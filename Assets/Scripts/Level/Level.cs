@@ -4,8 +4,8 @@ using UnityEngine;
 
 
 namespace LevelModule {
-    [CreateAssetMenu(fileName = "New Level Tile", menuName = "Level/Level")]
-    public class Level : ScriptableObject
+    
+    public abstract class Level : ScriptableObject
     {
         public GameObject levelPrefab;
     }
