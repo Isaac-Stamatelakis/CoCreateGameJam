@@ -9,7 +9,7 @@ namespace InventoryModule {
         private Dictionary<string, Equipment> equipmentDict;
 
         private EquipmentRegistry() {
-            Equipment[] equipments = Resources.LoadAll<Equipment>("Equipment");
+            Equipment[] equipments = Resources.LoadAll<Equipment>("Equipment/");
             equipmentDict = new Dictionary<string, Equipment>();
             foreach (Equipment equipment in equipments) {
                 if (equipmentDict.ContainsKey(equipment.id)) {
@@ -27,6 +27,9 @@ namespace InventoryModule {
         }
 
         public Equipment getEquipment(string id) {
+            if (id == null) {
+                return null;
+            }
             if (equipmentDict.ContainsKey(id)) {
                 return equipmentDict[id];
             }
