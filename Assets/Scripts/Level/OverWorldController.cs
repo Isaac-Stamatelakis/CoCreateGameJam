@@ -143,23 +143,8 @@ namespace LevelModule {
                     if (connection.connections.Contains(node)) {
                         connection.connections.Remove(node);
                     }
-                    GameObject line = new GameObject();
-
-                    line.name = node.name + " To " + connection.name;
-                    
-                    line.transform.SetParent(lineContainer);
-                    LineRenderer lineRenderer = line.AddComponent<LineRenderer>();
-                    Material defaultMaterial = Resources.Load<Material>("Materials/Default.mat");
-                    Shader shader = lineRenderer.GetComponent<Shader>();
-                    //shader = defaultMaterial;
-                    //lineRenderer.material = defaultMaterial;
-                    lineRenderer.materials[0] = defaultMaterial;
-                    lineRenderer.startWidth = 0.25f;
-                    lineRenderer.endWidth = 0.25f;
-                    lineRenderer.positionCount = 2;
-                    lineRenderer.SetPosition(0, node.transform.position);
-                    lineRenderer.SetPosition(1, connection.transform.position);
-                    
+                    LineFactory.create(node,connection,lineContainer);
+                
                 }
             }
             // Make graph doubly connected again
@@ -176,7 +161,7 @@ namespace LevelModule {
                     }
                 }
             }
-            
+            Debug.Log(lineContainer.childCount + " Lines Drawn");
         }
 
 

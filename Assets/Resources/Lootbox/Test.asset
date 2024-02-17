@@ -13,3 +13,9 @@ MonoBehaviour:
   m_Name: Test
   m_EditorClassIdentifier: 
   animation: {fileID: 0}
+  creatures:
+  - val: {fileID: 0}
+    frequency: 0
+  currencies:
+  - val: {fileID: 11400000, guid: cdb25ca96c985904b8564e47dc4dca62, type: 2}
+    frequency: 1

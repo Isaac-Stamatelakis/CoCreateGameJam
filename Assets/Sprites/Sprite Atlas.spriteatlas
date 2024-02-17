@@ -33,14 +33,17 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: fd120a50fbf862643a8c7b61846fc745, type: 3}
+    - {fileID: 102900000, guid: 9315eb7564f98534f97d7038f4ae4f41, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 05dacdd01883e37409e60f2324278e68, type: 3}
+  - {fileID: 21300000, guid: 3192f9c4b8c848d42b60b2f807aeb602, type: 3}
   m_PackedSpriteNamesToIndex:
   - temp_tile
+  - t_coin
   m_RenderDataMap: {}
   m_Tag: Sprite Atlas
   m_IsVariant: 0
