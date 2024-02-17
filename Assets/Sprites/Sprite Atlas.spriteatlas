@@ -40,10 +40,14 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 05dacdd01883e37409e60f2324278e68, type: 3}
+  - {fileID: 748654307, guid: ada25063d4316454f9a8be5f50c48d3e, type: 3}
+  - {fileID: 1970042327, guid: ada25063d4316454f9a8be5f50c48d3e, type: 3}
   - {fileID: 21300000, guid: 3192f9c4b8c848d42b60b2f807aeb602, type: 3}
   - {fileID: 21300000, guid: 1732022c85c33104ca986e352ccd73b0, type: 3}
   m_PackedSpriteNamesToIndex:
   - temp_tile
+  - Sam_the_helper_spooky_0
+  - Sam_the_helper_spooky_1
   - t_coin
   - t_grass
   m_RenderDataMap: {}
