@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using LevelModule.Tiles;
 using Player;
 using System.Linq;
 
@@ -54,7 +53,7 @@ namespace LevelModule {
                 currentNode = node;
                 return;
             }
-            playerTransform.position = Vector2.MoveTowards(playerTransform.position,node.transform.position,0.1f);
+            playerTransform.position = Vector2.MoveTowards(playerTransform.position,node.transform.position,0.15f);
         }
 
         private void raycastMove(Vector2 mousePosition) {
@@ -169,8 +168,6 @@ namespace LevelModule {
                     if (connection == null) {
                         continue;
                     }
-                    Debug.Log(node == null);
-                    Debug.Log(connection.AllConnections == null);
                     if (!connection.AllConnections.Contains(node)) {
                         connection.AllConnections.Add(node);      
                     }
