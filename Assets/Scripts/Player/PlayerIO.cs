@@ -13,7 +13,7 @@ namespace Player {
         // Start is called before the first frame update
         void Awake()
         {
-            data = new SPlayerData("LevelTile0", new HashSet<string>{"LevelTile0","LevelTile1","LevelTile2","LevelTile3","LevelTile4"});
+            data = new SPlayerData("Level0", new HashSet<string>{"Level0","Level1"});
         }
 
         // Update is called once per frame
