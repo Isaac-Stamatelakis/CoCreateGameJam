@@ -34,4 +34,34 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  m_Sprites: []
+  m_Sprites:
+  - sprite: {fileID: 1233180215, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 15
+  - sprite: {fileID: -1436139886, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 15
+  - sprite: {fileID: -1761863825, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 15
+  - sprite: {fileID: 1537547046, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 16
+  - sprite: {fileID: -1057872545, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 2
+  - sprite: {fileID: 1006269750, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 8
+  - sprite: {fileID: 695179970, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 8
+  - sprite: {fileID: 1964894923, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 8
+  - sprite: {fileID: 687679904, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 8
+  - sprite: {fileID: 172718117, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 8
+  - sprite: {fileID: 706209576, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 8
+  - sprite: {fileID: -1417943876, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 8
+  - sprite: {fileID: 1857891848, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 15
+  - sprite: {fileID: 1469639491, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 15
+  - sprite: {fileID: 1955398846, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+    frequency: 1

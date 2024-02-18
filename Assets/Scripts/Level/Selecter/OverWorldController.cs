@@ -147,7 +147,7 @@ namespace LevelModule {
                     }
                     // Prevent duplicate lines
                     if (connection.connections.Contains(node)) {
-                        connection.connections.Remove(node);
+                        //connection.connections.Remove(node);
                     }
                     LineFactory.create(node,connection,lineContainer);
                 

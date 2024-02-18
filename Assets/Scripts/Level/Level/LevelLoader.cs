@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Player;
+using LevelModule.Combat;
 
 namespace LevelModule {
     public class LevelLoader : MonoBehaviour
     {
         public void load(Level level) {
             GameObject levelPrefab = GameObject.Instantiate(level.levelPrefab);
-            GameObject playerPrefab = Resources.Load<GameObject>("Player");
-            GameObject player = GameObject.Instantiate(playerPrefab);
+            level.load();
+            //GameObject playerPrefab = Resources.Load<GameObject>("Player");
+            //GameObject player = GameObject.Instantiate(playerPrefab);
             GameObject.Destroy(this);
         }
     }
@@ -18,6 +21,9 @@ namespace LevelModule {
         public static Level currentLevel;
         public static void changeLevel(Level level) {
             SceneManager.LoadScene("LevelScene");
+            if (level is CombatLevel combatLevel) {
+                combatLevel.initalize(GameObject.Find("Player").GetComponent<PlayerIO>().GetEquipedCreetures());
+            }
             currentLevel = level;
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
