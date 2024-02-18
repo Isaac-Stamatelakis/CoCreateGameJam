@@ -8,6 +8,7 @@ namespace LevelModule {
     public abstract class Level : ScriptableObject
     {
         public GameObject levelPrefab;
+        public abstract void load();
     }
 }
 

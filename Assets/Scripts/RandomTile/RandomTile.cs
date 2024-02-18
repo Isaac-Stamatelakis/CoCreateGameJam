@@ -9,7 +9,8 @@ public class RandomTile : Tile
         /// The Sprites used for randomizing output.
         /// </summary>
         [SerializeField]
-        public Sprite[] m_Sprites;
+
+        public Pair[] m_Sprites;
 
         /// <summary>
         /// Retrieves any tile rendering data from the scripted tile.
@@ -30,8 +31,29 @@ public class RandomTile : Tile
                 hash = (hash + 0xbe9730af) ^ (hash << 11);
                 var oldState = Random.state;
                 Random.InitState((int)hash);
-                tileData.sprite = m_Sprites[(int) (m_Sprites.Length * Random.value)];
-                Random.state = oldState;
+                int total = 0;
+                foreach (Pair pair in m_Sprites) {
+                    total += pair.frequency;
+                }
+                int ran = Random.Range(0,total);
+                //int ran = (int) Mathf.PerlinNoise(0,(float)total);
+                total = 0;
+                foreach (Pair pair1 in m_Sprites) {
+                    total += pair1.frequency;
+                    if (ran < total) {
+                        tileData.sprite = pair1.sprite;
+                        Random.state = oldState;
+                        return;
+                    }
+                }
+                if (m_Sprites.Length > 0) {
+                    tileData.sprite = m_Sprites[0].sprite;
+                }
             }
+        }
+        [System.Serializable]
+        public class Pair {
+            public Sprite sprite;
+            public int frequency;
         }
     }

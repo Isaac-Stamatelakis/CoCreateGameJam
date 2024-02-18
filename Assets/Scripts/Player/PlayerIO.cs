@@ -9,6 +9,7 @@ namespace Player {
     public class PlayerIO : MonoBehaviour
     {
         private SPlayerData data;
+        private List<EquipedCreeture> equipedCreetures;
         public string CurrentTile {get => data.currentTiles; set => data.currentTiles = value;}
         public List<string> EquipmentIds {get => data.equipmentIds; set => data.equipmentIds = value;}
         public bool hasDiscoveredTile(string tileName) {
@@ -41,6 +42,30 @@ namespace Player {
                 returnVal.Add(creeture);
             }
             return returnVal;
+        }
+
+        public List<EquipedCreeture> GetEquipedCreetures() {
+            if (equipedCreetures == null) {
+                equipedCreetures = new List<EquipedCreeture>();
+                CreetureRegistry creetureRegistry = CreetureRegistry.getInstance();
+                EquipmentRegistry equipmentRegistry = EquipmentRegistry.getInstance();
+                foreach (SCreatureData sCreatureData in data.creatureData) {
+                    List<Equipment> equipments = new List<Equipment>();
+                    Creeture creeture = creetureRegistry.getEquipment(sCreatureData.id);
+                    if (creeture == null) {
+                        continue;
+                    }
+                    foreach (string equipmentID in sCreatureData.equipmentIDs) {
+                        Equipment equipment = equipmentRegistry.getEquipment(equipmentID);
+                        if (equipment == null) {
+                            continue;
+                        }
+                        equipments.Add(equipment);
+                    }
+                    equipedCreetures.Add(new EquipedCreeture(creeture,equipments));
+                }
+            }
+            return equipedCreetures;
         }
 
         public List<Equipment> GetEquipment() {
