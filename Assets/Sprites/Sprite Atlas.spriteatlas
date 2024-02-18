@@ -40,15 +40,39 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 05dacdd01883e37409e60f2324278e68, type: 3}
-  - {fileID: 748654307, guid: ada25063d4316454f9a8be5f50c48d3e, type: 3}
-  - {fileID: 1970042327, guid: ada25063d4316454f9a8be5f50c48d3e, type: 3}
-  - {fileID: 21300000, guid: 3192f9c4b8c848d42b60b2f807aeb602, type: 3}
+  - {fileID: 1955398846, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 1857891848, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 1469639491, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 706209576, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: -1417943876, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 1537547046, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: -1761863825, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: -1436139886, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 1233180215, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 1964894923, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 695179970, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 1006269750, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: -1057872545, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 172718117, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 687679904, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
   - {fileID: 21300000, guid: 1732022c85c33104ca986e352ccd73b0, type: 3}
   m_PackedSpriteNamesToIndex:
   - temp_tile
-  - Sam_the_helper_spooky_0
-  - Sam_the_helper_spooky_1
-  - t_coin
+  - tiles_14
+  - tiles_12
+  - tiles_13
+  - tiles_10
+  - tiles_11
+  - tiles_3
+  - tiles_2
+  - tiles_1
+  - tiles_0
+  - tiles_7
+  - tiles_6
+  - tiles_5
+  - tiles_4
+  - tiles_9
+  - tiles_8
   - t_grass
   m_RenderDataMap: {}
   m_Tag: Sprite Atlas

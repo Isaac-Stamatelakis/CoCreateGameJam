@@ -23,6 +23,7 @@ namespace InventoryModule {
     public enum Rarity {
         Common,
         Rare,
+        Exotic,
         Legendary
     }
 }
