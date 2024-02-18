@@ -25,9 +25,9 @@ namespace LevelModule.Combat {
                         case 0:
                             return new Vector2(-14f,8f);
                         case 1:
-                            return new Vector2(-10,5f);
+                            return new Vector2(-10,6.5f);
                         case 2:
-                            return new Vector2(-14,2f);
+                            return new Vector2(-14,5f);
                         default:
                             Debug.LogError("Order should be in range 0-2");
                             return Vector2.zero;
@@ -37,9 +37,9 @@ namespace LevelModule.Combat {
                         case 0:
                             return new Vector2(3,8f);
                         case 1:
-                            return new Vector2(-1,5f);
+                            return new Vector2(-1,6.5f);
                         case 2:
-                            return new Vector2(3,2f);
+                            return new Vector2(3,5f);
                         default:
                             Debug.LogError("Order should be in range 0-2");
                             return Vector2.zero;

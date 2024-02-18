@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
   m_Name: Shiny OmonGus
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 3308c902ffd7b484399963a415d4b1d7, type: 3}
+  sprite: {fileID: 21300000, guid: 63d34672e1e546b48a41035118d5b306, type: 3}
   id: shiny_omongus
+  speed: 0
+  strength: 0
+  health: 0
