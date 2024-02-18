@@ -17,7 +17,7 @@ namespace InventoryModule {
             return null;
         }
         public static GameObject fromEquipment(Equipment equipment) {
-            GameObject panel = GameObject.Instantiate(Resources.Load<GameObject>("Inventory/Panel"));
+            GameObject panel = GameObject.Instantiate(Resources.Load<GameObject>("UI/Inventory/Panel"));
             Image image = panel.transform.Find("Image").GetComponent<Image>();
             RectTransform panelTransform = panel.GetComponent<RectTransform>();
 
@@ -37,7 +37,7 @@ namespace InventoryModule {
         }
 
         public static GameObject fromCreature(Creeture creeture) {
-            GameObject panel = GameObject.Instantiate(Resources.Load<GameObject>("Inventory/Panel"));
+            GameObject panel = GameObject.Instantiate(Resources.Load<GameObject>("UI/Inventory/Panel"));
             Image image = panel.transform.Find("Image").GetComponent<Image>();
             RectTransform panelTransform = panel.GetComponent<RectTransform>();
             if (creeture != null) {

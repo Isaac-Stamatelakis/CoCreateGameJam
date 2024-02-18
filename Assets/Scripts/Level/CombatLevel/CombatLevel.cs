@@ -47,6 +47,10 @@ namespace LevelModule.Combat {
                 index ++;
             }
             combatLevelController.init(playerCreetures,aiCreetures);
+            GameObject combatUI = GameObject.Instantiate(Resources.Load<GameObject>("UI/CombatUI"));
+            CombatPlayerInputController inputController = combatUI.AddComponent<CombatPlayerInputController>(); 
+            inputController.LevelController = combatLevelController;
+
             
             
         }

@@ -21,8 +21,8 @@ namespace InventoryModule {
         {
             mButton.onClick.AddListener(onButtonClick);
             mButtonText = mButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            itemInventoryPrefab = Resources.Load<GameObject>("Inventory/ItemInventory");
-            creatureInventoryPrefab = Resources.Load<GameObject>("Inventory/CreatureInventory");
+            itemInventoryPrefab = Resources.Load<GameObject>("UI/Inventory/ItemInventory");
+            creatureInventoryPrefab = Resources.Load<GameObject>("UI/Inventory/CreatureInventory");
             playerIO = GameObject.Find("Player").GetComponent<PlayerIO>();
             setState();
         }
