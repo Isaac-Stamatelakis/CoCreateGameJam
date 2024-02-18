@@ -8,15 +8,16 @@ namespace LootBoxModule {
     [CreateAssetMenu(fileName = "New Lootbox", menuName = "Lootbox")]
     public class LootBox : ScriptableObject
     {
+        public Sprite sprite;
         public Animation animation;
         [Header("Lootables that can be won\nChance is frequency/sum of all frequencies")]
-        public List<LootFrequency<Creature>> creatures;
+        public List<LootFrequency<Creeture>> creatures;
         public List<LootFrequency<Currency>> currencies;
 
         public ILootable open() {
             List<ILootable> loot = new List<ILootable>();
             int totalFrequency = 0;
-            foreach (LootFrequency<Creature> creature in creatures) {
+            foreach (LootFrequency<Creeture> creature in creatures) {
                 totalFrequency += creature.frequency;
             }
             foreach (LootFrequency<Currency> currency in currencies) {
@@ -24,7 +25,7 @@ namespace LootBoxModule {
             }
             int ran = Random.Range(0,totalFrequency);
             totalFrequency = 0;
-            foreach (LootFrequency<Creature> creature in creatures) {
+            foreach (LootFrequency<Creeture> creature in creatures) {
                 totalFrequency += creature.frequency;
                 if (totalFrequency > ran) {
                     return creature.val;

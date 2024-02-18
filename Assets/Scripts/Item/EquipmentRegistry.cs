@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace InventoryModule {
-    public class EquipmentRegistry : MonoBehaviour
+    public class EquipmentRegistry
     {
         private static EquipmentRegistry instance = null;
         private Dictionary<string, Equipment> equipmentDict;
@@ -18,6 +18,7 @@ namespace InventoryModule {
                 }
                 equipmentDict[equipment.id] = equipment;
             }
+            Debug.Log(equipmentDict.Count + " Equipment Items Loaded");
         }
         public static EquipmentRegistry getInstance() {
             if (instance == null) {
