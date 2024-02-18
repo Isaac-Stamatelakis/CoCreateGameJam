@@ -1,0 +1,10 @@
+# Ignore everything thats not whitelisted
+/*
+# Unity Package Manager
+!Packages/
+
+# Project settings
+!ProjectSettings/
+
+# Assets
+!Assets/
