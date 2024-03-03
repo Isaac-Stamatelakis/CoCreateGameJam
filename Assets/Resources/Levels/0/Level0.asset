@@ -23,3 +23,5 @@ MonoBehaviour:
   - creeture: {fileID: 11400000, guid: 983c3894d67e63547af323e03570502b, type: 2}
     equipment:
     - {fileID: 11400000, guid: 689936d28a8320e4e80be32b9ab7521d, type: 2}
+  lootables:
+  - {fileID: 11400000, guid: 20b710f2fb14deb4298f09589e72bb13, type: 2}

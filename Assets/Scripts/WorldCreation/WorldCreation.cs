@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Player;
 
 namespace WorldCreationModule {
 public static class WorldCreation
@@ -11,6 +12,9 @@ public static class WorldCreation
             return folderExists(path);
         }
 
+        public static string getWorldName(int index) {
+            return "world" + index.ToString();
+        }
         public static bool folderExists(string path) {
             return File.Exists(path) || Directory.Exists(path);
         }
@@ -19,25 +23,17 @@ public static class WorldCreation
             string path = getWorldPath(name);
             Directory.CreateDirectory(path);
             Debug.Log("World Folder Created at " + path);
-            initPlayerData(name);
+            string playerData = PlayerIO.initPlayerData();
+            initPlayerData(name,playerData);
         }
         public static string getWorldPath(string name) {
             return Application.persistentDataPath + "/worlds/" + name; 
         }
 
-        public static void initPlayerData(string name) {
-            /*
-            PlayerData playerData = new PlayerData(
-                x: 0,
-                y: 0,
-                robotID: "happy_mk1",
-                name: "Izakio",
-                inventoryJson: ItemSlotFactory.createEmptySerializedInventory(40)
-            );
+        public static void initPlayerData(string name,string playerData) {
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(playerData);
             string path = getPlayerDataPath(name);
-            File.WriteAllText(path,json);
-            */
+            File.WriteAllText(path,json);  
         }
 
         public static string getPlayerDataPath(string name) {

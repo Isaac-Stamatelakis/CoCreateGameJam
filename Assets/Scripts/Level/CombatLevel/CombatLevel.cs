@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CreatureModule;
 using Player;
+using LootBoxModule;
 
 namespace LevelModule.Combat {
     [CreateAssetMenu(fileName = "New Combat Level", menuName = "Level/CombatLevel")]
@@ -10,7 +11,8 @@ namespace LevelModule.Combat {
     {
         
         private List<EquipedCreeture> playerCreatures;
-        public List<EquipedCreeture> enemyCreatures;
+        [SerializeField] public List<EquipedCreeture> enemyCreatures;
+        [SerializeField] public List<Lootable> lootables;
         public void initalize(List<EquipedCreeture> playerCreatures) {
             this.playerCreatures = playerCreatures;
         }

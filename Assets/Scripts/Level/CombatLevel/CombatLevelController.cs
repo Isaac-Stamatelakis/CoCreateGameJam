@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CreatureModule;
 using System.Linq;
+using TMPro;
 
 namespace LevelModule.Combat {
     public class CombatLevelController : MonoBehaviour
@@ -15,6 +16,7 @@ namespace LevelModule.Combat {
         private EquipedCreeture currentCreatureTurn;
         private EquipedCreeture selectedPlayerCreature;
         private int currentTurn;
+        private bool gameOver;
         
         public bool IsPlayerTurn {get => player.Contains(currentCreatureTurn);}
         // Start is called before the first frame update
@@ -25,10 +27,12 @@ namespace LevelModule.Combat {
             ai = new HashSet<EquipedCreeture>();
             foreach (KeyValuePair<EquipedCreeture, Transform> kvp in playerD) {
                 creatures[kvp.Key] = kvp.Value;
+                kvp.Key.initForBattle();
                 player.Add(kvp.Key);
             }
             foreach (KeyValuePair<EquipedCreeture, Transform> kvp in aiD) {
                 creatures[kvp.Key] = kvp.Value;
+                kvp.Key.initForBattle();
                 ai.Add(kvp.Key);
             }
             generateTurns();
@@ -36,6 +40,13 @@ namespace LevelModule.Combat {
 
         public void Start() {
             mCamera = GameObject.Find("Camera").GetComponent<Camera>();
+        }
+
+        private void updateHealth(EquipedCreeture equipedCreeture) {
+            Transform creatureTransform = creatures[equipedCreeture];
+            Transform textTransform = creatureTransform.Find("HealthText");
+            TextMeshPro textMeshPro = textTransform.GetComponent<TextMeshPro>();
+            textMeshPro.text = equipedCreeture.CurrentHealth.ToString();
         }
 
         public void Update() {
@@ -72,17 +83,39 @@ namespace LevelModule.Combat {
 
     
         private IEnumerator moveAI() {
-            yield return new WaitForSeconds(0.25f);
-            int move = Random.Range(0,3);
+            yield return new WaitForSeconds(0.5f);
+            int move = Random.Range(0,2);
+            List<EquipedCreeture> targets = player.ToList();
+            int n = targets.Count;
+            System.Random rng = new System.Random();
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                EquipedCreeture value = targets[k];
+                targets[k] = targets[n];
+                targets[n] = value;
+            }
             switch (move) {
-                case 0:
+                case 0: // attack
+                    foreach (EquipedCreeture target in targets) {
+                        if (target.CurrentHealth <= 0) {
+                            continue;
+                        }
+                        Debug.Log("ai attack");
+                        target.attack(currentCreatureTurn.getAttacks());
+                        updateHealth(target);
+                        break;
+                    }
                     break;
-                case 1:
+                case 1: // heal
+                    currentCreatureTurn.heal();
+                    updateHealth(currentCreatureTurn);
                     break;
-                case 2:
+                case 2: // defend
                     break;
             }
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.5f);
             iterateTurn();
         }
 
@@ -93,6 +126,8 @@ namespace LevelModule.Combat {
             if (selectedPlayerCreature == null) {
                 return;
             }
+            selectedPlayerCreature.attack(currentCreatureTurn.getAttacks());
+            updateHealth(selectedPlayerCreature);
             iterateTurn();
         }
 
@@ -100,6 +135,8 @@ namespace LevelModule.Combat {
             if (!IsPlayerTurn) {
                 return;
             }
+            currentCreatureTurn.heal();
+            updateHealth(currentCreatureTurn);
             iterateTurn();
         }
 
@@ -114,6 +151,19 @@ namespace LevelModule.Combat {
         }
 
         private void iterateTurn() {
+            if (gameOver) {
+                return;
+            }
+            if (playerDead()) {
+                gameOver = true;
+                showLossScreen();
+                return;
+            }
+            if (aiDead()) {
+                gameOver = true;
+                showWinScreen();
+                return;
+            }
             currentTurn++;
             if (currentTurn >= turns.Count) {
                 currentTurn = 0;
@@ -124,6 +174,39 @@ namespace LevelModule.Combat {
                 StartCoroutine(moveAI());
                 return;
             }
+        }
+
+        private void showWinScreen() {
+            GameObject over = GameObject.Instantiate(Resources.Load<GameObject>("UI/GameWinScreen"));
+            GameObject.Destroy(this);
+            GameObject.Destroy(GameObject.Find("CombatUI(Clone)"));
+            over.transform.SetParent(GameObject.Find("MainCanvas").transform,false);
+            Debug.Log("Player Win");
+        }
+
+        private void showLossScreen() {
+            GameObject over = GameObject.Instantiate(Resources.Load<GameObject>("UI/GameOverScreen"));
+            GameObject.Destroy(this);
+            GameObject.Destroy(GameObject.Find("CombatUI(Clone)"));
+            over.transform.SetParent(GameObject.Find("MainCanvas").transform,false);
+            Debug.Log("AI Win");
+        }
+
+        private bool playerDead() {
+            foreach (EquipedCreeture equipedCreeture in player) {
+                if (equipedCreeture.CurrentHealth > 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        private bool aiDead() {
+            foreach (EquipedCreeture equipedCreeture in ai) {
+                if (equipedCreeture.CurrentHealth > 0) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void playerSelectCreature(EquipedCreeture creeture) {
@@ -146,12 +229,15 @@ namespace LevelModule.Combat {
             highlighter.transform.SetParent(creatures[selectedPlayerCreature],false);
         }
         private void setCreatureTurn(EquipedCreeture creeture) {
-            if (currentCreatureTurn != null) {
+            if (currentCreatureTurn != null && currentCreatureTurn.CurrentHealth > 0) {
                 Transform highligher = creatures[currentCreatureTurn].Find("TurnHighlight");
                 GameObject.Destroy(highligher.gameObject);
             }
-
             currentCreatureTurn = creeture;
+            if (currentCreatureTurn.CurrentHealth <= 0) {
+                iterateTurn();
+                return;
+            }
             GameObject highlighter = new GameObject();
             highlighter.name = "TurnHighlight";
             SpriteRenderer spriteRenderer = highlighter.AddComponent<SpriteRenderer>();

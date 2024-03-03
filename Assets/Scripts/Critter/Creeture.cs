@@ -7,7 +7,7 @@ using InventoryModule;
 namespace CreatureModule {
     [CreateAssetMenu(fileName = "New Level Creeture", menuName = "Creeture")]
     [System.Serializable]
-    public class Creeture : ScriptableObject, ILootable, IItem
+    public class Creeture : Lootable, IItem
     {
         public Sprite sprite;
         public string id;
@@ -17,6 +17,10 @@ namespace CreatureModule {
     }
     [System.Serializable]
     public class EquipedCreeture {
+        private int currentHealth;
+        private bool IsDead{get => CurrentHealth <= 0;}
+        public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
+
         public Creeture creeture;
         public List<Equipment> equipment;
         public EquipedCreeture(Creeture creeture, List<Equipment> equipment) {
@@ -47,7 +51,7 @@ namespace CreatureModule {
         }
 
         public int getHealth() {
-            int health = 0;
+            int health = creeture.health;
             foreach (Equipment equipment in equipment) {
                 if (equipment.type != EquipmentType.Health) {
                     continue;
@@ -55,6 +59,16 @@ namespace CreatureModule {
                 health += (int) Mathf.Pow(2,(int)equipment.rarity+1);
             }
             return health;
+        }
+        public int getHealing() {
+            int heal = 1;
+            foreach (Equipment equipment in equipment) {
+                if (equipment.type != EquipmentType.Health) {
+                    continue;
+                }
+                heal += (int)equipment.rarity+1;
+            }
+            return heal;
         }
         public int getArmor() {
             int armor = 0;
@@ -76,6 +90,16 @@ namespace CreatureModule {
                 ability += ((int)equipment.rarity+1)!;
             }
             return ability;
+        }
+
+        public void heal() {
+            CurrentHealth += getHealing();
+        }
+        public void attack(int damage) {
+            CurrentHealth-=damage;
+        }
+        public void initForBattle() {
+            CurrentHealth = getHealth();
         }
     }
 }

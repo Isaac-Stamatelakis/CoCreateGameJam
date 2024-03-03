@@ -5,7 +5,7 @@ using LootBoxModule;
 
 namespace CurrencyModule {
     [CreateAssetMenu(fileName = "New Currency", menuName = "Currency")]
-    public class Currency : ScriptableObject, ILootable
+    public class Currency : Lootable
     {
         public Sprite sprite;
         public int value;

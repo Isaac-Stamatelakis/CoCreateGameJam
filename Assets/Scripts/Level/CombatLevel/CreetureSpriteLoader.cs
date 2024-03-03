@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CreatureModule;
 using InventoryModule;
+using TMPro;
 
 namespace LevelModule.Combat {
     public static class CreetureSpriteLoader 
@@ -12,6 +13,25 @@ namespace LevelModule.Combat {
             creature.name = equipedCreeture.creeture.name;
             SpriteRenderer spriteRenderer = creature.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = equipedCreeture.creeture.sprite;
+            GameObject health = new GameObject();
+            health.name = "Health";
+            health.transform.SetParent(creature.transform,false);
+            health.transform.position = new Vector3(-1,-spriteRenderer.bounds.extents.y-0.3f,1);
+            health.transform.localScale = new Vector3(0.3f,0.3f);
+            SpriteRenderer healthRenderer = health.AddComponent<SpriteRenderer>();
+            healthRenderer.sprite = Resources.Load<Sprite>("Sprites/Health_Points");
+
+            GameObject healthText = new GameObject();
+            TextMeshPro textMeshPro = healthText.AddComponent<TextMeshPro>();
+            textMeshPro.text = equipedCreeture.getHealth().ToString();
+            textMeshPro.color = Color.black;
+            textMeshPro.fontSize = 4;
+            textMeshPro.alignment = TextAlignmentOptions.Center;
+
+            healthText.transform.SetParent(creature.transform,false);
+            healthText.transform.position = new Vector3(-1,-spriteRenderer.bounds.extents.y-0.3f,0);
+            healthText.name = "HealthText";
+            
             creature.layer = LayerMask.NameToLayer("Creature");
             creature.AddComponent<BoxCollider2D>();
             creature.transform.position = getPosition(order,side);

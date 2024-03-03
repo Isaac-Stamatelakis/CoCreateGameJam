@@ -22,7 +22,7 @@ namespace LevelModule {
         public static void changeLevel(Level level) {
             SceneManager.LoadScene("LevelScene");
             if (level is CombatLevel combatLevel) {
-                combatLevel.initalize(GameObject.Find("Player").GetComponent<PlayerIO>().GetEquipedCreetures());
+                combatLevel.initalize(GameObject.Find("Player").GetComponent<PlayerIO>().EquipedCreetures);
             }
             currentLevel = level;
             SceneManager.sceneLoaded += OnSceneLoaded;

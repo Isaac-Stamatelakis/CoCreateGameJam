@@ -50,7 +50,7 @@ namespace InventoryModule {
                 case Mode.Equipment:
                     currentInventory = GameObject.Instantiate(itemInventoryPrefab);
                     ItemInventory itemInventory = currentInventory.GetComponentInChildren<ItemInventory>();
-                    itemInventory.initalize(playerIO.GetEquipment());
+                    itemInventory.initalize(playerIO.Equipment);
                     break;
                 case Mode.Creature:
                     currentInventory = GameObject.Instantiate(creatureInventoryPrefab);
