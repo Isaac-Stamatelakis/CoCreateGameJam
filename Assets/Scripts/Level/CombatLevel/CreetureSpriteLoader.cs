@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CreatureModule;
-using InventoryModule;
+using Creatures;
+using Items;
 using TMPro;
 
-namespace LevelModule.Combat {
+namespace Levels.Combat {
     public static class CreetureSpriteLoader 
     {
         public static GameObject loadCreature(EquipedCreeture equipedCreeture, int order,  Side side) {
             GameObject creature = new GameObject();
-            creature.name = equipedCreeture.creeture.name;
+            creature.name = equipedCreeture.Creeture.name;
             SpriteRenderer spriteRenderer = creature.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = equipedCreeture.creeture.sprite;
+            spriteRenderer.sprite = equipedCreeture.Creeture.Sprite;
             GameObject health = new GameObject();
             health.name = "Health";
             health.transform.SetParent(creature.transform,false);
@@ -23,7 +23,7 @@ namespace LevelModule.Combat {
 
             GameObject healthText = new GameObject();
             TextMeshPro textMeshPro = healthText.AddComponent<TextMeshPro>();
-            textMeshPro.text = equipedCreeture.getHealth().ToString();
+            textMeshPro.text = equipedCreeture.Creeture.Health.ToString();
             textMeshPro.color = Color.black;
             textMeshPro.fontSize = 4;
             textMeshPro.alignment = TextAlignmentOptions.Center;

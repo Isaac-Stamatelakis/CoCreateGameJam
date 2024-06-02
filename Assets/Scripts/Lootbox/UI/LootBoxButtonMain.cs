@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Player;
 
-namespace LootBoxModule {
+namespace LootBoxes {
     public class LootBoxButtonMain : MonoBehaviour
     {
         [SerializeField] public Button button;

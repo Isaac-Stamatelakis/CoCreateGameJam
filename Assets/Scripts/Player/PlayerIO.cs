@@ -2,30 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
-using CreatureModule;
-using InventoryModule;
-using LootBoxModule;
+using Creatures;
+using Items;
+using LootBoxes;
 using WorldCreationModule;
 using System.IO;
+using CurrencyModule;
 
 namespace Player {
     public class PlayerIO : MonoBehaviour
     {
-        private SPlayerData sData;
+        private static PlayerIO instance;
+        private List<EquipedCreeture> combatCreatures;
         public List<EquipedCreeture> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
         public List<Equipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
         public List<LootboxCount> LootBoxes {get => playerData.lootboxes; set => playerData.lootboxes = value;}
         private PlayerData playerData;
-        public string CurrentTile {get => sData.currentTile; set => sData.currentTile = value;}
+        public string CurrentTile {get => playerData.currentTile; set => playerData.currentTile = value;}
+        public static PlayerIO Instance { get => instance;}
+        public List<EquipedCreeture> CombatCreatures { get => combatCreatures; set => combatCreatures = value; }
+
         public bool hasDiscoveredTile(string tileName) {
-            return sData.discoveredTiles.Contains(tileName);
+            return playerData.discoveredTiles.Contains(tileName);
         }
-        // Start is called before the first frame update
-        
         public void Awake() {
             string path = WorldCreation.getPlayerDataPath(Global.WorldName);
             string data = File.ReadAllText(path);
             deseralize(data);
+            instance = this;
         }
 
         public void OnDestroy() {
@@ -34,8 +38,25 @@ namespace Player {
             File.WriteAllText(path,data);
         }
 
+        public void give(Lootable lootable) {
+            if (lootable is LootBox lootBox) {
+                foreach (LootboxCount lootboxCount in playerData.lootboxes) {
+                    if (lootboxCount.lootBox.id == lootBox.id) {
+                        lootboxCount.count++;
+                        return;
+                    }
+                }
+                playerData.lootboxes.Add(new LootboxCount(lootBox,1));
+            } else if (lootable is Currency currency) {
+                
+            } else if (lootable is Equipment equipment) {
+                playerData.equipment.Add(equipment);
+            } else if (lootable is Creature creeture) {
+                playerData.creetures.Add(new EquipedCreeture(creeture,new List<Equipment>()));
+            }
+            
+        }
         public void deseralize(string data) {
-            Debug.Log(data);
             SPlayerData sPlayerData = JsonConvert.DeserializeObject<SPlayerData>(data);
             List<Equipment> equipment = DeseralizeEquipment(sPlayerData.equipmentIds);
             List<EquipedCreeture> equipedCreetures = DeseralizeCreetures(sPlayerData.creatureData);
@@ -57,7 +78,7 @@ namespace Player {
             }
             List<SCreatureData> creatureData = new List<SCreatureData>();
             foreach (EquipedCreeture equipedCreeture in playerData.creetures) {
-                creatureData.Add(new SCreatureData(equipedCreeture.creeture.id,seralizeEquipment(equipedCreeture.equipment)));
+                creatureData.Add(new SCreatureData(equipedCreeture.Creeture.Id,seralizeEquipment(equipedCreeture.Equipment)));
             }
             SPlayerData sPlayerData = new SPlayerData(
                 currentTileIndex: playerData.currentTile,
@@ -72,32 +93,18 @@ namespace Player {
         private List<string> seralizeEquipment(List<Equipment> equipmentList) {
             List<string> equipmentIds = new List<string>();
             foreach (Equipment equipment in equipmentList) {
-                equipmentIds.Add(equipment.id);
+                equipmentIds.Add(equipment.Id);
             }
             return equipmentIds;
         }
 
-        public List<Creeture> GetCreetures() {
-            CreetureRegistry creetureRegistry = CreetureRegistry.getInstance();
-            List<Creeture> returnVal = new List<Creeture>();
-            foreach (SCreatureData data in sData.creatureData) {
-                Creeture creeture = GameObject.Instantiate(creetureRegistry.getEquipment(data.id));
-
-                if (creeture == null) {
-                    continue;
-                }
-                returnVal.Add(creeture);
-            }
-            return returnVal;
-        }
-
         private List<EquipedCreeture> DeseralizeCreetures(List<SCreatureData> sCreatureData) {
             List<EquipedCreeture> equipedCreetures = new List<EquipedCreeture>();
-            CreetureRegistry creetureRegistry = CreetureRegistry.getInstance();
+            CreatureRegistry creetureRegistry = CreatureRegistry.getInstance();
             EquipmentRegistry equipmentRegistry = EquipmentRegistry.getInstance();
             foreach (SCreatureData data in sCreatureData) {
                 List<Equipment> equipments = new List<Equipment>();
-                Creeture creeture = creetureRegistry.getEquipment(data.id);
+                Creature creeture = creetureRegistry.getCreature(data.id);
                 if (creeture == null) {
                     continue;
                 }
@@ -109,7 +116,6 @@ namespace Player {
                     equipments.Add(equipment);
                 }
                 equipedCreetures.Add(new EquipedCreeture(creeture,equipments));
-                
             }
             return equipedCreetures;
         }
@@ -119,10 +125,19 @@ namespace Player {
                 null,
                 new List<string>(),
                 new List<string>(),
-                new List<SCreatureData>(),
+                new List<SCreatureData>{
+                    new SCreatureData(
+                        "mike",
+                        new List<string>{
+                            "sword4"
+                        }
+                    )
+                },
                 new List<SLootboxData>()
             );
-            return JsonConvert.SerializeObject(sPlayerData);
+            string data = JsonConvert.SerializeObject(sPlayerData);
+            SPlayerData test = JsonConvert.DeserializeObject<SPlayerData>(data);
+            return data;
         }
 
         private List<LootboxCount> deseralizeLootboxes(List<SLootboxData> lootboxData) {
@@ -157,7 +172,7 @@ namespace Player {
         {
             
         }
-
+        [System.Serializable]
         private class SPlayerData {
             public SPlayerData(
                 string currentTileIndex, 

@@ -31,9 +31,8 @@ public static class WorldCreation
         }
 
         public static void initPlayerData(string name,string playerData) {
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(playerData);
             string path = getPlayerDataPath(name);
-            File.WriteAllText(path,json);  
+            File.WriteAllText(path,playerData);  
         }
 
         public static string getPlayerDataPath(string name) {

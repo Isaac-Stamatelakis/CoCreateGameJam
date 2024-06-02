@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InventoryModule {
+namespace Items {
     public interface IItem
     {
         

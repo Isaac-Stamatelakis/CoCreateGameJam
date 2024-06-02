@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
+  m_Name: Goof Ball
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 818572786, guid: f4dbcc5e296870948a45c8c6d4e86d9d, type: 3}
+  id: goof_ball
+  speed: 5
+  strength: 5
+  health: 5
+  mana: 5
+  controller: {fileID: 9100000, guid: 39e0b404da452f2449fc8837530dba06, type: 2}
+  strengths: 
+  weaknesses: 
+  moves: []

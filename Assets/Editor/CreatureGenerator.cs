@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Tilemaps;
-using CreatureModule;
+using Creatures;
 
 public class CreatureGenerator : EditorWindow {
     private string savePath = "Assets/EditorCreations";
@@ -45,24 +45,25 @@ public class CreatureGenerator : EditorWindow {
     void generate()
     {
         AssetDatabase.CreateFolder(savePath, creatureName);
-        Creeture creeture = ScriptableObject.CreateInstance<Creeture>();
+        Creature creeture = ScriptableObject.CreateInstance<Creature>();
         creeture.name = creatureName;
-        creeture.health = health;
-        creeture.strength = damage;
-        creeture.speed = speed;
-        creeture.sprite = baseSprite;
-        creeture.id = creatureName.ToLower().Replace(" ","_");
+        creeture.setHealth(health);
+        creeture.setStrength(damage);
+        creeture.setSpeed(speed);
+        creeture.setSprite(baseSprite);
+        creeture.setId(creatureName.ToLower().Replace(" ","_"));
         AssetDatabase.CreateAsset(creeture, savePath + "/" + creatureName + "/" + creeture.name + ".asset");
         Debug.Log("Creeture created " + creeture.name);
-
+        /*
         Creeture shiny = ScriptableObject.CreateInstance<Creeture>();
         shiny.name = "Shiny " + creatureName;
-        shiny.health = health;
-        shiny.strength = damage;
-        shiny.speed = speed;
-        shiny.sprite = baseSprite;
-        shiny.id = creatureName.ToLower().Replace(" ","_");
+        shiny.Health = health;
+        shiny.Strength = damage;
+        shiny.Speed = speed;
+        shiny.Sprite = baseSprite;
+        shiny.Id = "shiny_"+ creatureName.ToLower().Replace(" ","_");
         AssetDatabase.CreateAsset(shiny, savePath + "/" + creatureName + "/" + shiny.name + ".asset");
         Debug.Log("Creeture created " + shiny.name);
+        */
     }
 }

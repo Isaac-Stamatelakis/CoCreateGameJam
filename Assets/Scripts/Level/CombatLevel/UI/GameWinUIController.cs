@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-namespace LevelModule.Combat {
+namespace Levels.Combat {
     public class GameWinUIController : MonoBehaviour
     {
         [SerializeField] public Button continueButton;

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be548a906916e0246a3be3e322c4e96c, type: 3}
+  m_Name: Cardboard Box
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 7a15aecd73859924fa39309275bbd867, type: 3}
+  type: 0
+  id: cardboard_box
+  loot:
+  - val: {fileID: 11400000}
+    frequency: 10
+  - val: {fileID: 11400000, guid: 20bbaae9f0877f14bb319cdcd112dd5f, type: 2}
+    frequency: 5
+  animation: {fileID: 5531758582210896768, guid: 6aa11ac0b1bca3e41a89ee07404fbfce, type: 3}

@@ -2,55 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using CreatureModule;
+using Creatures;
 
-namespace InventoryModule {
+namespace Items {
     public static class ItemSlotFactory 
     {
-        public static GameObject fromItem(IItem item) {
-            if (item is Equipment equipment) {
-                return fromEquipment(equipment);
-            }
-            if (item is Creeture creeture) {
-                return fromCreature(creeture);
-            }
-            return null;
-        }
-        public static GameObject fromEquipment(Equipment equipment) {
-            GameObject panel = GameObject.Instantiate(Resources.Load<GameObject>("UI/Inventory/Panel"));
-            Image image = panel.transform.Find("Image").GetComponent<Image>();
-            RectTransform panelTransform = panel.GetComponent<RectTransform>();
-
-            ItemSlotClick itemSlotClick = panel.AddComponent<ItemSlotClick>();
-            if (equipment != null) {
-                itemSlotClick.Equipment = equipment;
-                image.sprite  = equipment.sprite;
-                Image panelImage = panel.GetComponent<Image>();
-                panelImage.sprite = getSprite(equipment.rarity);
-                panelImage.color = getColor(equipment.rarity);
-                RectTransform rectTransform = panelImage.GetComponent<RectTransform>();
-                rectTransform.sizeDelta = new Vector2(80,80);
-            } else {
-                GameObject.Destroy(image);
-            }
-            return panel;
-        }
-
-        public static GameObject fromCreature(Creeture creeture) {
-            GameObject panel = GameObject.Instantiate(Resources.Load<GameObject>("UI/Inventory/Panel"));
-            Image image = panel.transform.Find("Image").GetComponent<Image>();
-            RectTransform panelTransform = panel.GetComponent<RectTransform>();
-            if (creeture != null) {
-                RectTransform rectTransform = image.GetComponent<RectTransform>();
-                rectTransform.sizeDelta = new Vector2(160,160);
-                image.sprite  = creeture.sprite;
-
-            } else {
-                GameObject.Destroy(image);
-            }
-            return panel;
-        }
-
         public static Color getColor(Rarity rarity) {
             switch (rarity) {
                 case Rarity.Common:
