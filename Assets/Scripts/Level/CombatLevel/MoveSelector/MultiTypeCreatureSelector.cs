@@ -5,7 +5,7 @@ using System;
 using Creatures;
 using Levels.Combat;
 
-namespace Creatures.Moves {
+namespace Creatures.Actions {
     public interface IMultiTypeCreatureSelector {
         public void AddCreature(TargetType targetType, CreatureCombatObject creature);
         public List<CreatureCombatObject> GetCreaturesOfCategory(TargetType targetType);

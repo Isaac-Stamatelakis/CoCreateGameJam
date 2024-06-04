@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using LootBoxes;
 using Items;
-using Creatures.Moves;
+using Creatures.Actions;
 
 namespace Creatures {
     [CreateAssetMenu(fileName = "New Creeture", menuName = "Creeture/Instance")]
@@ -20,7 +20,7 @@ namespace Creatures {
         [SerializeField] private RuntimeAnimatorController controller;
         [SerializeField] private List<DamageType> strengths;
         [SerializeField] private List<DamageType> weaknesses;
-        [SerializeField] private List<Move> moves;
+        [SerializeField] private List<CreatureAction> moves;
         #if UNITY_EDITOR
         public void setSprite(Sprite sprite) {
             this.sprite = sprite;

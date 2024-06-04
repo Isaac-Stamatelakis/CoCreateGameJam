@@ -29,7 +29,7 @@ namespace UI.Inventory {
         {
             setCategory(InventoryUIMode.Creature);
             backButton.onClick.AddListener(() => {
-
+                gameObject.SetActive(false);
             });
         }
 
@@ -66,9 +66,9 @@ namespace UI.Inventory {
                             new List<Items.Equipment>()
                         ),
                     };
-                    //creatureInventory.display(PlayerIO.Instance.EquipedCreetures);
+                    creatureInventory.display(PlayerIO.Instance.EquipedCreetures);
                     titleText.text = "Creetures";
-                    creatureInventory.display(temp);
+                    //creatureInventory.display(temp);
                     break;
                 case InventoryUIMode.Equipment:
                     List<Equipment> tempEquipment = new List<Equipment>{

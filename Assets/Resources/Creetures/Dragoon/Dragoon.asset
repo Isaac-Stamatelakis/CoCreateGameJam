@@ -17,3 +17,10 @@ MonoBehaviour:
   speed: 2
   strength: 5
   health: 3
+  mana: 0
+  description: 
+  controller: {fileID: 0}
+  strengths: 
+  weaknesses: 
+  moves:
+  - {fileID: 11400000, guid: 9ed41a1714cc3f847b15547baf585ec6, type: 2}

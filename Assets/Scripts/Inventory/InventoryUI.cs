@@ -14,6 +14,8 @@ namespace UI.Inventory {
         protected List<UIDisplayer<T>> slots;
         private int currentlyHighlightedSlot = -1;
         public void display(List<T> elements) {
+            GlobalUtils.deleteChildren(transform);
+            slots = new List<UIDisplayer<T>>();
             this.elements = elements;
             loadSlots();
         }

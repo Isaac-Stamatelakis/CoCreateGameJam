@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60668585f1587ae4691207e8cb944205, type: 3}
   m_Name: Dragoon Fire Slash
   m_EditorClassIdentifier: 
-  targetTypes: 0100000000000000
+  targetTypes: 01000000
   maxTargets: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 887e1d593810ffe41995bd3de7973354, type: 3}
   description: 
   damage: 2.3
   damageType: 1

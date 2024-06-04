@@ -12,8 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
   m_Name: Shiny Dragoon
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: db16b47b7255ba647b77ebede625c3ae, type: 3}
+  sprite: {fileID: 21300000, guid: d536ba69f22aab14a94c307ce9e471a8, type: 3}
   id: shiny_dragoon
   speed: 2
   strength: 5
   health: 3
+  mana: 0
+  description: 
+  controller: {fileID: 0}
+  strengths: 
+  weaknesses: 
+  moves: []

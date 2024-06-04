@@ -15,10 +15,11 @@ namespace Levels.Combat {
             int toShow =  Mathf.Min(creatures.Count,Global.MAX_COMBAT_CREATURES);
             for (int i = 0; i < toShow; i++) {
                 creatureObjects[i].display(creatures[i]);
+                creatures[i].syncToObject(creatureObjects[i]);
             }
             // Hide inactive creatures
             for (int i = toShow; i < Global.MAX_COMBAT_CREATURES; i++) {
-                creatureObjects[i].gameObject.SetActive(false);
+                GameObject.Destroy(creatureObjects[i].gameObject);
             }
         }
     }

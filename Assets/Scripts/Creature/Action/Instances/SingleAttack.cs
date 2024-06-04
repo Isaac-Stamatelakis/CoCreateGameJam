@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Levels.Combat;
 
-namespace Creatures.Moves {
+namespace Creatures.Actions {
     [CreateAssetMenu(fileName = "New Move", menuName = "Creeture/Moves/Attack")]
-    public class SingleAttack : Move
+    public class SingleAttack : CreatureAction
     {
         [SerializeField] private float damage;
         [SerializeField] private DamageType damageType;
@@ -15,6 +15,11 @@ namespace Creatures.Moves {
                 CreatureInCombat creatureInCombat = creatureCombatObject.CreatureInCombat;
                 creatureInCombat.hit(damage,damageType);
             }
+        }
+
+        public override string getDescription()
+        {
+            return $"{description} dealing {damage} {damageType} damage";
         }
     }
 }

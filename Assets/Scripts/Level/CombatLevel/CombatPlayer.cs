@@ -9,7 +9,6 @@ namespace Levels.Combat {
     {
         private List<CreatureInCombat> creatures;
         public List<CreatureInCombat> Creatures {get => creatures;}
-        private Dictionary<CreatureInCombat, CreatureCombatObject> creatureObjectDict;
         public CombatPlayer(List<EquipedCreeture> equipedCreetures) {
             creatures = new List<CreatureInCombat>();
             foreach (EquipedCreeture creeture in equipedCreetures) {
@@ -18,12 +17,6 @@ namespace Levels.Combat {
                 }
                 creatures.Add(new CreatureInCombat(creeture));
             }
-        }
-        public CreatureCombatObject getCreatureObject(CreatureInCombat creature) {
-            if (creatureObjectDict.ContainsKey(creature)) {
-                return creatureObjectDict[creature];
-            }
-            return null;
         }
 
         public bool IsDead() {

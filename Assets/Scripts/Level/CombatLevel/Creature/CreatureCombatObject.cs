@@ -5,6 +5,7 @@ using Creatures;
 
 namespace Levels.Combat {
     public enum HighlightType {
+        View,
         Turn,
         Enemy,
         Ally
@@ -15,7 +16,7 @@ namespace Levels.Combat {
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer highlightSprite;
         private CreatureInCombat creatureInCombat;
-
+        private CreatureCombatUI combatUI;
         public CreatureInCombat CreatureInCombat { get => creatureInCombat; }
 
         public void display(CreatureInCombat creatureInCombat) {
@@ -23,16 +24,23 @@ namespace Levels.Combat {
             animator.runtimeAnimatorController = creatureInCombat.EquipedCreeture.Creeture.AnimationController;
         }
 
+        public void syncCombatUI(CreatureCombatUI creatureCombatUI) {
+            this.combatUI = creatureCombatUI;
+        }
+
         public void highlight(HighlightType? highlightType) {
             switch (highlightType) {
                 case HighlightType.Turn:
-                    changeHighlightColor(Color.yellow);
+                    changeHighlightColor(Color.cyan);
                     break;
                 case HighlightType.Enemy:
                     changeHighlightColor(Color.red);
                     break;
                 case HighlightType.Ally:
                     changeHighlightColor(Color.green);
+                    break;
+                case HighlightType.View:
+                    changeHighlightColor(Color.yellow);
                     break;
                 default:
                     highlightSprite.gameObject.SetActive(false);

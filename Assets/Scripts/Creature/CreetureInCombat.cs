@@ -13,6 +13,8 @@ namespace Creatures {
         public float Health { get => health;}
         public EquipedCreeture EquipedCreeture { get => equipedCreeture; set => equipedCreeture = value; }
         private HashSet<StatusEffect> statusEffects = new HashSet<StatusEffect>();
+        private CreatureCombatObject creatureCombatObject;
+        public CreatureCombatObject CreatureCombatObject {get => creatureCombatObject;}
         public CreatureInCombat(EquipedCreeture equipedCreeture) {
             this.EquipedCreeture = equipedCreeture;
             this.health = equipedCreeture.getStat(CreatureStat.Health);
@@ -24,6 +26,9 @@ namespace Creatures {
                 damage *= Global.WEAKNESS_DAMAGE_MODIFIER;
             }
             health -= damage;
+        }
+        public void syncToObject(CreatureCombatObject creatureCombatObject) {
+            this.creatureCombatObject = creatureCombatObject;
         }
         public void heal(float healAmount) {
             health = Mathf.Max(equipedCreeture.getStat(CreatureStat.Health),health+healAmount);
