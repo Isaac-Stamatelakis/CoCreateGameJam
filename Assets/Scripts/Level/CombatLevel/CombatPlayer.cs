@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
 using Items;
+using Items.Consumables;
 
 namespace Levels.Combat {
     public class CombatPlayer
     {
         private List<CreatureInCombat> creatures;
+        private List<Consumable> consumables;
         public List<CreatureInCombat> Creatures {get => creatures;}
+        public List<Consumable> Consumables { get => consumables; }
+
         public CombatPlayer(List<EquipedCreeture> equipedCreetures) {
             creatures = new List<CreatureInCombat>();
             foreach (EquipedCreeture creeture in equipedCreetures) {

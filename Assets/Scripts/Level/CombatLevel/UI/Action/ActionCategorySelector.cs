@@ -12,7 +12,13 @@ namespace Levels.Combat {
         [SerializeField] private Button otherButton;
         public void Start() {
             creatureButton.onClick.AddListener(() => {
-                
+                actionSelectUIController.displayActionType(ActionType.Creature);
+            });
+            consumableButton.onClick.AddListener(() => {
+                actionSelectUIController.displayActionType(ActionType.Consumable);
+            });
+            otherButton.onClick.AddListener(() => {
+                actionSelectUIController.displayActionType(ActionType.Other);
             });
         }
     }

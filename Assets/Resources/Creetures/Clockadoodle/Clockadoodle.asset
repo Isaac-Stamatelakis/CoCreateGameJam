@@ -22,4 +22,5 @@ MonoBehaviour:
   controller: {fileID: 9100000, guid: 835e620070b829042bcdb09924d9ce72, type: 2}
   strengths: 
   weaknesses: 
-  moves: []
+  actions:
+  - {fileID: 11400000, guid: a007d7d191e265141963ea4ff4de5709, type: 2}

@@ -4,6 +4,7 @@ using UnityEngine;
 using LootBoxes;
 using Items;
 using Creatures.Actions;
+using Actions.Script;
 
 namespace Creatures {
     [CreateAssetMenu(fileName = "New Creeture", menuName = "Creeture/Instance")]
@@ -20,7 +21,7 @@ namespace Creatures {
         [SerializeField] private RuntimeAnimatorController controller;
         [SerializeField] private List<DamageType> strengths;
         [SerializeField] private List<DamageType> weaknesses;
-        [SerializeField] private List<CreatureAction> moves;
+        [SerializeField] private List<ScriptedAction> actions;
         #if UNITY_EDITOR
         public void setSprite(Sprite sprite) {
             this.sprite = sprite;
@@ -46,6 +47,7 @@ namespace Creatures {
         public List<DamageType> Strengths { get => strengths; }
         public List<DamageType> Weaknesses { get => weaknesses; }
         public RuntimeAnimatorController AnimationController { get => controller; }
+        public List<ScriptedAction> Actions { get => actions;}
 
         public override Sprite getSprite()
         {

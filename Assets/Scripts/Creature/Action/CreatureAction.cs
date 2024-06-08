@@ -2,39 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Levels.Combat;
+using Actions.Script;
 
 namespace Creatures.Actions {
     public enum TargetType {
-        Allies,
-        Enemies
+        Ally,
+        Enemy,
+        Any,
+        Ally_Not_Self,
+        Any_Not_Self,
     }
-    public abstract class CreatureAction : ScriptableObject, ICombatAction
+    public static class TargetTypeExtension {
+        public static string formatSelection(this TargetType targetType) {
+            switch (targetType) {
+                case TargetType.Ally:
+                    return "Allies";
+                case TargetType.Enemy:
+                    return "Enemies";
+                case TargetType.Any:
+                    return "Creatures";
+                case TargetType.Any_Not_Self:
+                    return "Creatures except caster";
+                case TargetType.Ally_Not_Self:
+                    return "Allies except caster";
+                default:
+                    throw new System.Exception($"Target type {targetType} not covered");
+            }
+        }
+    }
+    public abstract class CreatureAction : ScriptedAction
     {
-        [SerializeField] protected List<TargetType> targetTypes;
-        [SerializeField] [Range(1,4)] protected int maxTargets;
-        [SerializeField] protected Sprite icon;
-        [SerializeField] protected int manaCost;
-        [SerializeField] protected string description;
+        [SerializeField] private int manaCost;
         public int ManaCost {get => manaCost;}
-        public CreatureSelector getSelector(CreatureSelector selector) {
-            return new CreatureSelector(
-                targetTypes,
-                maxTargets
-            );
-        }
         public abstract void execute(CreatureSelector selector);
-
-        public string getTitle()
-        {
-            return name;
-        }
-
-        public Sprite getSprite()
-        {
-            return icon;
-        }
-
-        public abstract string getDescription();
     }
 
 }

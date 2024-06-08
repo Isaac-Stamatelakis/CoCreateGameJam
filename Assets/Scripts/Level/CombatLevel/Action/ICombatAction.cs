@@ -8,5 +8,9 @@ namespace Levels.Combat {
         public string getTitle();
         public string getDescription();
     }
+
+    public interface IManaCombatAction {
+        public int getManaCost();
+    }
 }
 
