@@ -50,11 +50,14 @@ namespace Levels.Combat {
             if (selected) {
                 unhighlightCreature(creatureCombatObject);
                 creatureSelector.Creatures.Remove(creatureCombatObject);
+                creatureSelector.updateDescription();
                 return;
             }
-            if (creatureSelector.Creatures.Count > creatureSelector.MaxTargets) {
+            if (creatureSelector.Creatures.Count >= creatureSelector.MaxTargets) {
                 CreatureCombatObject firstInRemovalQueue = creatureSelector.Creatures[0];
                 firstInRemovalQueue.highlight(null);
+                creatureSelector.Creatures.Remove(firstInRemovalQueue);
+                creatureSelector.updateDescription();
             }
             creatureSelector.Creatures.Add(creatureCombatObject);
             if (isAlly) {
@@ -62,6 +65,7 @@ namespace Levels.Combat {
             } else {
                 creatureCombatObject.highlight(HighlightType.Enemy);
             }
+            creatureSelector.updateDescription();
         }
         private void unhighlightCreature(CreatureCombatObject creatureCombatObject) {
             if (creatureCombatObject==null) {
@@ -77,6 +81,9 @@ namespace Levels.Combat {
         }
 
         public void setSelector(CreatureSelector creatureSelector) {
+            if (this.creatureSelector != null) {
+                this.creatureSelector.clear();
+            }
             this.creatureSelector = creatureSelector;
         }
 

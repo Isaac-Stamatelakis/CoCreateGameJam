@@ -22,6 +22,4 @@ MonoBehaviour:
     attack
     min=5 max=7 type=physical;
 
-    end select;
-
-'
+    end select;'

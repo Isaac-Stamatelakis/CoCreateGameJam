@@ -10,8 +10,15 @@ namespace Levels.Combat {
         [SerializeField] private Slider healthSlider;
         [SerializeField] private Slider manaSlider;
         [SerializeField] private Image icon;
+        private CreatureInCombat creatureInCombat;
         public void sync(CreatureInCombat creatureInCombat) {
-            
+            this.creatureInCombat = creatureInCombat;
+            display();
+        }
+
+        public void display() {
+            healthSlider.value=creatureInCombat.Health/creatureInCombat.EquipedCreeture.getStat(Items.CreatureStat.Health);
+            manaSlider.value = 1;
         }
     }
 }

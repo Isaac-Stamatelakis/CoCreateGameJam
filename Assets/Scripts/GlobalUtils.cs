@@ -18,4 +18,13 @@ public static class GlobalUtils
         }
         return default(T);
     }
+
+    public static (Vector3,int) speedAndIterationsToMove(Vector3 a, Vector3 b,float velocity) {
+        Vector2 direction = a - b;
+        float angle = Mathf.Atan2(direction.y,direction.x);
+        Vector3 speed = velocity * new Vector3(Mathf.Cos(angle),Mathf.Sin(angle),0);
+        float distance = Vector3.Distance(a,b);
+        int iterations = Mathf.FloorToInt(distance/velocity);
+        return (speed,iterations);
+    }
 }

@@ -18,6 +18,7 @@ namespace Levels.Combat {
         private List<Consumable> consumables;
         public void display(CreatureInCombat creatureInCombat, List<Consumable> consumables) {
             gameObject.SetActive(true);
+            this.currentActionType = null;
             this.creatureInCombat = creatureInCombat;
             this.consumables = consumables;
             displayActionType(ActionType.Creature);

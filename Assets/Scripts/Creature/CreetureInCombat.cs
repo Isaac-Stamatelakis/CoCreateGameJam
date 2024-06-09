@@ -9,7 +9,7 @@ namespace Creatures {
     {
         private EquipedCreeture equipedCreeture;
         private float health;
-        private bool IsDead{get => health <= 0;}
+        public bool IsDead{get => health <= 0;}
         public float Health { get => health;}
         public EquipedCreeture EquipedCreeture { get => equipedCreeture; set => equipedCreeture = value; }
         private HashSet<StatusEffect> statusEffects = new HashSet<StatusEffect>();
@@ -26,6 +26,8 @@ namespace Creatures {
                 damage *= Global.WEAKNESS_DAMAGE_MODIFIER;
             }
             health -= damage;
+            Debug.Log(damage);
+            creatureCombatObject.CombatUI.display();
         }
         public void syncToObject(CreatureCombatObject creatureCombatObject) {
             this.creatureCombatObject = creatureCombatObject;
