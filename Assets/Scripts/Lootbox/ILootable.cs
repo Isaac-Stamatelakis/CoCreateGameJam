@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace LootBoxModule {
+public interface IDisplayable {
+    public Sprite getSprite();
+}
 
-    public interface ILootable {
-        
-    }
+public abstract class Lootable : ScriptableObject, IDisplayable {
+    public abstract Sprite getSprite();
 }

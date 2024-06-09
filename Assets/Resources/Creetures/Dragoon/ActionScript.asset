@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 209d2f40468806142b44b9eca2e2ee2a, type: 3}
+  m_Name: ActionScript
+  m_EditorClassIdentifier: 
+  animations:
+  - key: slash
+    value: {fileID: 7400000, guid: cb8f9c7c7cea2cc46be4c08581c974a4, type: 2}
+  prefabs: []
+  actionScript: "start select targets=1 type=enemy\r;\nmove self target\r;\nanimate
+    self slash\r;\nattack min=5 max=7 type=physical;\nattack min=5 max=7 type=fire\r;\nend
+    select;"

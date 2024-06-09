@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
+  m_Name: Clockadoodle
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -1542322139, guid: 4a061eb1245e94740ac74bcfafb97813, type: 3}
+  id: clockadoodle
+  speed: 2
+  strength: 2
+  health: 5
+  mana: 100
+  description: 
+  controller: {fileID: 9100000, guid: 835e620070b829042bcdb09924d9ce72, type: 2}
+  strengths: 
+  weaknesses: 
+  actions:
+  - {fileID: 11400000, guid: a007d7d191e265141963ea4ff4de5709, type: 2}

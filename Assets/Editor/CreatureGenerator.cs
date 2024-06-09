@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Tilemaps;
-using CreatureModule;
+using Creatures;
 
 public class CreatureGenerator : EditorWindow {
+    private string savePath = "Assets/EditorCreations";
     private Sprite baseSprite;
     private Sprite shinySprite;
     private string creatureName;
+    private int health;
+    private int damage;
+    private int speed;
     [MenuItem("Tools/CreetureGenerator")]
     public static void ShowWindow()
     {
@@ -20,13 +24,17 @@ public class CreatureGenerator : EditorWindow {
     {
         EditorGUILayout.Space();
         baseSprite = EditorGUILayout.ObjectField("Base Sprite", baseSprite, typeof(Sprite), true) as Sprite;
-        shinySprite= EditorGUILayout.ObjectField("Base Sprite", shinySprite, typeof(Sprite), true) as Sprite;
+        shinySprite= EditorGUILayout.ObjectField("Shiny Sprite", shinySprite, typeof(Sprite), true) as Sprite;
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Name:", GUILayout.Width(70));
         creatureName = EditorGUILayout.TextField(creatureName);
-        GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
+        health = EditorGUILayout.IntField("Health:", health);
+        damage = EditorGUILayout.IntField("Damage:", damage);
+        speed = EditorGUILayout.IntField("Speed:", speed);
+        GUILayout.FlexibleSpace();
+        
         EditorGUILayout.Space();
         if (GUILayout.Button("Generate"))
         {
@@ -36,43 +44,26 @@ public class CreatureGenerator : EditorWindow {
 
     void generate()
     {
-        Creeture creeture = ScriptableObject.CreateInstance<Creeture>();
+        AssetDatabase.CreateFolder(savePath, creatureName);
+        Creature creeture = ScriptableObject.CreateInstance<Creature>();
         creeture.name = creatureName;
-        
-
+        creeture.setHealth(health);
+        creeture.setStrength(damage);
+        creeture.setSpeed(speed);
+        creeture.setSprite(baseSprite);
+        creeture.setId(creatureName.ToLower().Replace(" ","_"));
+        AssetDatabase.CreateAsset(creeture, savePath + "/" + creatureName + "/" + creeture.name + ".asset");
+        Debug.Log("Creeture created " + creeture.name);
         /*
-        TileItem tileItem = ScriptableObject.CreateInstance<TileItem>();
-        StandardTile tile = ScriptableObject.CreateInstance<StandardTile>();
-        tile.sprite = sprite;
-        tile.colliderType = Tile.ColliderType.Grid;
-        Vector2Int spriteSize = Global.getSpriteSize(sprite);
-        Matrix4x4 tileTransform = tile.transform;
-        if (spriteSize.x % 2 == 0) {
-            tileTransform.m03 = 0.25f;
-        }
-        if (spriteSize.y % 2 == 0) {
-            tileTransform.m13 = 0.25f;
-        }
-        tile.transform = tileTransform;
-        
-        tile.name = "T~" + tileName;
-        tileItem.name = tileName;
-        tileItem.tile = tile;
-
-        string path = "Assets/EditorCreations/" + tileName + "/";
-        if (AssetDatabase.IsValidFolder(path)) {
-            Debug.LogError("Tile Generation for "+  tileItem + "Abanadoned as Folder already exists at EditorCreations");
-            return;
-        }
-        AssetDatabase.CreateFolder("Assets/EditorCreations", tileName);
-        
-        tileItem.id = tileName;
-        tileItem.id = tileItem.id.ToLower().Replace(" ","_");
-        tile.id = tileItem.id;
-        
-        AssetDatabase.CreateAsset(tile, path + tile.name + ".asset");
-        AssetDatabase.CreateAsset(tileItem, path + tileItem.name + ".asset");
-        Debug.Log("TileItem and Tile Created for " + tileName + " at " + path);
+        Creeture shiny = ScriptableObject.CreateInstance<Creeture>();
+        shiny.name = "Shiny " + creatureName;
+        shiny.Health = health;
+        shiny.Strength = damage;
+        shiny.Speed = speed;
+        shiny.Sprite = baseSprite;
+        shiny.Id = "shiny_"+ creatureName.ToLower().Replace(" ","_");
+        AssetDatabase.CreateAsset(shiny, savePath + "/" + creatureName + "/" + shiny.name + ".asset");
+        Debug.Log("Creeture created " + shiny.name);
         */
     }
 }

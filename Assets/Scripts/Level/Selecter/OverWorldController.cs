@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 using Player;
 using System.Linq;
 
-namespace LevelModule {
+namespace Levels {
     public class OverWorldController : MonoBehaviour
     {
         protected List<WorldNode> nodes;
@@ -122,6 +122,9 @@ namespace LevelModule {
         private void initPlayer() {
             
             string tileName = playerIO.CurrentTile;
+            if (tileName == null) {
+                tileName = Global.StartSquare;
+            }
             currentNode = null;
             foreach (WorldNode node in nodes) {
                 if (node.name.Equals(tileName)) {
