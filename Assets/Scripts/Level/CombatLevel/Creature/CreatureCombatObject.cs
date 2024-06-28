@@ -18,12 +18,16 @@ namespace Levels.Combat {
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer highlightSprite;
+        [SerializeField] private AudioSource audioSource;
         private CreatureInCombat creatureInCombat;
         private CreatureCombatUI combatUI;
         public CreatureInCombat CreatureInCombat { get => creatureInCombat; }
         public CreatureCombatUI CombatUI { get => combatUI; }
-    
+        public Animator Animator { get => animator; }
+        public AudioSource AudioSource { get => audioSource; }
+
         private Vector3 originPosition;
+        private List<StatusEffect> statusEffects;
 
         public void Start() {
             this.originPosition = transform.position;

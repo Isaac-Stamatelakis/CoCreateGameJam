@@ -10,13 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 209d2f40468806142b44b9eca2e2ee2a, type: 3}
-  m_Name: Clock Smash
+  m_Name: SprayAndPray
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
   animations: []
   prefabs: []
-  actionScript: 'select 1 enemy;
+  actionScript: 'start spawn gun pos=self;
 
-    move self target;
+    start select targets=15 type=random;
 
-    attack min=5 max=7 type=physical;'
+    start
+    spawn proj pos=self;
+
+    move proj pos=target vel=5;
+
+    attack min=15 max=25
+    type=physical;
+
+    end spawn proj;
+
+    end spawn gun;
+
+    end select;'

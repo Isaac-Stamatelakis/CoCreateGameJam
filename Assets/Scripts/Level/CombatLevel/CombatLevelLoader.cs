@@ -16,7 +16,8 @@ namespace Levels.Combat {
             CreatureRegistry creatureRegistry = CreatureRegistry.getInstance();
             List<EquipedCreeture> testingCreatings = new List<EquipedCreeture> {
                 new EquipedCreeture(creatureRegistry.getCreature("clockadoodle"), new List<Equipment>()),
-                new EquipedCreeture(creatureRegistry.getCreature("goof_ball"), new List<Equipment>())
+                new EquipedCreeture(creatureRegistry.getCreature("soddle"), new List<Equipment>()),
+                new EquipedCreeture(creatureRegistry.getCreature("dragoon"), new List<Equipment>())
             };
             foreach (EquipedCreeture equipedCreeture in testingCreatings) {
                 Debug.Log(equipedCreeture.creeture.name);

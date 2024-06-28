@@ -9,14 +9,19 @@ namespace Creatures {
     {
         private EquipedCreeture equipedCreeture;
         private float health;
+        private float mana;
         public bool IsDead{get => health <= 0;}
         public float Health { get => health;}
-        public EquipedCreeture EquipedCreeture { get => equipedCreeture; set => equipedCreeture = value; }
+        public float HealthPercent { get => health/equipedCreeture.getStat(CreatureStat.Health);}
+        public EquipedCreeture EquipedCreeture { get => equipedCreeture; }
         private HashSet<StatusEffect> statusEffects = new HashSet<StatusEffect>();
         private CreatureCombatObject creatureCombatObject;
         public CreatureCombatObject CreatureCombatObject {get => creatureCombatObject;}
+        public float Mana { get => mana; }
+        public float ManaPercent {get => mana/equipedCreeture.getStat(CreatureStat.MaxMana);}
+
         public CreatureInCombat(EquipedCreeture equipedCreeture) {
-            this.EquipedCreeture = equipedCreeture;
+            this.equipedCreeture = equipedCreeture;
             this.health = equipedCreeture.getStat(CreatureStat.Health);
         }
         public void hit(float damage, DamageType damageType) {
@@ -26,7 +31,6 @@ namespace Creatures {
                 damage *= Global.WEAKNESS_DAMAGE_MODIFIER;
             }
             health -= damage;
-            Debug.Log(damage);
             creatureCombatObject.CombatUI.display();
         }
         public void syncToObject(CreatureCombatObject creatureCombatObject) {
@@ -37,6 +41,15 @@ namespace Creatures {
         }
         public void addStatusEffect(StatusEffect statusEffect) {
             this.statusEffects.Add(statusEffect);
+        }
+
+        public bool hasStatusEffect(string statusName) {
+            foreach (StatusEffect afflictedEffect in statusEffects) {
+                if (statusName.Equals(afflictedEffect.getName())) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

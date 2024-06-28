@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
-  m_Name: Dragoon
+  m_Name: Soddle
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: db16b47b7255ba647b77ebede625c3ae, type: 3}
-  id: dragoon
-  speed: 2
+  sprite: {fileID: 1039628608, guid: 44ade7b084e85ff43a432bf5e09d0ca4, type: 3}
+  id: soddle
+  speed: 5
   strength: 5
-  health: 3
-  mana: 0
+  health: 10
+  mana: 50
   description: 
-  controller: {fileID: 9100000, guid: 9356422a02f3c384aa8c916414e582ee, type: 2}
+  controller: {fileID: 9100000, guid: 0b93c56f6381440419b8aeb1ea056970, type: 2}
   strengths: 
   weaknesses: 
   actions:
-  - {fileID: 11400000, guid: 49dc34eb1c1b52e46873850ac05276bb, type: 2}
-  - {fileID: 11400000, guid: 109a6d3981698184bb628cc14b70d139, type: 2}
+  - {fileID: 11400000, guid: 5542c76fcd5f7444ba565ef8ee209803, type: 2}

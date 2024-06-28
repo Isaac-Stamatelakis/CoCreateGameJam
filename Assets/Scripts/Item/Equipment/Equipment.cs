@@ -23,7 +23,9 @@ namespace Items {
         Speed,
         Ability,
         Armor,
-        Health
+        Health,
+        MaxMana,
+        InitalMana
     }
 
     public enum Rarity {

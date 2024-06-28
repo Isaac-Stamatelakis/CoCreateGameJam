@@ -10,13 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 209d2f40468806142b44b9eca2e2ee2a, type: 3}
-  m_Name: Clock Smash
+  m_Name: Fire Ball
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
-  animations: []
-  prefabs: []
+  animations:
+  - key: fire
+    value: {fileID: 9100000, guid: f251b3754ccef6948a00e4e4ae7bd8c1, type: 2}
+  prefabs:
+  - key: fireball
+    value: {fileID: 6181269950411984863, guid: 9bf8d1fe5c66c1b4c9fbc45fefd09cc4, type: 3}
+  sounds: []
   actionScript: 'select 1 enemy;
 
-    move self target;
+    animation fire loop=false;
 
-    attack min=5 max=7 type=physical;'
+    spawn fireball;
+
+    action
+    fireball move;
+
+    attack min=5 max=7 type=fire;
+
+    end spawn fireball;'

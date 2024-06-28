@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Levels.Combat {
-    public class StatusEffect
+    public abstract class StatusEffect
     {
-        
+        public abstract string getName();
     }
 }
 
