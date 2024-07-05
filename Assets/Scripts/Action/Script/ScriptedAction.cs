@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Levels.Combat;
+using Actions.Script.Description;
 
 namespace Actions.Script {
     [CreateAssetMenu(fileName = "New Action Script", menuName = "Action/Script")]

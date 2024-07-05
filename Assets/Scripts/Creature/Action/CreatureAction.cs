@@ -4,7 +4,7 @@ using UnityEngine;
 using Levels.Combat;
 using Actions.Script;
 
-namespace Creatures.Actions {
+namespace Actions {
     public enum CreatureSelectionType {
         Ally,
         Enemy,

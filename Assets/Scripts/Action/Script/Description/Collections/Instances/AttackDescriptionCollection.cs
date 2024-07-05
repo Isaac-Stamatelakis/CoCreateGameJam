@@ -9,9 +9,9 @@ namespace Actions.Script {
         }
         private ActionTargetType actionTargetType;
         private List<string> descriptions = new List<string>();
-        public override void addCommand(ScriptCommand scriptCommand)
+        public override void addCommand(FormattedScriptCommand scriptCommand)
         {
-            (float damage, float range, DamageType damageType, float falloff, float lifesteal) = ActionScriptCommandParser.parseAttackCommand(scriptCommand);
+            (float damage, float range, DamageType damageType, float falloff, float lifesteal, bool self) = AttackCommand.parse(scriptCommand);
             float min = damage-range;
             float max = damage+range;
             string damageTypeString = damageType.ToString().ToLower();

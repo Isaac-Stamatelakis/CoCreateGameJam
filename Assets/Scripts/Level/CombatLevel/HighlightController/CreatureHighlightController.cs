@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Creatures.Actions;
+using Actions;
 
 namespace Levels.Combat {
     public class CreatureHighlightController

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Globalization;
 using TMPro;
 
-namespace Creatures.Actions {
+namespace Actions {
     public class CreatureSelector
     {
         private CreatureSelectionType targetType;

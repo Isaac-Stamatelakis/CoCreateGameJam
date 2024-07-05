@@ -1,0 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Actions.Script {
+    public class SpawnCommand : InstantScriptCommand
+    {
+        public SpawnCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
+        {
+            
+        }
+
+        public override void execute(CommandExecutionState commandExecutionState)
+        {
+            string spawnName = parse(formattedScriptCommand);
+            if (!commandExecutionState.ObjectPrefabs.ContainsKey(spawnName)) {
+                ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,$"Prefab {spawnName} could not be found");
+            }
+            if (!commandExecutionState.ObjectPrefabs.ContainsKey(spawnName)) {
+                ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,$"Prefab {spawnName} is already spawned");
+            }
+            GameObject instantiated = GameObject.Instantiate(commandExecutionState.ObjectPrefabs[spawnName]);
+            instantiated.transform.SetParent(commandExecutionState.SelfCreature.transform,false);
+            commandExecutionState.SpawnedObjects[spawnName] = instantiated;
+        }
+
+        public static string parse(FormattedScriptCommand formattedScriptCommand) {
+            List<object> parsedParameters = ActionScriptParseUtils.parseOrdered(
+                new List<ParseInstruction>{
+                    new ParseInstruction(ParseType.String,"Name",true)
+                },
+                formattedScriptCommand.Parameters,
+                formattedScriptCommand
+            );
+            string spawnName = (string) parsedParameters[0];
+            return spawnName;
+        }
+
+    }
+
+}

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UI.Inventory;
-using Creatures.Actions;
+using Actions;
 
 namespace Levels.Combat {
     public interface ISelectionActionList {

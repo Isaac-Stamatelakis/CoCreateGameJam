@@ -5,7 +5,7 @@ using UI;
 using Creatures;
 using Items.Consumables;
 using UI.Inventory;
-using Creatures.Actions;
+using Actions;
 using UnityEngine.UI;
 
 namespace Levels.Combat {

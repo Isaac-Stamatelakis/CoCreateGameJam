@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Actions.Script {
     public class StatusDescriptionCollection : ActionDescriptionCollection
     {
-        public override void addCommand(ScriptCommand scriptCommand)
+        public override void addCommand(FormattedScriptCommand scriptCommand)
         {
             throw new System.NotImplementedException();
         }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
-using Creatures.Actions;
+using Actions;
 using Actions.Script;
 
 namespace Levels.Combat {
@@ -105,7 +105,6 @@ namespace Levels.Combat {
             ScriptedAction chosenAction = actions[ran];
             CommandExecutionState commandExecutionState = new CommandExecutionState(chosenAction,currentCreatureTurn);
             yield return StartCoroutine(commandExecutionState.executeSection());
-            Debug.Log(commandExecutionState.Complete);
             while (!commandExecutionState.Complete) {
                 CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
                 switch (creatureSelector.TargetType) {

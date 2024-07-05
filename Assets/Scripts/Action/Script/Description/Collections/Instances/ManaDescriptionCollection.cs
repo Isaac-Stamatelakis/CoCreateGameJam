@@ -14,17 +14,23 @@ namespace Actions.Script {
             currentManaValues = new PercentManaValues();
         }
 
-        public override void addCommand(ScriptCommand scriptCommand)
+        public override void addCommand(FormattedScriptCommand scriptCommand)
         {
-            (float amount, float range, float stealPercent, bool percent, bool currentMana) = ActionScriptCommandParser.parseManaCommand(scriptCommand);
-            if (percent) {
-                if (currentMana) {
-                    currentManaValues.modify(amount,stealPercent);
-                } else {
-                    maxManaValues.modify(amount,stealPercent);
-                }
-            } else {
-                constantManaValues.modify(amount,range,stealPercent);
+            (ManaSubCommand subCommand, float amount, ManaParamType paramType, float range, bool self) = ManaCommand.parse(scriptCommand);
+            if (subCommand == ManaSubCommand.remove) {
+                amount *= -1;
+            }
+            bool steal = subCommand == ManaSubCommand.steal;
+            switch (paramType) {
+                case ManaParamType.num:
+                    constantManaValues.modify(amount,range,true);
+                    break;
+                case ManaParamType.max:
+                    maxManaValues.modify(amount,true);
+                    break;
+                case ManaParamType.current:
+                    currentManaValues.modify(amount,true);
+                    break;
             }
         }
         private PrefixType getPrefixType(List<IManaValue> manaValues) {
@@ -79,28 +85,28 @@ namespace Actions.Script {
         public override List<string> getDescription()
         {
             List<IManaValue> manaValues = GetManaValues();
-            string fullDescription = "";
+            string description = "";
             if (!maxManaValues.isInert()) {
-                fullDescription += $"{maxManaValues.Percent*100}% of their max mana";
+                description += $"{maxManaValues.Percent*100}% of their max mana";
             }
             if (!currentManaValues.isInert()) {
                 string currentManaValueDescription = $"{currentManaValues.Percent*100}% of their current mana";
-                if (fullDescription.Length == 0) {
-                    fullDescription += currentManaValueDescription;
+                if (description.Length == 0) {
+                    description += currentManaValueDescription;
                 } else {
-                    fullDescription += $" plus {currentManaValueDescription}";
+                    description += $" plus {currentManaValueDescription}";
                 }
             }
             if (!constantManaValues.isInert()) {
                 string constantManaValueDescription = $"{constantManaValues.Min}-{constantManaValues.Max}";
-                if (fullDescription.Length == 0) {
-                    fullDescription += constantManaValueDescription;
+                if (description.Length == 0) {
+                    description += constantManaValueDescription;
                 } else {
-                    fullDescription += $" plus {constantManaValueDescription}";
+                    description += $" plus {constantManaValueDescription}";
                 }
             }
             return new List<string>{
-                fullDescription
+                description
             };
         }
         public override string getPrefix(bool passive)
@@ -119,10 +125,13 @@ namespace Actions.Script {
         private class ConstantManaValues : IManaValue {
             public float Min;
             public float Max;
-            public float StealPercent;
-            public void modify(float amount, float range, float steal) {
+            public float Steal;
+            public void modify(float amount, float range, bool steal) {
                 Min += amount - range;
                 Max += amount + range;
+                if (steal) {
+                    Steal += amount;
+                }
             }
             public bool isPositive() {
                 return (Min+Max)/2 >= 0;
@@ -134,9 +143,11 @@ namespace Actions.Script {
         private class PercentManaValues : IManaValue {
             public float Percent;
             public float Steal;
-            public void modify(float percent, float steal) {
+            public void modify(float percent, bool steal) {
                 Percent += percent;
-                Steal += percent * steal;
+                if (steal) {
+                    Steal += percent;
+                }
             }
             public bool isPositive() {
                 return Percent >= 0;

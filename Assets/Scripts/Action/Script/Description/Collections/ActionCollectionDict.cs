@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Actions.Script {
+namespace Actions.Script.Description {
     public class ActionDescriptionCollectionDict
     {
         private ActionTargetType actionTargetType;
@@ -17,18 +17,19 @@ namespace Actions.Script {
             return targetType == actionTargetType;
 
         }
-        public void addCommand(ScriptCommand scriptCommand) {
-            if (!actionDict.ContainsKey(scriptCommand.Command)) {
+        public void addCommand(FormattedScriptCommand scriptCommand) {
+            string commandName = scriptCommand.Command;
+            if (!actionDict.ContainsKey(commandName)) {
                 ActionDescriptionCollection actionDescriptionCollection = ScriptDescriptionCollectionUtils.getActionCollection(
-                    scriptCommand.Command,
+                    commandName,
                     actionTargetType
                 );
                 if (actionDescriptionCollection == null) {
                     return;
                 }
-                actionDict[scriptCommand.Command] = actionDescriptionCollection;
+                actionDict[commandName] = actionDescriptionCollection;
             }
-            actionDict[scriptCommand.Command].addCommand(scriptCommand);
+            actionDict[commandName].addCommand(scriptCommand);
         }
 
         public string getDescription(List<string> actionOrder, bool passiveVoice) {

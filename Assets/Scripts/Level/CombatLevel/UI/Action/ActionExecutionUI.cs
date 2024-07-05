@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Actions.Script;
-using Creatures.Actions;
+using Actions;
 
 namespace Levels.Combat {
     public class ActionExecutionUI : MonoBehaviour

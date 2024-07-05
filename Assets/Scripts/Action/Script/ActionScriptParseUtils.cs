@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Creatures;
 using Items;
+using Levels.Combat;
 
 namespace Actions.Script {
     public static class ActionScriptParseUtils 
@@ -19,40 +20,27 @@ namespace Actions.Script {
             }
             return array;
         }
-        public static Stack<ScriptCommand> parseCommands(string script) {
-            Stack<ScriptCommand> commandStack = new Stack<ScriptCommand>();
-            string[] lines = script.Split(";");
-            for (int lineIndex = lines.Length-1; lineIndex >= 0; lineIndex--) {
-                string line = lines[lineIndex];
-                line = line.Replace("\n","");
-                string[] splitLine = line.Split(" ");
-                if (splitLine.Length == 0) {
-                    continue;
-                }
-                string command = splitLine[0];
-                if (command.Length == 0) {
-                    continue;
-                }
-                List<string> splitLineNoEmpty = new List<string>();
-                foreach (string parameter in splitLine) {
-                    if (parameter.Length > 0) {
-                        splitLineNoEmpty.Add(parameter);
-                    }
-                }
-                string[] parameters = new string[splitLineNoEmpty.Count-1];
-                for (int i = 0; i < splitLineNoEmpty.Count-1; i++) {
-                    parameters[i] = splitLineNoEmpty[i+1];
-                }
-                commandStack.Push(new ScriptCommand(
-                    command,
-                    parameters,
-                    lineIndex
-                ));
-            }
-            return commandStack;
-        }
 
-        public static double parseCreatureAttribute(ScriptCommand scriptCommand, string attribute, CreatureInCombat creatureInCombat) {
+        public static double parseDoubleValue(string val, FormattedScriptCommand scriptCommand, CommandExecutionState commandExecutionState) {
+            try {
+                return Convert.ToDouble(val);
+            } catch (FormatException) {
+
+            }
+            try {
+                string[] split = val.Split(".");
+                string objIndicator = split[0];
+                string attributeIndicator = split[1];
+                CreatureCombatObject creatureCombatObject = commandExecutionState.getCreatureFromIndicator(scriptCommand,objIndicator);
+                return ActionScriptParseUtils.parseCreatureAttribute(scriptCommand,attributeIndicator,creatureCombatObject.CreatureInCombat);
+            } catch (IndexOutOfRangeException) {
+                ActionScriptInterpretorUtils.scriptError(scriptCommand,$"{val} must be of form obj.val");
+            }
+            return default(double);
+        }
+        
+
+        public static double parseCreatureAttribute(FormattedScriptCommand scriptCommand, string attribute, CreatureInCombat creatureInCombat) {
             switch (attribute) {
                 case "health":
                     return creatureInCombat.Health;
@@ -82,7 +70,7 @@ namespace Actions.Script {
             }
             return parameters;
         }
-        public static object parse(ParseType parseType, string val, string parameterDescription, ScriptCommand scriptCommand) {
+        public static object parse(ParseType parseType, string val, string parameterDescription, FormattedScriptCommand scriptCommand) {
             switch (parseType) {
                 case ParseType.Integer:
                     try {
@@ -120,7 +108,7 @@ namespace Actions.Script {
             return null;
         }
 
-        public static List<object> parseOrdered(List<ParseInstruction> parseInstructions, string[] parameters, ScriptCommand scriptCommand) {
+        public static List<object> parseOrdered(List<ParseInstruction> parseInstructions, string[] parameters, FormattedScriptCommand scriptCommand) {
             List<object> objects = new List<object>();
             for (int i = 0; i < parseInstructions.Count; i++) {
                 ParseInstruction parseInstruction = parseInstructions[i];
@@ -133,7 +121,7 @@ namespace Actions.Script {
             return objects;
         }
 
-        public static Dictionary<string,object> parseDict(List<ParseInstruction> parseInstructions, string[] parameters, ScriptCommand scriptCommand) {
+        public static Dictionary<string,object> parseDict(List<ParseInstruction> parseInstructions, string[] parameters, FormattedScriptCommand scriptCommand) {
             Dictionary<string,object> dict = new Dictionary<string, object>();
             Dictionary<string, ParseInstruction> parameterToInstruction = new Dictionary<string, ParseInstruction>();
             HashSet<string> requiredParameters = new HashSet<string>();
@@ -177,115 +165,23 @@ namespace Actions.Script {
     }
 
     public static class ActionScriptCommandParser {
-        public static ActionTargetType parseCommandTargetType(ScriptCommand scriptCommand) {
+        public static ActionTargetType parseCommandTargetType(FormattedScriptCommand scriptCommand) {
             Dictionary<string,object> parameters = ActionScriptParseUtils.parseDict(
                 new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Boolean,"target_self",false),
+                    new ParseInstruction(ParseType.Boolean,"self",false),
                 },
                 parameters: scriptCommand.Parameters,
                 scriptCommand: scriptCommand
             );
-            if (!parameters.ContainsKey("target_self")) {
+            if (!parameters.ContainsKey("self")) {
                 return ActionTargetType.Target;
             }
-            bool targetSelf = (bool) parameters["target_self"];
+            bool targetSelf = (bool) parameters["self"];
             return targetSelf ? ActionTargetType.Self : ActionTargetType.Target;
         }
-        public static (int targets, string type, bool random, bool targetSelf) parseSelectCommand(ScriptCommand scriptCommand) {
-            List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
-            parseInstructions: new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Integer,"targets",true),
-                    new ParseInstruction(ParseType.String,"type",true)
-                },
-                parameters: scriptCommand.Parameters,
-                scriptCommand: scriptCommand
-            );
-            int targets = (int) orderedParameters[0];
-            string type = (string) orderedParameters[1];
-            Dictionary<string,object> dictParameters = ActionScriptParseUtils.parseDict(
-                new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Boolean,"random",false),
-                    new ParseInstruction(ParseType.Boolean,"self",false)
-                },
-                parameters: scriptCommand.Parameters,
-                scriptCommand: scriptCommand
-            );
-            bool random = false;
-            bool targetSelf = true;
-            if (dictParameters.ContainsKey("random")) {
-                random = (bool) dictParameters["random"];
-            }
-            if (dictParameters.ContainsKey("self")) {
-                targetSelf = (bool) dictParameters["self"];
-            }
-            return (targets,type,random,targetSelf);
-        }
-
-        public static (float damage, float range, DamageType type, float falloff, float lifesteal) parseAttackCommand(ScriptCommand scriptCommand) {
-            List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
-            parseInstructions: new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Float,"damage",true),
-                },
-                parameters: scriptCommand.Parameters,
-                scriptCommand: scriptCommand
-            );
-            
-            Dictionary<string,object> parameters = ActionScriptParseUtils.parseDict(
-                new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Float,
-                    "range",
-                    false
-                    ),
-                    new ParseInstruction(ParseType.String,
-                    "type",
-                    false
-                    ),
-                    new ParseInstruction(ParseType.Float,
-                    "falloff",
-                    false
-                    ),
-                    new ParseInstruction(ParseType.Float,
-                    "lifesteal",
-                    false
-                    ),
-                },
-                scriptCommand.Parameters,
-                scriptCommand
-            );
-            float range = 0;
-            if (parameters.ContainsKey("range")) {
-                range = (float) parameters["range"];
-            }
-            DamageType damageType = DamageType.Physical;
-            if (parameters.ContainsKey("type")) {
-                string damageString = (string) parameters["type"];
-                damageType = GlobalUtils.stringToEnum<DamageType>(damageString);
-            }
-            float falloff = 0;
-            if (parameters.ContainsKey("falloff")) {
-                falloff = (float) parameters["falloff"];
-            }
-            float lifesteal = 0;
-            if (parameters.ContainsKey("lifesteal")) {
-                lifesteal = (float) parameters["lifesteal"];
-            }
-            float damage = (float) orderedParameters[0];
-            return (damage,range,damageType,falloff,lifesteal);
-        }
-
-        public static (string first, string booleanOperator, string second) parseIfCommand(ScriptCommand scriptCommand) {
-            List<object> parsedParameters = ActionScriptParseUtils.parseOrdered(
-                new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.String,"First Value",true),
-                    new ParseInstruction(ParseType.String,"Comparitor",true),
-                    new ParseInstruction(ParseType.String,"Second Value",true)
-                },
-                scriptCommand.Parameters,
-                scriptCommand
-            );
-            return ((string) parsedParameters[0],(string) parsedParameters[1],(string) parsedParameters[2]);
-        }
-        public static (float damage, float range) parseHealCommand(ScriptCommand scriptCommand) {
+    
+        
+        public static (float damage, float range) parseHealCommand(FormattedScriptCommand scriptCommand) {
             List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
             parseInstructions: new List<ParseInstruction>{
                     new ParseInstruction(ParseType.Float,"heal",true),
@@ -311,54 +207,15 @@ namespace Actions.Script {
             float heal = (float) orderedParameters[0];
             return (heal,range);
         }
-
-        public static (float amount, float range, float steal, bool percent, bool currentMana) parseManaCommand(ScriptCommand scriptCommand) {
-            List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
-            parseInstructions: new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Integer,"amount",true)
-                },
-                parameters: scriptCommand.Parameters,
-                scriptCommand: scriptCommand
-            );
-            
-            Dictionary<string,object> parameters = ActionScriptParseUtils.parseDict(
-                new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Float,"range",false),
-                    new ParseInstruction(ParseType.Float,"steal",false),
-                    new ParseInstruction(ParseType.Boolean,"percent",false),
-                    new ParseInstruction(ParseType.Boolean,"current",false)
-                },
-                scriptCommand.Parameters,
-                scriptCommand
-            );
-            float range = 0;
-            if (parameters.ContainsKey("range")) {
-                range = (float) parameters["range"];
-            }
-            float amount = (float) orderedParameters[0];
-            float steal = 0;
-            if (parameters.ContainsKey("steal")) {
-                steal = (float) parameters["steal"];
-            }
-            bool percent = false;
-            if (parameters.ContainsKey("percent")) {
-                percent = (bool) parameters["percent"];
-            }
-            bool currentMana = false;
-            if (parameters.ContainsKey("current")) {
-                currentMana = (bool) parameters["current"];
-            }
-            return (amount,range,steal,percent,currentMana);
-        }
     }
 
     public enum ParseType {
-            Integer,
-            Float,
-            String,
-            IntegerArray,
-            Boolean
-        }
+        Integer,
+        Float,
+        String,
+        IntegerArray,
+        Boolean
+    }
 
     public class ParseInstruction {
         public ParseType ParseType;

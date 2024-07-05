@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using LootBoxes;
 using Items;
-using Creatures.Actions;
 using Actions.Script;
 
 namespace Creatures {

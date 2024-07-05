@@ -31,6 +31,9 @@ namespace Creatures {
                 damage *= Global.WEAKNESS_DAMAGE_MODIFIER;
             }
             health -= damage;
+            if (health < 0) {
+                health = 0;
+            }
             creatureCombatObject.CombatUI.display();
         }
         public void syncToObject(CreatureCombatObject creatureCombatObject) {
