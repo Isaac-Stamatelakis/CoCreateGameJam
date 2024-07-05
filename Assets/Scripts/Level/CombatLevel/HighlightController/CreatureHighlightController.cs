@@ -42,7 +42,7 @@ namespace Levels.Combat {
         private void highlightForSelector(CreatureCombatObject creatureCombatObject) {
             bool isAlly = humanPlayer.Creatures.Contains(creatureCombatObject.CreatureInCombat);
             bool isSelf = creatureCombatObject.Equals(currentlyMovingCreature);
-            bool validSelection = isValidSelection(isAlly,isSelf);
+            bool validSelection = creatureSelector.isValidSelection(isAlly,isSelf);
             if (!validSelection) {
                 return;
             }
@@ -87,31 +87,7 @@ namespace Levels.Combat {
             this.creatureSelector = creatureSelector;
         }
 
-        private bool isValidSelection(bool isAlly, bool isSelf) {
-            switch (creatureSelector.TargetType) {
-                case TargetType.Ally:
-                    if (!isAlly) {
-                        return false;
-                    }
-                    break;
-                case TargetType.Enemy:
-                    if (isAlly) {
-                        return false;
-                    }
-                    break;
-                case TargetType.Any_Not_Self:
-                    if (!isSelf) {
-                        return false;
-                    }
-                    break;
-                case TargetType.Ally_Not_Self:
-                    if (!isAlly || isSelf) {
-                        return false;
-                    }
-                    break;
-            }
-            return true;
-        }
+        
 
         public void setCurrentCreatureTurn(CreatureCombatObject creatureCombatObject) {
             if (currentlyMovingCreature != null) {

@@ -5,26 +5,20 @@ using Levels.Combat;
 using Actions.Script;
 
 namespace Creatures.Actions {
-    public enum TargetType {
+    public enum CreatureSelectionType {
         Ally,
         Enemy,
         Any,
-        Ally_Not_Self,
-        Any_Not_Self,
     }
     public static class TargetTypeExtension {
-        public static string formatSelection(this TargetType targetType) {
+        public static string formatSelection(this CreatureSelectionType targetType, bool allowSelf) {
             switch (targetType) {
-                case TargetType.Ally:
-                    return "Allies";
-                case TargetType.Enemy:
+                case CreatureSelectionType.Ally:
+                    return allowSelf ? "Allies" : "Allies except caster";
+                case CreatureSelectionType.Enemy:
                     return "Enemies";
-                case TargetType.Any:
-                    return "Creatures";
-                case TargetType.Any_Not_Self:
-                    return "Creatures except caster";
-                case TargetType.Ally_Not_Self:
-                    return "Allies except caster";
+                case CreatureSelectionType.Any:
+                    return allowSelf ? "Creatures" : "Creatures except caster";
                 default:
                     throw new System.Exception($"Target type {targetType} not covered");
             }

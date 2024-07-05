@@ -11,26 +11,45 @@ using TMPro;
 namespace Creatures.Actions {
     public class CreatureSelector
     {
-        private TargetType targetType;
+        private CreatureSelectionType targetType;
         private int maxTargets;
         private List<CreatureCombatObject> creatures = new List<CreatureCombatObject>();
         private TextMeshProUGUI textUI;
-        public CreatureSelector(TargetType targetType, int maxTargets)
+        public CreatureSelector(CreatureSelectionType targetType, bool allowSelf, int maxTargets)
         {
             this.targetType = targetType;
             this.maxTargets = maxTargets;
         }
         public int MaxTargets { get => maxTargets;}
-        public TargetType TargetType { get => targetType;}
+        public CreatureSelectionType TargetType { get => targetType;}
+        private bool allowSelf;
         public List<CreatureCombatObject> Creatures { get => creatures; }
         public TextMeshProUGUI TextUI { get => textUI; set => textUI = value; }
 
+        public bool isValidSelection(bool isAlly, bool isSelf) {
+            if (!allowSelf && isSelf) {
+                return false;
+            }
+            switch (targetType) {
+                case CreatureSelectionType.Ally:
+                    if (!isAlly) {
+                        return false;
+                    }
+                    break;
+                case CreatureSelectionType.Enemy:
+                    if (isAlly) {
+                        return false;
+                    }
+                    break;   
+            }
+            return true;
+        }
         public bool isSatisfied() {
             return creatures.Count > 0;
         }
 
         public string getTextDescription() {
-            string formattedTarget = targetType.formatSelection();
+            string formattedTarget = targetType.formatSelection(allowSelf);
             return $"{creatures.Count}/{maxTargets} {formattedTarget} Selected";
         }
 

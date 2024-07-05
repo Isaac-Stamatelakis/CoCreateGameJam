@@ -15,15 +15,6 @@ MonoBehaviour:
   sprite: {fileID: 0}
   animations: []
   prefabs: []
-  actionScript: 'start select targets=1 type=enemy;
-
-    move self target;
-
-    attack
-    min=5 max=7 type=physical;
-
-    attack min=5 max=7 type=fire;
-
-    end select;
-
-'
+  sounds: []
+  actionScript: "select 1 enemy\nmove self target;\nattack min=5 max=7 type=physical;\nif
+    self.health > target.health;\n\tattack min=2 max=3 type=physical;\nend if;\n"

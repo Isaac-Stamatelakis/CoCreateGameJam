@@ -15,13 +15,11 @@ MonoBehaviour:
   sprite: {fileID: 0}
   animations: []
   prefabs: []
-  actionScript: 'select targets=1 type=enemy;
+  sounds: []
+  actionScript: 'select 1 enemy;
 
     move self target;
 
-    attack
-    min=5 max=7 type=physical;
-
-    end select;
+    attack min=5 max=7 type=physical;
 
 '

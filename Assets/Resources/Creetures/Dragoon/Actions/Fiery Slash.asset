@@ -13,13 +13,18 @@ MonoBehaviour:
   m_Name: Fiery Slash
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
-  animations: []
+  animations:
+  - key: slash
+    value: {fileID: 9100000, guid: ee730c199dddac1438f3515d9f4eb932, type: 2}
   prefabs: []
+  sounds: []
   actionScript: 'select 1 enemy;
 
     move self target;
 
-    attack min=5 max=7 type=physical;
+    animation slash;
 
-    end
-    select;'
+    attack
+    min=3 max=5 type=physical;
+
+    attack min=3 max=5 type=fire;'

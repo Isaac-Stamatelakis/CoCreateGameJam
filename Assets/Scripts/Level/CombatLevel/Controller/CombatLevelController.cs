@@ -109,11 +109,11 @@ namespace Levels.Combat {
             while (!commandExecutionState.Complete) {
                 CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
                 switch (creatureSelector.TargetType) {
-                    case TargetType.Ally:
+                    case CreatureSelectionType.Ally:
                         ran = Random.Range(0,aiPlayer.Creatures.Count);
                         creatureSelector.Creatures.Add(aiPlayer.Creatures[ran].CreatureCombatObject);
                         break;
-                    case TargetType.Enemy:
+                    case CreatureSelectionType.Enemy:
                         ran = Random.Range(0,humanPlayer.Creatures.Count);
                         creatureSelector.Creatures.Add(humanPlayer.Creatures[ran].CreatureCombatObject);
                         break;

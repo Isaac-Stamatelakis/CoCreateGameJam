@@ -11,8 +11,10 @@ namespace Actions.Script {
         [SerializeField] private List<Declaration<RuntimeAnimatorController>> animations;
         [SerializeField] private List<Declaration<GameObject>> prefabs;
         [SerializeField] private List<Declaration<AudioClip>> sounds;
+        [SerializeField] private string preSelectDescription;
+        [SerializeField] private string selectDescription;
+        [SerializeField] private string postSelectDescription;
         [SerializeField] private string actionScript;
-
         public string ActionScript { get => actionScript;}
         public Dictionary<string,GameObject> PrefabDict {get => DeclarationFactory.ToDict<GameObject>(prefabs);}
         public Dictionary<string,RuntimeAnimatorController> AnimationDict {get => DeclarationFactory.ToDict<RuntimeAnimatorController>(animations);}
@@ -41,7 +43,13 @@ namespace Actions.Script {
 
         public string getDescription()
         {
-            return ActionScriptInterpretorUtils.getDescription(actionScript);
+            return new ActionScriptDescriptionParser(
+                actionScript,
+                name,
+                preSelectDescription,
+                selectDescription,
+                postSelectDescription
+            ).getDescription();
         }
 
         public Sprite getSprite()
