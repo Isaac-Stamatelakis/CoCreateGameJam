@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
-using CurrencyModule;
+using Trading;
 
 namespace LootBoxes {
     
@@ -10,10 +10,8 @@ namespace LootBoxes {
     {
         public Sprite sprite;
         public LootBoxType type;
-        public string id;
         [Header("Lootables that can be won\nChance is frequency/sum of all frequencies")]
         public List<LootFrequency> loot;
-
         public override Sprite getSprite()
         {
             return sprite;
@@ -34,6 +32,11 @@ namespace LootBoxes {
             }
             return null;
         }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 
     [System.Serializable]
@@ -53,6 +56,11 @@ namespace LootBoxes {
         public Sprite getSprite()
         {
             return lootBox.sprite;
+        }
+
+        public string getName()
+        {
+            return lootBox.name;
         }
     }
 

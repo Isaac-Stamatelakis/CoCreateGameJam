@@ -12,11 +12,11 @@ namespace LootBoxes {
             LootBox[] creetures = Resources.LoadAll<LootBox>("Lootbox/");
             dict = new Dictionary<string, LootBox>();
             foreach (LootBox lootBox in creetures) {
-                if (dict.ContainsKey(lootBox.id)) {
-                    Debug.LogError("Duplicate ID for " + lootBox.name + " and " + dict[lootBox.id].name);
+                if (dict.ContainsKey(lootBox.getId())) {
+                    Debug.LogError("Duplicate ID for " + lootBox.name + " and " + dict[lootBox.getId()].name);
                     continue;
                 }
-                dict[lootBox.id] = lootBox;
+                dict[lootBox.getId()] = lootBox;
             }
             Debug.Log(dict.Count + " Lootboxes Loaded");
         }

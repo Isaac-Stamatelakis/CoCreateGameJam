@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace UI.Inventory {
-    public class DetailedLootboxDisplay : UIDisplayer<LootboxCount>, ILootBoxDisplayer
+    public class DetailedLootboxDisplay : UIInventoryDisplayer<LootboxCount>, ILootBoxDisplayer
     {
         [SerializeField] private TextMeshProUGUI title;
         [SerializeField] private TextMeshProUGUI description;

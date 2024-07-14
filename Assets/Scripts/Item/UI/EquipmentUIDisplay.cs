@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace UI.Inventory {
-    public abstract class EquipmentUIDisplay : UIDisplayer<Equipment>, IPointerClickHandler
+    public abstract class EquipmentUIDisplay : UIInventoryDisplayer<Equipment>, IPointerClickHandler
     {
         protected InventoryUI<Equipment> inventory;
         [SerializeField] private Image image;

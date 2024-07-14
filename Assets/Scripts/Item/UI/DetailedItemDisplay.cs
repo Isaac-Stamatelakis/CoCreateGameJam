@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace UI.Inventory {
-    public class DetailedItemDisplay : UIDisplayer<Equipment>
+    public class DetailedItemDisplay : UIInventoryDisplayer<Equipment>
     {
         [SerializeField] private Image image;
         [SerializeField] private TextMeshProUGUI titleText;

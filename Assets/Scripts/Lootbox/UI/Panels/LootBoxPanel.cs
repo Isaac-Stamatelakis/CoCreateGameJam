@@ -11,7 +11,7 @@ namespace LootBoxes {
         public void leftClick();
         public void rightClick();
     }
-    public abstract class LootBoxPanel : UIDisplayer<LootboxCount>, IClickableUIElement, IPointerClickHandler
+    public abstract class LootBoxPanel : UIInventoryDisplayer<LootboxCount>, IClickableUIElement, IPointerClickHandler
     {
         [SerializeField] public Image image;
         [SerializeField] public TextMeshProUGUI text;

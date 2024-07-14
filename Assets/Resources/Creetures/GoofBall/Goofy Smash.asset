@@ -16,5 +16,21 @@ MonoBehaviour:
   animations: []
   prefabs: []
   sounds: []
-  actionScript: "select 1 enemy\nmove self target;\nattack min=5 max=7 type=physical;\nif
-    self.health > target.health;\n\tattack min=2 max=3 type=physical;\nend if;\n"
+  preSelectDescription: 
+  selectDescription: Goof Ball smashes
+  postSelectDescription: 
+  actionScript: 'select 1 enemy;
+
+    move self target;
+
+    attack 6 range=1 type=physical;
+
+    if
+    self.health > target.health;
+
+    attack 1 range=0.5 type=physical;
+
+    end
+    if;
+
+'

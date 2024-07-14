@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UI.Inventory;
 
 namespace Levels.Combat {
-    public abstract class ActionUIElement : UIDisplayer<ICombatAction>, IPointerClickHandler
+    public abstract class ActionUIElement : UIInventoryDisplayer<ICombatAction>, IPointerClickHandler
     {
         [SerializeField] private Image image;
         [SerializeField] private TextMeshProUGUI title;

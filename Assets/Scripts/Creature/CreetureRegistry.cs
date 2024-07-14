@@ -7,7 +7,6 @@ namespace Creatures {
         {
             private static CreatureRegistry instance = null;
             private Dictionary<string, Creature> dict;
-
             private CreatureRegistry() {
                 Creature[] creetures = Resources.LoadAll<Creature>("Creetures/");
                 dict = new Dictionary<string, Creature>();

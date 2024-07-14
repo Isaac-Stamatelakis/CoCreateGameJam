@@ -179,34 +179,6 @@ namespace Actions.Script {
             bool targetSelf = (bool) parameters["self"];
             return targetSelf ? ActionTargetType.Self : ActionTargetType.Target;
         }
-    
-        
-        public static (float damage, float range) parseHealCommand(FormattedScriptCommand scriptCommand) {
-            List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
-            parseInstructions: new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Float,"heal",true),
-                },
-                parameters: scriptCommand.Parameters,
-                scriptCommand: scriptCommand
-            );
-            
-            Dictionary<string,object> parameters = ActionScriptParseUtils.parseDict(
-                new List<ParseInstruction>{
-                    new ParseInstruction(ParseType.Float,
-                    "range",
-                    false
-                    ),
-                },
-                scriptCommand.Parameters,
-                scriptCommand
-            );
-            float range = 0;
-            if (parameters.ContainsKey("range")) {
-                range = (float) parameters["range"];
-            }
-            float heal = (float) orderedParameters[0];
-            return (heal,range);
-        }
     }
 
     public enum ParseType {

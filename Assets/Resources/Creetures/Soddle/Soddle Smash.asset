@@ -16,10 +16,13 @@ MonoBehaviour:
   animations: []
   prefabs: []
   sounds: []
+  preSelectDescription: 
+  selectDescription: 
+  postSelectDescription: 
   actionScript: 'select 1 enemy;
 
     move self target;
 
-    attack min=5 max=7 type=physical;
+    attack 4 range=1 type=physical;
 
 '

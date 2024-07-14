@@ -7,6 +7,8 @@ using Player;
 namespace WorldCreationModule {
 public static class WorldCreation
     {
+        private static readonly string playerDataPath = "player_data.json";
+        private static readonly string tradingDataPath = "trading_data.json";
         public static bool worldExists(string name) {
             string path = getWorldPath(name);
             return folderExists(path);
@@ -23,8 +25,6 @@ public static class WorldCreation
             string path = getWorldPath(name);
             Directory.CreateDirectory(path);
             Debug.Log("World Folder Created at " + path);
-            string playerData = PlayerIO.initPlayerData();
-            initPlayerData(name,playerData);
         }
         public static string getWorldPath(string name) {
             return Application.persistentDataPath + "/worlds/" + name; 
@@ -36,7 +36,10 @@ public static class WorldCreation
         }
 
         public static string getPlayerDataPath(string name) {
-            return getWorldPath(name) + "/player_data.json";;
+            return Path.Combine(getWorldPath(name),playerDataPath);
+        }
+        public static string getTradingDataPath(string name) {
+            return Path.Combine(getWorldPath(name),tradingDataPath);
         }
     }
 }

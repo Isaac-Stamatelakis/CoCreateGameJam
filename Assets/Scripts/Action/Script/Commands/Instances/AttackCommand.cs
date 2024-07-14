@@ -4,13 +4,13 @@ using UnityEngine;
 using Levels.Combat;
 
 namespace Actions.Script {
-    public class AttackCommand : DelayScriptCommand
+    public class AttackCommand : InstantScriptCommand
     {
         public AttackCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
         {
         }
 
-        public override IEnumerator execute(CommandExecutionState commandExecutionState)
+        public override void execute(CommandExecutionState commandExecutionState)
         {
             (float damage, float range, DamageType damageType, float falloff, float lifesteal, bool self) = parse(formattedScriptCommand);
             CreatureCombatObject target = commandExecutionState.getActionTarget(self);
@@ -18,7 +18,6 @@ namespace Actions.Script {
             realDamage += falloff * commandExecutionState.SubStack.iterations;
             target.CreatureInCombat.hit(realDamage,damageType);
             commandExecutionState.SelfCreature.CreatureInCombat.heal(realDamage*lifesteal);
-            yield return null;
         }
 
         public static (float damage, float range, DamageType type, float falloff, float lifesteal, bool self) parse(FormattedScriptCommand scriptCommand) {

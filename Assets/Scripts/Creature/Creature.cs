@@ -4,6 +4,7 @@ using UnityEngine;
 using LootBoxes;
 using Items;
 using Actions.Script;
+using Trading;
 
 namespace Creatures {
     [CreateAssetMenu(fileName = "New Creeture", menuName = "Creeture/Instance")]
@@ -11,7 +12,6 @@ namespace Creatures {
     public class Creature : Lootable, IItem
     {
         [SerializeField] private Sprite sprite;
-        [SerializeField] private string id;
         [SerializeField] private int speed;
         [SerializeField] private int strength;
         [SerializeField] private int health;
@@ -20,6 +20,8 @@ namespace Creatures {
         [SerializeField] private RuntimeAnimatorController controller;
         [SerializeField] private List<DamageType> strengths;
         [SerializeField] private List<DamageType> weaknesses;
+        [SerializeField] private Currency favouriteCurrency;
+        [SerializeField] private Currency hatedCurrency;
         [SerializeField] private List<ScriptedAction> actions;
         #if UNITY_EDITOR
         public void setSprite(Sprite sprite) {

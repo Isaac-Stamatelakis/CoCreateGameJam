@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Items;
+using Newtonsoft.Json;
 
 namespace Creatures {
     [System.Serializable]
     public class EquipedCreeture : IDisplayable {
         public Creature creeture;
-        List<Equipment> equipment;
+        private List<Equipment> equipment;
         private string nickname;
+        private float mood;
         private int level;
         private int xp;
         public Creature Creeture { get => creeture; }
@@ -58,13 +60,104 @@ namespace Creatures {
                 xp = xp % toLevel;
                 level++;
             }
-
         }
 
         public Sprite getSprite()
         {
             return creeture.Sprite;
         }
+
+        public string getName()
+        {
+            return creeture.name;
+        }
     }
+    
+    public class EquipCreatureSerializationFactory : SerializationFactory<EquipedCreeture, SCreatureData>
+    {
+        protected override EquipedCreeture deserializeValue(SCreatureData sValue)
+        {
+            CreatureRegistry creetureRegistry = CreatureRegistry.getInstance();
+            EquipmentRegistry equipmentRegistry = EquipmentRegistry.getInstance();
+
+            List<Equipment> equipments = new List<Equipment>();
+            Creature creeture = creetureRegistry.getCreature(sValue.id);
+            if (creeture == null) {
+                return null;
+            }
+            foreach (string equipmentID in sValue.equipmentIDs) {
+                Equipment equipment = equipmentRegistry.getEquipment(equipmentID);
+                if (equipment == null) {
+                    continue;
+                }
+                equipments.Add(equipment);
+            }
+            return new EquipedCreeture(creeture,equipments);
+        }
+        protected override SCreatureData formatValue(EquipedCreeture value)
+        {
+            string creatureId = null;
+            if (value != null && value.creeture != null) {
+                creatureId = value.creeture.Id;
+            }
+            List<string> seralizedEquipment = value == null ? new List<string>() : EquipmentFactory.serialize(value.Equipment);
+            return new SCreatureData(
+                creatureId,
+                seralizedEquipment
+            );
+        }
+    }
+
+    public class SCreatureData {
+            public string id;
+            public List<string> equipmentIDs;
+            public SCreatureData(string id, List<string> equipmentIDs) {
+                this.id = id;
+                this.equipmentIDs = equipmentIDs;
+            }
+        }
+
+    
 }
+
+public abstract class SerializationFactory<T,S> {
+        public string serialize(List<T> list) {
+            if (list == null) {
+                return null;
+            }
+            List<S> sList = new List<S>();
+            foreach (T value in list) {
+                if (value == null) {
+                    sList.Add(default(S));
+                } else {
+                    sList.Add(formatValue(value));
+                }
+            }
+            return JsonConvert.SerializeObject(sList);
+        }
+        public string serialize(T value) {
+            return JsonConvert.SerializeObject(formatValue(value));
+        }
+        public List<T> deserializeList(string json) {
+            if (json == null) {
+                return null;
+            }
+            List<S> sList = JsonConvert.DeserializeObject<List<S>>(json);
+            List<T> values = new List<T>();
+            foreach (S sValue in sList) {
+                T value = deserializeValue(sValue);
+                values.Add(value);
+            }
+            return values;
+        }
+        public T deserialize(string json) {
+            S sValue = JsonConvert.DeserializeObject<S>(json);
+            if (sValue == null) {
+                return default(T);
+            }
+            return deserializeValue(sValue);
+        }
+        protected abstract T deserializeValue(S sValue);
+        protected abstract S formatValue(T value);
+    }
 

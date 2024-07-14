@@ -8,7 +8,7 @@ namespace Actions.Script {
         private float max;
         public override void addCommand(FormattedScriptCommand scriptCommand)
         {
-            (float heal, float range) = ActionScriptCommandParser.parseHealCommand(scriptCommand);
+            (float heal, float range,bool self) = HealCommand.parse(scriptCommand);
             min += heal-range;
             max += heal+range;
         }

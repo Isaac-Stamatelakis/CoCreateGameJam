@@ -14,4 +14,5 @@ public static class Global {
     public static readonly float WEAKNESS_DAMAGE_MODIFIER = 0.5f;
     public static readonly string COMBAT_SCENE_NAME = "CombatLevelScene";
     public static readonly int MAX_COMBAT_CREATURES = 4;
+    public static readonly int TRADE_UPDATE_FREQ = 25;
 }

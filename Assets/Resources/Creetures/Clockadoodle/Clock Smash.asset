@@ -15,8 +15,12 @@ MonoBehaviour:
   sprite: {fileID: 0}
   animations: []
   prefabs: []
+  sounds: []
+  preSelectDescription: 
+  selectDescription: 
+  postSelectDescription: 
   actionScript: 'select 1 enemy;
 
     move self target;
 
-    attack min=5 max=7 type=physical;'
+    attack 2 range=1 type=physical;'

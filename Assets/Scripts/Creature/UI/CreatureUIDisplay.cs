@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 
 namespace UI.Inventory {
-    public abstract class CreatureUIDisplay : UIDisplayer<EquipedCreeture>, IPanelDisplay, IPointerClickHandler
+    public abstract class CreatureUIDisplay : UIInventoryDisplayer<EquipedCreeture>, IPanelDisplay, IPointerClickHandler
     {
         [SerializeField] protected Image panel;
         [SerializeField] protected Image image;

@@ -20,6 +20,9 @@ MonoBehaviour:
   - key: fireball
     value: {fileID: 6181269950411984863, guid: 9bf8d1fe5c66c1b4c9fbc45fefd09cc4, type: 3}
   sounds: []
+  preSelectDescription: 
+  selectDescription: Dragoon shoots a fireball at
+  postSelectDescription: 
   actionScript: 'select 1 enemy;
 
     animation fire loop=false;
@@ -29,6 +32,6 @@ MonoBehaviour:
     action
     fireball move;
 
-    attack min=5 max=7 type=fire;
+    attack 6 range=1 type=fire;
 
     end spawn fireball;'

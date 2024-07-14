@@ -18,6 +18,9 @@ MonoBehaviour:
     value: {fileID: 9100000, guid: ee730c199dddac1438f3515d9f4eb932, type: 2}
   prefabs: []
   sounds: []
+  preSelectDescription: 
+  selectDescription: Dragoon slashes his claws against
+  postSelectDescription: 
   actionScript: 'select 1 enemy;
 
     move self target;
@@ -25,6 +28,4 @@ MonoBehaviour:
     animation slash;
 
     attack
-    min=3 max=5 type=physical;
-
-    attack min=3 max=5 type=fire;'
+    4 range=1;'

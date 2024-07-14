@@ -57,6 +57,11 @@ namespace Actions.Script {
         {
             return sprite;
         }
+
+        public string getName()
+        {
+            return name;
+        }
     }
 }
 

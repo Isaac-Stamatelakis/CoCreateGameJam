@@ -7,7 +7,7 @@ using Creatures;
 using Items;
 
 namespace UI.Inventory {
-    public class CreatureDetailedDisplay : UIDisplayer<EquipedCreeture>
+    public class CreatureDetailedDisplay : UIInventoryDisplayer<EquipedCreeture>
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private Image creatureImage;

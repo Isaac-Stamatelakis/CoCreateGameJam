@@ -29,9 +29,9 @@ namespace Actions.Script {
                 case "sound":
                     return new SoundCommand(formattedScriptCommand);
                 case "status":
-                    break;
+                    return new StatusCommand(formattedScriptCommand);
                 case "heal":
-                    break;
+                    return new HealCommand(formattedScriptCommand);
                 default:
                     ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,$"{formattedScriptCommand.Command} is not a valid command");
                     break;

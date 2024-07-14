@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Items {
-    public abstract class Equipment : Lootable, IItem
+    public abstract class Equipment : Lootable, IItem, ISecondaryHeaderDisplayable
     {
-        [SerializeField] private string id;
         [SerializeField] private Rarity rarity;
         [SerializeField] private Sprite sprite;
         public Rarity Rarity {get => rarity;}
@@ -15,6 +14,20 @@ namespace Items {
         public override Sprite getSprite()
         {
             return sprite;
+        }
+        public string getSecondaryHeader()
+        {
+            return rarity.ToString();
+        }
+    }
+
+    public static class EquipmentFactory {
+        public static List<string> serialize(List<Equipment> equipmentList) {
+            List<string> equipmentIds = new List<string>();
+            foreach (Equipment equipment in equipmentList) {
+                equipmentIds.Add(equipment.Id);
+            }
+            return equipmentIds;
         }
     }
 
