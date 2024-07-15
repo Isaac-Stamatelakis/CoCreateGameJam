@@ -17,11 +17,10 @@ namespace Player {
         public List<EquipedCreeture> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
         public List<Equipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
         public List<LootboxCount> LootBoxes {get => playerData.lootboxes; set => playerData.lootboxes = value;}
-        private List<Currency> currencies;
         private PlayerData playerData;
         public string CurrentTile {get => playerData.currentTile; set => playerData.currentTile = value;}
         public static PlayerIO Instance { get => instance;}
-        public List<EquipedCreeture> CombatCreatures { get => combatCreatures; set => combatCreatures = value; }
+        public List<CurrencyCount> Currencies {get=>playerData.currencyCounts;}
 
         public bool hasDiscoveredTile(string tileName) {
             return playerData.discoveredTiles.Contains(tileName);
@@ -38,33 +37,22 @@ namespace Player {
             File.WriteAllText(path,data);
         }
 
-        public void give(Lootable lootable) {
+        public void give(LootableCount lootableCount) {
+            Lootable lootable = lootableCount.lootable;
             if (lootable is LootBox lootBox) {
-                foreach (LootboxCount lootboxCount in playerData.lootboxes) {
-                    if (lootboxCount.lootBox.getId() == lootBox.getId()) {
-                        lootboxCount.count++;
-                        return;
-                    }
-                }
-                playerData.lootboxes.Add(new LootboxCount(lootBox,1));
+                LootboxCount lootboxCount = new LootboxCount(lootBox,(int)lootableCount.count);
+                LootableCountUtils.giveCountable<LootboxCount>(lootboxCount,LootBoxes);
             } else if (lootable is Equipment equipment) {
                 playerData.equipment.Add(equipment);
             } else if (lootable is Creature creeture) {
                 playerData.creetures.Add(new EquipedCreeture(creeture,new List<Equipment>()));
-            } else if (lootable is CurrencyCount currencyCount) {
-                giveCurrencyCount(currencyCount);
+            } else if (lootable is Currency currency) {
+                CurrencyCount currencyCount = new CurrencyCount(currency,lootableCount.count);
+                LootableCountUtils.giveCountable<CurrencyCount>(currencyCount,Currencies);
             }
         }
 
-        private void giveCurrencyCount(CurrencyCount currencyCount) {
-            foreach (CurrencyCount playerCurrency in playerData.currencyCounts) {
-                if (playerCurrency.currency != null && playerCurrency.currency.getId().Equals(currencyCount.getId())) {
-                    playerCurrency.amount += currencyCount.amount;
-                    return;
-                }
-            }
-            playerData.currencyCounts.Add(currencyCount);
-        }
+        
         private PlayerData deseralize(string data) {
             try {
                 SPlayerData sPlayerData = JsonConvert.DeserializeObject<SPlayerData>(data);

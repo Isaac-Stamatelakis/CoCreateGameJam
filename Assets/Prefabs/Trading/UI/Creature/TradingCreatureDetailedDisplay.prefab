@@ -617,8 +617,11 @@ MonoBehaviour:
   currencyAmount: {fileID: 5770442840016281003}
   hourChange: {fileID: 5770442841520938837}
   currencyNullText: {fileID: 5770442840836915126}
-  nullSprite: {fileID: 0}
+  investButton: {fileID: 947140857254889159}
+  withDrawButton: {fileID: 433443912789132009}
+  nullSprite: {fileID: 21300000, guid: 861f23b3101b3d041a5eff24990afed2, type: 3}
   displayableListPrefab: {fileID: 8421004933263405377, guid: 0ec33f051a4bb274f83766b25760fa68, type: 3}
+  currencyCountPopUpPrefab: {fileID: 631086122591624035, guid: e29977060c1609c418f722ee1c50add3, type: 3}
 --- !u!1 &5770442839756510159
 GameObject:
   m_ObjectHideFlags: 0
@@ -1465,7 +1468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

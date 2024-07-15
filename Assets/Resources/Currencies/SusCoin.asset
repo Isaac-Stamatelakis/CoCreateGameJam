@@ -16,5 +16,5 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 3192f9c4b8c848d42b60b2f807aeb602, type: 3}
   acroynm: SUS
   value: 25
-  growthRate: 0
-  volatility: 0
+  hourlyGrowthRate: 0.02
+  volatility: 0.01

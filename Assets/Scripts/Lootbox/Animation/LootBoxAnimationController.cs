@@ -56,9 +56,9 @@ namespace LootBoxes {
                 animator.StartPlayback();
                 yield return waitForAnimation(animator);
             }
-            Lootable loot = lootboxCount.lootBox.open();
+            LootableCount loot = lootboxCount.lootBox.open();
             PlayerIO.Instance.give(loot);
-            lootableInventoryUI.display(new List<Lootable>{loot});
+            lootableInventoryUI.display(new List<LootableCount>{loot});
             continueButton.gameObject.SetActive(true);
         }
 

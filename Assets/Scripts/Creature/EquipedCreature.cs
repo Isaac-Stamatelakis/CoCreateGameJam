@@ -145,6 +145,9 @@ public abstract class SerializationFactory<T,S> {
             List<S> sList = JsonConvert.DeserializeObject<List<S>>(json);
             List<T> values = new List<T>();
             foreach (S sValue in sList) {
+                if (sValue == null) {
+                    continue;
+                }
                 T value = deserializeValue(sValue);
                 values.Add(value);
             }

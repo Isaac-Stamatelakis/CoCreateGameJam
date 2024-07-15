@@ -17,6 +17,9 @@ namespace Trading {
         public List<TradingCreature> TradingCreatures { get => tradingCreatures; }
         private List<TradingCreature> tradingCreatures;
         private Dictionary<string, CurrencyTradingData> currencyData;
+        private DateTime lastLogoff;
+        private long previousPlayTime;
+        public long RunTime {get => previousPlayTime + (lastLogoff.Second - DateTime.UtcNow.Second);}
         private int updateCounter;
         public void Awake() {
             instance = this;

@@ -48,4 +48,15 @@ public static class GlobalUtils
         }
         return new Color(r/255f,g/255f,b/255f,a/255f);
     }
+
+    public static Canvas getCanvas(Transform transform) {
+        while (transform != null) {
+            Canvas canvas = transform.GetComponent<Canvas>();
+            if (canvas != null) {
+                return canvas;
+            }
+            transform = transform.parent;
+        }
+        return null;
+    }
 }

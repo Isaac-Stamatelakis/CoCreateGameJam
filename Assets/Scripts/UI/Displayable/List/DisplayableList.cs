@@ -13,6 +13,8 @@ namespace UI.Displayables {
         [SerializeField] private Image titleBackground;
         [SerializeField] private Image scrollViewHandle;
         [SerializeField] private GridLayoutGroup list;
+        [SerializeField] private Button backButton;
+        [SerializeField] private Button nullButton;
         [SerializeField] private DisplayableSelectorListElement listElementPrefab;
         public void display(List<IDisplayable> displayables, DisplayableClickCallback callback, DisplayListParameters displayListParameters) {
             title.text = displayListParameters.title;
@@ -28,13 +30,22 @@ namespace UI.Displayables {
             Vector2 anchorMax = new Vector2(0.5f,0.5f);
             Vector2 sizeDelta = new Vector2(0,0);
 
+            nullButton.onClick.AddListener(() => {
+                callback(-1);
+                GameObject.Destroy(gameObject);
+            });
+            nullButton.GetComponent<Image>().color = displayListParameters.secondaryBackgroundColor;
+            backButton.onClick.AddListener(() => {
+                GameObject.Destroy(gameObject);
+            });
+            backButton.GetComponent<Image>().color = displayListParameters.secondaryBackgroundColor;
             if (displayListParameters.xSize is AbsoluteListSize absoluteListSizeX) {
                 sizeDelta.x = absoluteListSizeX.size;
-            } else if (displayListParameters.ySize is AnchorListSize anchorListSizeX) {
+            } else if (displayListParameters.xSize is AnchorListSize anchorListSizeX) {
                 anchorMin.x = anchorListSizeX.min;
                 anchorMax.x = anchorListSizeX.max;
             }
-            if (displayListParameters.xSize is AbsoluteListSize absoluteListSizeY) {
+            if (displayListParameters.ySize is AbsoluteListSize absoluteListSizeY) {
                 sizeDelta.y = absoluteListSizeY.size;
             } else if (displayListParameters.ySize is AnchorListSize anchorListSizeY) {
                 anchorMin.y = anchorListSizeY.min;

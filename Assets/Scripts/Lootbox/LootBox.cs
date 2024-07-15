@@ -17,7 +17,7 @@ namespace LootBoxes {
             return sprite;
         }
 
-        public Lootable open() {
+        public LootableCount open() {
             int totalFrequency = 0;
             foreach (LootFrequency lootable in loot) {
                 totalFrequency += lootable.frequency;
@@ -27,7 +27,7 @@ namespace LootBoxes {
             foreach (LootFrequency lootable in loot) {
                 totalFrequency += lootable.frequency;
                 if (totalFrequency > ran) {
-                    return lootable.val;
+                    return new LootableCount(lootable.val,lootable.amount);
                 }
             }
             return null;
@@ -43,9 +43,10 @@ namespace LootBoxes {
     public class LootFrequency {
         public Lootable val;
         public int frequency;
+        public float amount = 1;
     }
 
-    public class LootboxCount : IDisplayable {
+    public class LootboxCount : IDisplayable, ILootableCount {
         public LootboxCount(LootBox lootBox, int count) {
             this.lootBox = lootBox;
             this.count = count;
@@ -61,6 +62,21 @@ namespace LootBoxes {
         public string getName()
         {
             return lootBox.name;
+        }
+
+        public float getAmount()
+        {
+            return (float) count;
+        }
+
+        public void addAmount(float amount)
+        {
+            count += (int)amount;
+        }
+
+        public Lootable getLootable()
+        {
+            return lootBox;
         }
     }
 
