@@ -17,6 +17,7 @@ namespace Player {
         public List<EquipedCreeture> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
         public List<Equipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
         public List<LootboxCount> LootBoxes {get => playerData.lootboxes; set => playerData.lootboxes = value;}
+        public List<ItemSlot> CraftingItems {get => playerData.craftingItems; set => playerData.craftingItems = value;}
         private PlayerData playerData;
         public string CurrentTile {get => playerData.currentTile; set => playerData.currentTile = value;}
         public static PlayerIO Instance { get => instance;}
@@ -49,6 +50,10 @@ namespace Player {
             } else if (lootable is Currency currency) {
                 CurrencyCount currencyCount = new CurrencyCount(currency,lootableCount.count);
                 LootableCountUtils.giveCountable<CurrencyCount>(currencyCount,Currencies);
+            } else if (lootable is CraftingItem itemSlot) {
+
+            } else {
+                throw new System.Exception($"Did not cover case for lootable {lootable.GetType()}");
             }
         }
 
@@ -61,13 +66,15 @@ namespace Player {
                 List<EquipedCreeture> equipedCreetures = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureData);
                 List<LootboxCount> lootboxCounts = deseralizeLootboxes(sPlayerData.lootboxData);
                 List<CurrencyCount> currencyCounts = new CurrencyCountSerializer().deserializeList(sPlayerData.currencyCountData);
+                List<ItemSlot> craftingItems = new ItemSlotSerializationFactory().deserializeList(sPlayerData.craftingItemData);
                 return new PlayerData(
                     currentTile: sPlayerData.currentTile,
                     discoveredTiles: sPlayerData.discoveredTiles,
                     creetures: equipedCreetures,
                     equipment: equipment,
                     lootboxCounts: lootboxCounts,
-                    currencyCounts: currencyCounts
+                    currencyCounts: currencyCounts,
+                    craftingItems: craftingItems
                 );
             } catch (JsonSerializationException e) {
                 Debug.LogError($"Error during player deseralization {e}");
@@ -85,13 +92,15 @@ namespace Player {
             }
             string creatureData = new EquipCreatureSerializationFactory().serialize(playerData.creetures);
             string currencyData = new CurrencyCountSerializer().serialize(playerData.currencyCounts);
+            string craftingItemData = new ItemSlotSerializationFactory().serialize(playerData.craftingItems);
             SPlayerData sPlayerData = new SPlayerData(
                 currentTileIndex: playerData.currentTile,
                 discoveredTiles: playerData.discoveredTiles,
                 equipmentIds: equipmentIds,
                 creatureData: creatureData,
                 lootboxData: lootboxData,
-                currencyData: currencyData
+                currencyData: currencyData,
+                craftingItems: craftingItemData
             );
             return JsonConvert.SerializeObject(sPlayerData);
         }
@@ -108,7 +117,8 @@ namespace Player {
                 new List<EquipedCreeture>(),
                 new List<Equipment>(),
                 new List<LootboxCount>{startingBox},
-                new List<CurrencyCount>()
+                new List<CurrencyCount>(),
+                new List<ItemSlot>()
             );
         }
 
@@ -123,10 +133,10 @@ namespace Player {
         }
 
         public List<Equipment> DeseralizeEquipment(List<string> ids) {
-            EquipmentRegistry registry = EquipmentRegistry.getInstance();
+            LootableRegistry registry = LootableRegistry.getInstance();
             List<Equipment> returnVal = new List<Equipment>();
             foreach (string id in ids) {
-                Equipment equipment = registry.getEquipment(id);
+                Equipment equipment = registry.getLootable<Equipment>(id);
                 if (equipment == null) {
                     continue;
                 }
@@ -147,7 +157,8 @@ namespace Player {
                 List<string> equipmentIds, 
                 string creatureData,
                 List<SLootboxData> lootboxData,
-                string currencyData
+                string currencyData,
+                string craftingItems
             ) {
                 this.currentTile = currentTileIndex;
                 this.discoveredTiles = discoveredTiles;
@@ -155,6 +166,7 @@ namespace Player {
                 this.creatureData = creatureData;
                 this.lootboxData = lootboxData;
                 this.currencyCountData = currencyData;
+                this.craftingItemData = craftingItems;
             }
             public string currentTile; 
             public List<string> discoveredTiles;
@@ -162,6 +174,7 @@ namespace Player {
             public string creatureData;
             public List<SLootboxData> lootboxData;
             public string currencyCountData;
+            public string craftingItemData;
         }
 
         private class PlayerData {
@@ -171,7 +184,8 @@ namespace Player {
                 List<EquipedCreeture> creetures, 
                 List<Equipment> equipment, 
                 List<LootboxCount> lootboxCounts,
-                List<CurrencyCount> currencyCounts
+                List<CurrencyCount> currencyCounts,
+                List<ItemSlot> craftingItems
                 ) {
                 this.discoveredTiles = discoveredTiles;
                 this.currentTile = currentTile;
@@ -179,6 +193,7 @@ namespace Player {
                 this.equipment = equipment;
                 this.lootboxes = lootboxCounts;
                 this.currencyCounts = currencyCounts;
+                this.craftingItems = craftingItems;
             }
             public List<string> discoveredTiles;
             public string currentTile;
@@ -186,6 +201,7 @@ namespace Player {
             public List<Equipment> equipment;
             public List<LootboxCount> lootboxes;
             public List<CurrencyCount> currencyCounts;
+            public List<ItemSlot> craftingItems;
         }
 
         
