@@ -8,20 +8,40 @@ namespace Levels.Combat {
     {
         [SerializeField] private CombatLevelUIController combatLevelUIController;
         [SerializeField] private ActionSelectUI actionSelectUI;
+        [SerializeField] private EnemyTurnUI enemyTurnUI;
+        private GameObject currentlyDisplayed;
 
         public ActionSelectUI ActionSelectUI { get => actionSelectUI;}
         public CombatLevelUIController CombatLevelUIController { get => combatLevelUIController;  }
 
+        private void toggleDisplay(GameObject toDisplay) {
+            if (currentlyDisplayed != null) {
+                currentlyDisplayed.SetActive(false);
+            }
+            if (toDisplay != null) {
+                toDisplay.gameObject.SetActive(true);
+            }
+            currentlyDisplayed = toDisplay;
+            
+            
+        }
+
         public void displaySelect(CreatureInCombat creatureInCombat, CombatPlayer combatPlayer) {
-            ActionSelectUI.gameObject.SetActive(true);
+            toggleDisplay(actionSelectUI.gameObject);
             ActionSelectUI.display(creatureInCombat,combatPlayer.Consumables);
         }
 
         public void displayExecutionUI(ActionExecutionUI actionExecutionUIPrefab, ICombatAction combatAction) {
-            ActionSelectUI.gameObject.SetActive(false);
+            toggleDisplay(null);
             ActionExecutionUI actionExecutionUI = GameObject.Instantiate(actionExecutionUIPrefab);
+            actionExecutionUI.gameObject.SetActive(true);
             actionExecutionUI.transform.SetParent(transform,false);
             actionExecutionUI.display(combatAction,this);
+        }
+
+        public void displayEnemyTurn(CreatureInCombat creatureInCombat) {
+            toggleDisplay(enemyTurnUI.gameObject);
+            enemyTurnUI.display(creatureInCombat.EquipedCreeture);
         }
     }
 }

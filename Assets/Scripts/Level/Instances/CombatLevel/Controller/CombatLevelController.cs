@@ -26,7 +26,7 @@ namespace Levels.Combat {
                 humanPlayer,
                 aiPlayer
             };
-            creatureTurns = CombatLevelFactory.generateTurns(players);
+            creatureTurns = CombatLevelUtils.generateTurns(players);
             foreach (CreatureInCombat creatureInCombat in creatureTurns) {
                 uiController.CombatCreatureUIContainer.addCreature(creatureInCombat.CreatureCombatObject);
             }
@@ -59,6 +59,7 @@ namespace Levels.Combat {
                 return;
             }
             if (aiPlayer.Creatures.Contains(currentCreatureTurn.CreatureInCombat)) {
+                uiController.ActionUIController.displayEnemyTurn(creatureTurns[0]);
                 StartCoroutine(moveAI());
                 return;
             }
