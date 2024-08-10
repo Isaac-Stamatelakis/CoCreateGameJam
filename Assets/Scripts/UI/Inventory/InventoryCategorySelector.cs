@@ -9,7 +9,9 @@ namespace UI.Inventory {
         [SerializeField] private Button creatureButton;
         [SerializeField] private Button equipmentButton;
         [SerializeField] private Button lootboxButton;
+        [SerializeField] private Button craftingItems;
         [SerializeField] private Button currencyButton;
+        [SerializeField] private Button consumableButton;
         [SerializeField] private InventoryController controller;
 
         public void Start() {
@@ -25,6 +27,12 @@ namespace UI.Inventory {
             currencyButton.onClick.AddListener(() => {
                 controller.setCategory(InventoryUIMode.Currency);
             });
+            craftingItems.onClick.AddListener(() => {
+                controller.setCategory(InventoryUIMode.CraftingItem);
+            });
+            consumableButton.onClick.AddListener(() => {
+                controller.setCategory(InventoryUIMode.Consumables);
+            });
         }
         public void highlightCategory(InventoryUIMode mode) {
             switch (mode) {
@@ -35,6 +43,8 @@ namespace UI.Inventory {
                 case InventoryUIMode.Lootbox:
                     break;
                 case InventoryUIMode.Currency:
+                    break;
+                case InventoryUIMode.CraftingItem:
                     break;
             }
         }

@@ -7,8 +7,8 @@ using Items;
 namespace Crafting.UI {
     public class StaticRecipeInputList : RecipeInputList<ItemRecipe>
     {
-        [SerializeField] private ItemSlotUI itemSlotUIPrefab;
-        public override ItemSlotUI getSlotPrefab(ItemSlot itemSlot)
+        [SerializeField] private StackableItemSlotUI itemSlotUIPrefab;
+        public override StackableItemSlotUI getSlotPrefab(ItemSlot itemSlot)
         {
             return itemSlotUIPrefab;
         }

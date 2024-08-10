@@ -1154,6 +1154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427f3e90b1dff4a4d97f1ce7816d57a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testLevel: {fileID: 0}
   combatLevelController: {fileID: 1144188295}
 --- !u!1 &786916912
 GameObject:
@@ -4124,7 +4125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3550b4d14b20cc44787c44f9196eb4b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotPrefab: {fileID: 8589844447023703335, guid: 51f93c34b02b56e4aa62762a33f2a4b4, type: 3}
+  slotPrefab: {fileID: 8234690295167771099, guid: 51f93c34b02b56e4aa62762a33f2a4b4, type: 3}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   combatLevelActionUIController: {fileID: 527757102}
   actionExecutionUIPrefab: {fileID: 3518438499828018675, guid: 446f81282cfa2764895a0355f272da11, type: 3}

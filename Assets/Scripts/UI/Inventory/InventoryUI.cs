@@ -6,10 +6,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI.Inventory {
-    public class InventoryUI<T> : MonoBehaviour where T : IDisplayable
+    public abstract class InventoryUI<T> : MonoBehaviour where T : IDisplayable
     {
         [SerializeField] protected UIInventoryDisplayer<T> slotPrefab;
-        [SerializeField] protected Color highlightColor;
+        [SerializeField] protected Color highlightColor = Color.yellow;
         protected List<T> elements;
         protected List<UIInventoryDisplayer<T>> slots;
         private int currentlyHighlightedSlot = -1;
@@ -36,7 +36,7 @@ namespace UI.Inventory {
                 loadSlot(i);
             }
         }
-        public void highlightSlot(int i) {
+        protected void highlightSlot(int i) {
             if (i >= slots.Count) {
                 Debug.LogWarning($"Tried to highlight slot out of range {i}");
                 return;
@@ -44,17 +44,26 @@ namespace UI.Inventory {
             if (i == currentlyHighlightedSlot) {
                 return;
             }
-            if (slots[i] is not IPanelDisplay panelDisplay) {
-                Debug.LogWarning("Tried to highlight non panel display slot");
+            Image panel = slotPrefab.GetComponent<Image>();
+            if (panel == null) {
                 return;
             }
-            
-            if (currentlyHighlightedSlot >= 0) {
-                Color defaultColor = panelDisplay.getColor();
-                ((IPanelDisplay) slots[currentlyHighlightedSlot]).setPanelColor(defaultColor);
+            if (currentlyHighlightedSlot > 0) {
+                setSlotColor(slots[currentlyHighlightedSlot],panel.color); // Resets color of currently highlighted
             }
             currentlyHighlightedSlot = i;
-            panelDisplay.setPanelColor(highlightColor);
+            setSlotColor(slots[currentlyHighlightedSlot],highlightColor);
+        }
+
+        protected void setSlotColor(UIInventoryDisplayer<T> slot, Color color) {
+            if (slot == null) {
+                return;
+            }
+            Image panel = slot.gameObject.GetComponent<Image>();
+            if (panel == null) {
+                return;
+            }
+            panel.color = slotPrefab.GetComponent<Image>().color;
         }
 
         protected void loadSlot(int i) { 
@@ -64,15 +73,18 @@ namespace UI.Inventory {
             }
             UIInventoryDisplayer<T> displayer = GameObject.Instantiate(slotPrefab);
             slots[i] = displayer;
-            displayer.display(elements[i],this,i);
+            displayer.display(elements[i],i,this);
             displayer.transform.SetParent(transform,false);
             displayer.name = $"slot{i}";
         }
 
+        public abstract void rightClick(int index);
+        public abstract void leftClick(int index);
+
         public void refresh() {
             int i = 0;
             while (i < slots.Count) {
-                slots[i].display(elements[i],this,i);
+                slots[i].display(elements[i],i,this);
                 i++;
             }
             while (i < elements.Count) {

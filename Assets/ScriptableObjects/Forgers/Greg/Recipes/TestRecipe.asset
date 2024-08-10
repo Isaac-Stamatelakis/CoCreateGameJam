@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: TestRecipe
   m_EditorClassIdentifier: 
   inputs:
-  - lootable: {fileID: 11400000, guid: 27eee0545eed87f4593ca7e63f4d8282, type: 2}
-    amount: 1
-  - lootable: {fileID: 11400000, guid: cdb25ca96c985904b8564e47dc4dca62, type: 2}
+  - lootable: {fileID: 11400000, guid: 7235df68661030845bd58044efa382dc, type: 2}
     amount: 1
   output:
-    lootable: {fileID: 11400000, guid: 6cd36bb269793dd4dabd590d15935164, type: 2}
+    lootable: {fileID: 11400000, guid: 619c1a7561664404d8b0b022c3ece1ae, type: 2}
     amount: 1

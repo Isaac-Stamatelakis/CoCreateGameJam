@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public delegate void DisplayableClickCallback(int index);
 namespace UI.Displayables {
-    public delegate void DisplayableClickCallback(int index);
     public abstract class UIDisplayer<T> : MonoBehaviour, IPointerClickHandler where T : IDisplayable
     {
         [SerializeField] private Image background;
@@ -23,8 +23,9 @@ namespace UI.Displayables {
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left || eventData.button == PointerEventData.InputButton.Right) {
-                callback(index);
-                GameObject.Destroy(parentList.gameObject);
+                if (callback != null) {
+                    callback(index);
+                }
             }
         }
         public abstract void display(IDisplayable displayable, DisplayListParameters displayListParameters);

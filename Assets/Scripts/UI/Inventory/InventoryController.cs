@@ -6,19 +6,18 @@ using TMPro;
 using Player;
 using Creatures;
 using Items;
+using System.Linq;
 
 namespace UI.Inventory {
-    public interface IDetailedViewDisplayer {
-        public void displayDetailedView(int index);
-    }
     public class InventoryController : MonoBehaviour
     {
         [SerializeField] private Button backButton;
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private GridLayoutGroup inventoryContainer;
-        [SerializeField] private MainCreatureInventoryUI creatureInventory;
-        [SerializeField] private MainItemInventoryUI equipmentInventory;
-        [SerializeField] private MainLootboxInventory lootboxInventory;
+        private CreatureMainInventoryUI creatureInventory;
+        private EquipmentMainInventoryUI equipmentInventory;
+        private MainLootboxInventory lootboxInventory;
+        private CraftingItemMainInventoryUI craftingInventory;
         [SerializeField] private InventoryCategorySelector inventoryCategorySelector;
         [SerializeField] private Transform detailedDisplayContainer;
         private InventoryUIMode mode;
@@ -27,10 +26,15 @@ namespace UI.Inventory {
         // Start is called before the first frame update
         void Start()
         {
+            creatureInventory = inventoryContainer.GetComponent<CreatureMainInventoryUI>();
+            equipmentInventory = inventoryContainer.GetComponent<EquipmentMainInventoryUI>();
+            lootboxInventory = inventoryContainer.GetComponent<MainLootboxInventory>();
+            craftingInventory = inventoryContainer.GetComponent<CraftingItemMainInventoryUI>();
             setCategory(InventoryUIMode.Creature);
             backButton.onClick.AddListener(() => {
                 gameObject.SetActive(false);
             });
+            
         }
 
         public void setCategory(InventoryUIMode newMode) {
@@ -44,31 +48,8 @@ namespace UI.Inventory {
             List<IDisplayable> displayables = new List<IDisplayable>();
             switch (newMode) {
                 case InventoryUIMode.Creature:
-                    List<EquipedCreeture> temp = new List<EquipedCreeture>{
-                        new EquipedCreeture(
-                            LootableRegistry.getInstance().getLootable<Creature>("goof_ball"),
-                            new List<Items.Equipment>()
-                        ),
-                        new EquipedCreeture(
-                            LootableRegistry.getInstance().getLootable<Creature>("mike"),
-                            new List<Items.Equipment>()
-                        ),
-                        new EquipedCreeture(
-                            LootableRegistry.getInstance().getLootable<Creature>("dragoon"),
-                            new List<Items.Equipment>()
-                        ),
-                        new EquipedCreeture(
-                            LootableRegistry.getInstance().getLootable<Creature>("crog"),
-                            new List<Items.Equipment>()
-                        ),
-                        new EquipedCreeture(
-                            LootableRegistry.getInstance().getLootable<Creature>("omongus"),
-                            new List<Items.Equipment>()
-                        ),
-                    };
                     creatureInventory.display(PlayerIO.Instance.EquipedCreetures);
                     titleText.text = "Creetures";
-                    //creatureInventory.display(temp);
                     break;
                 case InventoryUIMode.Equipment:
                     List<Equipment> tempEquipment = new List<Equipment>{
@@ -78,12 +59,20 @@ namespace UI.Inventory {
                     equipmentInventory.display(tempEquipment);
                     break;
                 case InventoryUIMode.Lootbox:
-                    lootboxInventory.display(PlayerIO.Instance.LootBoxes);
-                    titleText.text = "LootBoxes";
+                    lootboxInventory.display(PlayerIO.Instance.LootBoxes.Cast<StackableItemSlot>().ToList());
+                    titleText.text = "Loot Boxes";
                     break;
                 case InventoryUIMode.Currency:
-                    titleText.text = "LootBoxes";
+                    titleText.text = "Currencies";
                     break;
+                case InventoryUIMode.CraftingItem:
+                    titleText.text = "Crafting Items";
+                    craftingInventory.display(PlayerIO.Instance.CraftingItems.Cast<StackableItemSlot>().ToList());
+                    break;
+                case InventoryUIMode.Consumables:
+                    titleText.text = "Consumables";
+                    break;
+
             }
         }
 
@@ -98,6 +87,8 @@ namespace UI.Inventory {
             Equipment,
             Creature,
             Lootbox,
-            Currency
+            Currency,
+            CraftingItem,
+            Consumables
         }
 }

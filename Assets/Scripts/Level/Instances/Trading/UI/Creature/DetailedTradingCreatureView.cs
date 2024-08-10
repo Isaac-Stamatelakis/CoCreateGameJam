@@ -10,6 +10,7 @@ using UI.Displayables;
 using Creatures;
 using System.Linq;
 using Player;
+using Items;
 
 namespace Trading.UI {
     public class DetailedTradingCreatureView : UIInventoryDisplayer<TradingCreature>
@@ -28,10 +29,8 @@ namespace Trading.UI {
         [SerializeField] private Button investButton;
         [SerializeField] private Button withDrawButton;
         [SerializeField] private Sprite nullSprite;
-        [SerializeField] private DisplayableList displayableListPrefab;
+        [SerializeField] private ColorableDisplayableList displayableListPrefab;
         [SerializeField] private CurrencyCountPopUp currencyCountPopUpPrefab;
-        private InventoryUI<TradingCreature> inventory;
-        private int index;
         private TradingCreature TradingCreature {get => TradingController.Instance.TradingCreatures[index];}
         private readonly DisplayListParameters displayListParameters = new DisplayListParameters(
             title: null,
@@ -79,20 +78,20 @@ namespace Trading.UI {
 
         private void selectCurrency(int currencyIndex) {
             TradingCreature currentCreature = TradingCreature;
-            List<CurrencyCount> currencyCounts = PlayerIO.Instance.Currencies;
+            List<DoubleItemSlot> currencyCounts = PlayerIO.Instance.Currencies;
             bool nullSelected = currencyIndex < 0;
-            CurrencyCount currencyCount = nullSelected ? null : currencyCounts[currencyIndex];
+            DoubleItemSlot currencyCount = nullSelected ? null : currencyCounts[currencyIndex];
             if (currentCreature.Currency != null) {
-                CurrencyCount creatureCurrencyCount = new CurrencyCount(
+                DoubleItemSlot creatureCurrencyCount = new DoubleItemSlot(
                     currentCreature.Currency,
                     currentCreature.Amount
                 );
-                LootableCountUtils.giveCountable<CurrencyCount>(creatureCurrencyCount,currencyCounts);
+                ItemSlotFactory.insertList<DoubleItemSlot>(currencyCounts,creatureCurrencyCount);
             }
             if (currencyCount == null) {
-                currentCreature.CurrencyCount = null;
+                currentCreature.CreatureCurrency = null;
             } else {
-                currentCreature.CurrencyCount = new CurrencyCount(currencyCount.currency,0); 
+                currentCreature.CreatureCurrency = new DoubleItemSlot(currencyCount.Lootable,0); 
             }
             
         }
@@ -101,7 +100,7 @@ namespace Trading.UI {
 
         private void selectionButton<T>(string title, List<T> elements, DisplayableClickCallback callback) where T : IDisplayable{
             displayListParameters.title = title;
-            DisplayableList displayableList = GameObject.Instantiate(displayableListPrefab);
+            ColorableDisplayableList displayableList = GameObject.Instantiate(displayableListPrefab);
             List<IDisplayable> displayables = new List<IDisplayable>();
             foreach (T element in elements) {
                 if (element == null) {
@@ -149,10 +148,8 @@ namespace Trading.UI {
                 hourChange.text = $"{tradingCreature.Amount:F1}";
             }
         }
-        public override void display(TradingCreature element, InventoryUI<TradingCreature> inventory, int index)
+        public override void display(TradingCreature element)
         {
-            this.index = index;
-            this.inventory = inventory;
             creatureImage.GetComponent<Button>().onClick.RemoveAllListeners();
             creatureImage.GetComponent<Button>().onClick.AddListener(() => {
                 selectionButton<EquipedCreeture>(
@@ -164,7 +161,7 @@ namespace Trading.UI {
 
             currencyImage.transform.parent.GetComponent<Button>().onClick.RemoveAllListeners();
             currencyImage.transform.parent.GetComponent<Button>().onClick.AddListener(() => {
-                selectionButton<CurrencyCount>(
+                selectionButton<DoubleItemSlot>(
                     title: "Select a Currency",
                     elements: PlayerIO.Instance.Currencies,
                     selectCurrency
@@ -186,12 +183,12 @@ namespace Trading.UI {
         }
 
         private void displayCurrencyPopUp(CurrencyPopUpDisplayMode mode) {
-            CurrencyCount playerCurrency = LootableCountUtils.matchCountable<CurrencyCount>(
-                new CurrencyCount(TradingCreature.Currency,TradingCreature.Amount), 
-                PlayerIO.Instance.Currencies
+            DoubleItemSlot playerCurrency = ItemSlotFactory.matchList<DoubleItemSlot>(
+                PlayerIO.Instance.Currencies,
+                new DoubleItemSlot(TradingCreature.Currency,TradingCreature.Amount)
             );
             CurrencyCountPopUp currencyCountPopUp = GameObject.Instantiate(currencyCountPopUpPrefab);
-                currencyCountPopUp.display(mode,TradingCreature.CurrencyCount,playerCurrency);
+                currencyCountPopUp.display(mode,TradingCreature.CreatureCurrency,playerCurrency);
                 Canvas canvas = GlobalUtils.getCanvas(transform);
                 currencyCountPopUp.transform.SetParent(canvas.transform,false);
         }

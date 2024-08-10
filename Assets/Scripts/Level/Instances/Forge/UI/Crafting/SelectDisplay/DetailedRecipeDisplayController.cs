@@ -3,24 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Crafting.Recipes;
 using System;
+using UnityEngine.UI;
 
 namespace Crafting.UI {
     public class DetailedRecipeDisplayController : MonoBehaviour
     {
         [SerializeField] private Transform inputContentContainer;
+        [SerializeField] private Button craftButton;
         [SerializeField] private ItemRecipeDisplayer itemRecipeDisplayer;
         [SerializeField] private TierUpgradeRecipeDisplayer tierUpgradeRecipeDisplayer;
         private IRecipeDisplayer currentDisplayer;
-
         public IRecipeDisplayer CurrentDisplayer { get => currentDisplayer; }
-
+        public void Start() {
+            craftButton.onClick.AddListener(() => {
+                currentDisplayer.craft();
+                Debug.Log("Crafted");
+            });
+        }
         public void display(Recipe recipe) {
             GlobalUtils.deleteChildren(inputContentContainer.transform);
             GameObject recipeDisplayer = GameObject.Instantiate(getRecipeDisplayerPrefab(recipe));
             recipeDisplayer.transform.SetParent(inputContentContainer,false);
             // Probalby another way to do this 
             currentDisplayer = recipeDisplayer.GetComponent<IRecipeDisplayer>();
-            Debug.Log(currentDisplayer==null);
             if (recipe is TierUpgradeRecipe tierUpgradeRecipe) {
                 recipeDisplayer.GetComponent<TierUpgradeRecipeDisplayer>().display(tierUpgradeRecipe);
             } else if (recipe is ItemRecipe itemRecipe) {

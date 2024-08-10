@@ -12,31 +12,9 @@ namespace Crafting.Recipes {
         [SerializeField] private Rarity inputTier;
         [SerializeField] private Sprite recipeSprite;
         [SerializeField] private List<ItemSlot> additonalInputs;
-
-        public override int getAmount()
-        {
-            return 1;
-        }
-
-        public override List<ItemSlot> getInputs()
-        {
-            List<ItemSlot> inputs = new List<ItemSlot>();
-            for (int i = 0; i < amount; i++)
-            {
-                inputs.Add(new SelectableItemSlot(null,1,type,inputTier));
-            }
-            inputs.AddRange(additonalInputs);
-            return inputs;
-        }
-
         public override string getName()
         {
             return $"{inputTier+1} {type}";
-        }
-
-        public override ItemSlot getOutput()
-        {
-            throw new System.NotImplementedException();
         }
 
         public override Sprite getSprite()
@@ -44,10 +22,8 @@ namespace Crafting.Recipes {
             return recipeSprite;
         }
     }
-
-    public enum TieredItemType {
-        Creature,
-        Equipment
-    }
-
+}
+public enum TieredItemType {
+    Creature,
+    Equipment
 }

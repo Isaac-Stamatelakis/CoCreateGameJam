@@ -8,6 +8,16 @@ namespace Trading.UI {
     {
         [SerializeField] private CreatureTradingUIPage creatureTradingUIPage;
         public CreatureTradingUIPage CreatureTradingUIPage { get => creatureTradingUIPage;}
+
+        public override void leftClick(int index)
+        {
+            
+        }
+
+        public override void rightClick(int index)
+        {
+            
+        }
     }
 }
 

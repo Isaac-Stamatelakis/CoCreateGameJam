@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 6690121502150876050}
   - component: {fileID: 7640222189588204794}
   - component: {fileID: 1405769003249445340}
-  - component: {fileID: 904462994591830202}
+  - component: {fileID: 5073419909503503671}
   m_Layer: 5
   m_Name: Loot
   m_TagString: Untagged
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!114 &904462994591830202
+--- !u!114 &5073419909503503671
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -217,11 +217,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 677037187832902356}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b77fcede5bb410f48ac9d3fc74ec89f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 55d0f37fdafeacc40919e8aae948b90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotPrefab: {fileID: 7425745020004044320, guid: baf5ac7cf45f56147bc2bd3cb7f68698, type: 3}
-  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  slotPrefab: {fileID: 2483508937048584719, guid: ec2dbabc1269e4c42b8f9917136defab, type: 3}
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &4532933741151040147
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,5 +417,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0bae46e0261223408d0bf9eb5e6f870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lootableInventoryUI: {fileID: 904462994591830202}
+  itemSlotListUI: {fileID: 5073419909503503671}
   continueButton: {fileID: 5952362840222086179}

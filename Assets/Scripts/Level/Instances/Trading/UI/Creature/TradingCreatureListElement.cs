@@ -7,7 +7,7 @@ using UI.Inventory;
 using UnityEngine.EventSystems;
 
 namespace Trading.UI {
-    public class TradingCreatureListElement : ClickableUIDisplayer<TradingCreature>, IPanelDisplay
+    public class TradingCreatureListElement : UIInventoryDisplayer<TradingCreature>
     {
         [SerializeField] private Image creatureImage;
         [SerializeField] private Image currencyImage;
@@ -18,12 +18,8 @@ namespace Trading.UI {
         [SerializeField] private TextMeshProUGUI empty;
         [SerializeField] private Transform activeElements;
         [SerializeField] private Image panel;
-        private int index;
-        private InventoryUI<TradingCreature> inventoryUI;
-        public override void display(TradingCreature element, InventoryUI<TradingCreature> inventory, int index)
+        public override void display(TradingCreature element)
         {
-            this.inventoryUI = inventory;
-            this.index = index;
             if (element == null || (element.EquipedCreeture == null && element.Currency == null)) {
                 empty.gameObject.SetActive(true);
                 activeElements.gameObject.SetActive(false);
@@ -50,26 +46,6 @@ namespace Trading.UI {
                 }
             }
             
-        }
-
-        public Color getColor()
-        {
-            return panel.color;
-        }
-
-        public override void leftClick()
-        {  
-            ((TradingCreatureList) inventoryUI).CreatureTradingUIPage.displayDetailedView(index);
-        }
-
-        public override void rightClick()
-        {
-            // Does nothing
-        }
-
-        public void setPanelColor(Color color)
-        {
-            panel.color = color;
         }
     }
 

@@ -15,4 +15,5 @@ MonoBehaviour:
   recipes:
   - {fileID: 11400000, guid: 109cbbc56be2e1541be7ee8499b00fb6, type: 2}
   - {fileID: 11400000, guid: d8dbeba6a830d62448f2786d44d43590, type: 2}
+  - {fileID: 11400000, guid: e2df97cde3fb19d4d8f7fafb71cb1ead, type: 2}
   blueprintRecipes: []

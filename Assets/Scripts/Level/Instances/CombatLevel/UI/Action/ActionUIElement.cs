@@ -7,18 +7,14 @@ using UnityEngine.EventSystems;
 using UI.Inventory;
 
 namespace Levels.Combat {
-    public abstract class ActionUIElement : UIInventoryDisplayer<ICombatAction>, IPointerClickHandler
+    public class ActionUIElement : UIInventoryDisplayer<ICombatAction>, IPointerClickHandler
     {
         [SerializeField] private Image image;
         [SerializeField] private TextMeshProUGUI title;
         [SerializeField] private TextMeshProUGUI number;
         protected ICombatAction combatAction;
-        protected InventoryUI<ICombatAction> inventory;
-        protected int index;
-        public override void display(ICombatAction element, InventoryUI<ICombatAction> inventory, int index)
+        public override void display(ICombatAction element)
         {
-            this.inventory = inventory;
-            this.index = index;
             this.combatAction = element;
             this.image.sprite = element.getSprite();
             this.title.text = element.getTitle();
@@ -28,18 +24,6 @@ namespace Levels.Combat {
                 number.gameObject.SetActive(false);
             }
         }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (eventData.button == PointerEventData.InputButton.Left) {
-                leftClick();
-            } else if (eventData.button == PointerEventData.InputButton.Right) {
-                rightClick();
-            }
-        }
-
-        public abstract void leftClick();
-        public abstract void rightClick();
     }
 }
 

@@ -6,15 +6,16 @@ using Trading;
 using System;
 using System.Linq;
 using Newtonsoft.Json;
+using Items;
 
 namespace Trading {
     public class TradingCreature : IDisplayable
     {
         private EquipedCreeture equipedCreeture;
-        private CurrencyCount currencyCount;
+        private DoubleItemSlot currencyCount;
         private TradingHistory tradingHistory;
         private float mood;
-        public TradingCreature(EquipedCreeture equipedCreeture, CurrencyCount currencyCount, TradingHistory tradingHistory, float mood)
+        public TradingCreature(EquipedCreeture equipedCreeture, DoubleItemSlot currencyCount, TradingHistory tradingHistory, float mood)
         {
             this.equipedCreeture = equipedCreeture;
             this.currencyCount = currencyCount;
@@ -23,10 +24,10 @@ namespace Trading {
         }
 
         public EquipedCreeture EquipedCreeture { get => equipedCreeture; set => equipedCreeture = value;}
-        public Currency Currency { get => currencyCount==null ? null:currencyCount.currency;}
-        public double Amount {get => currencyCount == null ? 0 : currencyCount.amount;}
+        public Currency Currency { get => currencyCount==null || currencyCount.Lootable == null ? null : (Currency) currencyCount.Lootable;}
+        public double Amount {get => currencyCount == null ? 0 : currencyCount.Amount;}
         public float Mood {get => mood;}
-        public CurrencyCount CurrencyCount { get => currencyCount; set => currencyCount = value; }
+        public DoubleItemSlot CreatureCurrency { get => currencyCount; set => currencyCount = value; }
         public TradingHistory TradingHistory { get => tradingHistory; }
 
         public Sprite getSprite()
@@ -35,13 +36,13 @@ namespace Trading {
         }
 
         public void tradeUpdate() {
-            if (currencyCount == null || currencyCount.currency == null) {
+            if (currencyCount == null || currencyCount.Lootable == null) {
                 return;
             }
             double randomFactor = new System.Random().NextDouble() * 2 - 1;
-            Currency currency = currencyCount.currency;
-            double newAmount = currencyCount.amount + (currencyCount.amount * (currency.GrowthRate + randomFactor * currency.Volatility));
-            currencyCount.amount = newAmount;
+            Currency currency =  (Currency) currencyCount.Lootable;
+            double newAmount = currencyCount.Amount + (currencyCount.Amount * (currency.GrowthRate + randomFactor * currency.Volatility));
+            currencyCount.Amount = newAmount;
             tradingHistory.addTradingPeriod(newAmount);
         }
         public double getHourChange() {
@@ -134,7 +135,7 @@ namespace Trading {
             Currency currency = LootableRegistry.getInstance().getLootable<Currency>(sValue.currencyId);
             TradingHistory tradingHistory = new TradingHistory(sValue.tradingHistory,sValue.startTime);
             
-            CurrencyCount currencyCount = new CurrencyCount(currency,sValue.value);
+            DoubleItemSlot currencyCount = new DoubleItemSlot(currency,sValue.value);
             return new TradingCreature(
                 new EquipCreatureSerializationFactory().deserialize(sValue.seralizedEquipedCreature),
                 currencyCount,
@@ -145,7 +146,7 @@ namespace Trading {
         protected override SeralizedTradingCreature formatValue(TradingCreature value)
         {
             string currencyId = value.Currency != null ? value.Currency.getId() : null;
-            double currencyAmount = value.CurrencyCount != null ? value.CurrencyCount.amount : 0;
+            double currencyAmount = value.CreatureCurrency != null ? value.CreatureCurrency.Amount : 0;
             return new SeralizedTradingCreature(
                 new EquipCreatureSerializationFactory().serialize(value.EquipedCreeture),
                 currencyId,

@@ -920,7 +920,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 5
     m_Bottom: 5
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 470, y: 100}
@@ -4379,6 +4379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputContentContainer: {fileID: 2055845248}
+  craftButton: {fileID: 18686152}
   itemRecipeDisplayer: {fileID: 1636054902783597291, guid: 5484ebe1e687cf24b8b6887453383860, type: 3}
   tierUpgradeRecipeDisplayer: {fileID: 3693483676117810109, guid: 854da83a36da29645a3bbfc9e404eeea, type: 3}
 --- !u!1 &1698142032

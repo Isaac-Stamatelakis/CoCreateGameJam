@@ -16,7 +16,7 @@ namespace Crafting.UI {
 
         protected override void executeCraft()
         {
-            throw new System.NotImplementedException();
+            //PlayerIO.Instance.give(displayedRecipe.getOutput());
         }
 
         protected override void displayExtra(ItemRecipe recipe)

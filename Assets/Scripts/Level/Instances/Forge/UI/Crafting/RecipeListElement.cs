@@ -8,31 +8,15 @@ using TMPro;
 using Items;
 
 namespace Crafting.UI {
-    public class RecipeListElement : ClickableUIDisplayer<Recipe>
+    public class RecipeListElement : UIInventoryDisplayer<Recipe>
     {
-        [SerializeField] private ItemSlotUI itemSlotUI;
+        //[SerializeField] private StackableItemSlotUI itemSlotUI;
         [SerializeField] private TextMeshProUGUI nameText;
         private RecipeUIController recipeUIController;
-        private int index;
-        public override void display(Recipe element, InventoryUI<Recipe> inventory, int index)
+        public override void display(Recipe element)
         {
-            itemSlotUI.display(element.getSprite(),element.getAmount());
+            //itemSlotUI.display(element.getSprite(),0);
             nameText.text = element.getName();
-            this.index = index;
-            this.recipeUIController = (RecipeUIController) inventory;
-            
-
-        }
-
-        public override void leftClick()
-        {
-            recipeUIController.selectRecipe(index);
-            Debug.Log(index);
-        }
-
-        public override void rightClick()
-        {
-            
         }
     }
 }

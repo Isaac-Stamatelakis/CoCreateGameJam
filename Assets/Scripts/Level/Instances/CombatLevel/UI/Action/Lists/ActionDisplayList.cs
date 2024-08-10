@@ -4,16 +4,20 @@ using UnityEngine;
 using UI.Inventory;
 
 namespace Levels.Combat {
-    public interface ICombatActionDisplayList {
-        public void showExecutionUI(ICombatAction combatAction);
-    }
-    public class ActionDisplayList : InventoryUI<ICombatAction>, ICombatActionDisplayList
+    
+    public class ActionDisplayList : InventoryUI<ICombatAction>
     {
         [SerializeField] private CombatLevelActionUIController combatLevelActionUIController;
         [SerializeField] private ActionExecutionUI actionExecutionUIPrefab;
-        public void showExecutionUI(ICombatAction combatAction)
+
+        public override void leftClick(int index)
         {
-            combatLevelActionUIController.displayExecutionUI(actionExecutionUIPrefab,combatAction);
+            combatLevelActionUIController.displayExecutionUI(actionExecutionUIPrefab,elements[index]);
+        }
+
+        public override void rightClick(int index)
+        {
+            
         }
     }
 }

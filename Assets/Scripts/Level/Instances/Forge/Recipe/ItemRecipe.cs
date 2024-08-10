@@ -7,17 +7,8 @@ namespace Crafting.Recipes {
     [CreateAssetMenu(fileName = "New Item Recipe", menuName = "Crafting/Recipe/Item")]
     public class ItemRecipe : Recipe
     {
-        [SerializeField] private List<ItemSlot> inputs;
-        [SerializeField] private ItemSlot output;
-
-        public override int getAmount()
-        {
-            if (output==null) {
-                return 0;
-            }
-            return output.Amount;
-        }
-
+        [SerializeField] private List<IntItemSlot> inputs;
+        [SerializeField] private IntItemSlot output;
         public override string getName()
         {
             if (output==null) {
@@ -32,16 +23,6 @@ namespace Crafting.Recipes {
                 return null;
             }
             return output.getSprite();
-        }
-
-        public override List<ItemSlot> getInputs()
-        {
-            return inputs;
-        }
-
-        public override ItemSlot getOutput()
-        {
-            return output;
         }
     }
 

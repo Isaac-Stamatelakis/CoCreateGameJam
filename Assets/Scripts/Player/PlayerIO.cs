@@ -8,6 +8,8 @@ using LootBoxes;
 using WorldCreationModule;
 using System.IO;
 using Trading;
+using System.Linq;
+using System;
 
 namespace Player {
     public class PlayerIO : MonoBehaviour
@@ -16,12 +18,12 @@ namespace Player {
         private List<EquipedCreeture> combatCreatures;
         public List<EquipedCreeture> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
         public List<Equipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
-        public List<LootboxCount> LootBoxes {get => playerData.lootboxes; set => playerData.lootboxes = value;}
-        public List<ItemSlot> CraftingItems {get => playerData.craftingItems; set => playerData.craftingItems = value;}
+        public List<IntItemSlot> LootBoxes {get => playerData.lootboxes; set => playerData.lootboxes = value;}
+        public List<IntItemSlot> CraftingItems {get => playerData.craftingItems; set => playerData.craftingItems = value;}
         private PlayerData playerData;
         public string CurrentTile {get => playerData.currentTile; set => playerData.currentTile = value;}
         public static PlayerIO Instance { get => instance;}
-        public List<CurrencyCount> Currencies {get=>playerData.currencyCounts;}
+        public List<DoubleItemSlot> Currencies {get=>playerData.currencyCounts;}
 
         public bool hasDiscoveredTile(string tileName) {
             return playerData.discoveredTiles.Contains(tileName);
@@ -37,36 +39,105 @@ namespace Player {
             string path = WorldCreation.getPlayerDataPath(Global.WorldName);
             File.WriteAllText(path,data);
         }
-
-        public void give(LootableCount lootableCount) {
-            Lootable lootable = lootableCount.lootable;
-            if (lootable is LootBox lootBox) {
-                LootboxCount lootboxCount = new LootboxCount(lootBox,(int)lootableCount.count);
-                LootableCountUtils.giveCountable<LootboxCount>(lootboxCount,LootBoxes);
+        public void give(List<IntItemSlot> itemSlots) {
+            foreach (IntItemSlot itemSlot in itemSlots) {
+                give(itemSlot);
+            }
+        }
+        public void give(IntItemSlot itemSlot) {
+            if (itemSlot == null || itemSlot.Lootable == null) {
+                return;
+            }
+            Lootable lootable = itemSlot.Lootable;
+            if (lootable is Creature creature) {
+                playerData.creetures.Add(new EquipedCreeture(creature,new List<Equipment>()));
             } else if (lootable is Equipment equipment) {
                 playerData.equipment.Add(equipment);
-            } else if (lootable is Creature creeture) {
-                playerData.creetures.Add(new EquipedCreeture(creeture,new List<Equipment>()));
+            } else if (lootable is CraftingItem craftingItem) {
+                Debug.Log("Here");
+                ItemSlotFactory.insertList<IntItemSlot>(playerData.craftingItems,itemSlot);
+                Debug.Log(playerData.craftingItems.Count);
+            } else if (lootable is LootBox lootBox) {
+                ItemSlotFactory.insertList<IntItemSlot>(playerData.lootboxes,itemSlot);
             } else if (lootable is Currency currency) {
-                CurrencyCount currencyCount = new CurrencyCount(currency,lootableCount.count);
-                LootableCountUtils.giveCountable<CurrencyCount>(currencyCount,Currencies);
-            } else if (lootable is CraftingItem itemSlot) {
+                DoubleItemSlot currencySlot = ItemSlotFactory.fromIntItemSlot(itemSlot);
+                ItemSlotFactory.insertList<DoubleItemSlot>(playerData.currencyCounts,currencySlot);
+            }
+        }
 
-            } else {
-                throw new System.Exception($"Did not cover case for lootable {lootable.GetType()}");
+        public void give(DoubleItemSlot doubleItemSlot) {
+
+        }
+
+        public int getAmountOfUniqueItem(string id, TieredItemType tieredItemType, Rarity rarity) {
+            switch (tieredItemType) {
+                case TieredItemType.Creature:
+                    return ItemSlotFactory.getAmountFromList(playerData.creetures.Cast<UniqueItemSlot>().ToList(),id,rarity);
+                case TieredItemType.Equipment:
+                    return ItemSlotFactory.getAmountFromList(playerData.equipment.Cast<UniqueItemSlot>().ToList(),id,rarity);
+            }
+            return 0;
+            
+        }
+        public float getAmountOfLootable(ItemSlot itemSlot) {
+            /*
+            if (itemSlot == null || itemSlot.Lootable == null) {
+                return 0;
+            }
+            if (itemSlot.Lootable is LootBox lootBox) {
+                return LootableCountUtils.getCount<LootBox,LootboxCount>(lootBox,playerData.lootboxes);
+            } else if (itemSlot.Lootable is Currency currency) {
+                return LootableCountUtils.getCount<Currency,CurrencyCount>(currency,playerData.currencyCounts);
+            } else if (itemSlot.Lootable is CraftingItem craftingItem) {
+                return LootableCountUtils.getCount<CraftingItem,ItemSlot>(craftingItem,playerData.craftingItems);
+            }
+            return 0;
+            */
+            return 0;
+
+
+        }
+
+        public void take(TieredItemType tieredItemType, int index) {
+            List<object> elements = getLootableList(tieredItemType);
+            if (index < 0 || index >= elements.Count) {
+                return;
+            }
+            elements.RemoveAt(index);
+        }
+
+        public void take(ItemSlot itemSlot) {
+            if (itemSlot == null || itemSlot.Lootable == null) {
+                return;
+            }
+            Lootable lootable = itemSlot.Lootable;
+            if (lootable is Currency currency) {
+
+            }
+        }
+
+        private List<object> getLootableList(TieredItemType tieredItemType) {
+            switch (tieredItemType) {
+                case TieredItemType.Creature:
+                    return playerData.creetures.Cast<object>().ToList();
+                case TieredItemType.Equipment:
+                    return playerData.equipment.Cast<object>().ToList();
+                default:
+                    throw new System.Exception($"{tieredItemType} was not covered by get lootable list");
             }
         }
 
         
         private PlayerData deseralize(string data) {
+            Debug.Log(Application.persistentDataPath);
             try {
                 SPlayerData sPlayerData = JsonConvert.DeserializeObject<SPlayerData>(data);
                 List<Equipment> equipment = DeseralizeEquipment(sPlayerData.equipmentIds);
                 EquipCreatureSerializationFactory equipCreatureSerializationFactory = new EquipCreatureSerializationFactory();
                 List<EquipedCreeture> equipedCreetures = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureData);
-                List<LootboxCount> lootboxCounts = deseralizeLootboxes(sPlayerData.lootboxData);
-                List<CurrencyCount> currencyCounts = new CurrencyCountSerializer().deserializeList(sPlayerData.currencyCountData);
-                List<ItemSlot> craftingItems = new ItemSlotSerializationFactory().deserializeList(sPlayerData.craftingItemData);
+                List<IntItemSlot> lootboxCounts = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.lootboxData);
+                List<DoubleItemSlot> currencyCounts = new DoubleItemSlotSerializationFactory().deserializeList(sPlayerData.currencyCountData);
+                List<IntItemSlot> craftingItems = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.craftingItemData);
                 return new PlayerData(
                     currentTile: sPlayerData.currentTile,
                     discoveredTiles: sPlayerData.discoveredTiles,
@@ -86,13 +157,10 @@ namespace Player {
 
         public string seralize() {
             List<string> equipmentIds = EquipmentFactory.serialize(playerData.equipment);
-            List<SLootboxData> lootboxData = new List<SLootboxData>();
-            foreach (LootboxCount lootboxCount in playerData.lootboxes) {
-                lootboxData.Add(new SLootboxData(lootboxCount.lootBox.getId(),lootboxCount.count));
-            }
+            string lootboxData = new IntItemSlotSerializationFactory().serialize(playerData.lootboxes);
             string creatureData = new EquipCreatureSerializationFactory().serialize(playerData.creetures);
-            string currencyData = new CurrencyCountSerializer().serialize(playerData.currencyCounts);
-            string craftingItemData = new ItemSlotSerializationFactory().serialize(playerData.craftingItems);
+            string currencyData = new DoubleItemSlotSerializationFactory().serialize(playerData.currencyCounts);
+            string craftingItemData = new IntItemSlotSerializationFactory().serialize(playerData.craftingItems);
             SPlayerData sPlayerData = new SPlayerData(
                 currentTileIndex: playerData.currentTile,
                 discoveredTiles: playerData.discoveredTiles,
@@ -107,7 +175,7 @@ namespace Player {
 
         private static PlayerData initPlayerData() {
             LootBox cardboardBox = LootBoxRegistry.getInstance().getLootbox("cardboard_box");
-            LootboxCount startingBox = new LootboxCount(
+            IntItemSlot startingBox = new IntItemSlot(
                 cardboardBox,
                 9999
             );
@@ -116,20 +184,10 @@ namespace Player {
                 null,
                 new List<EquipedCreeture>(),
                 new List<Equipment>(),
-                new List<LootboxCount>{startingBox},
-                new List<CurrencyCount>(),
-                new List<ItemSlot>()
+                new List<IntItemSlot>{startingBox},
+                new List<DoubleItemSlot>(),
+                new List<IntItemSlot>()
             );
-        }
-
-        private List<LootboxCount> deseralizeLootboxes(List<SLootboxData> lootboxData) {
-            List<LootboxCount> lootboxCounts = new List<LootboxCount>();
-            LootBoxRegistry lootBoxRegistry = LootBoxRegistry.getInstance();
-            foreach (SLootboxData data in lootboxData) {
-                LootBox lootBox = lootBoxRegistry.getLootbox(data.id);
-                lootboxCounts.Add(new LootboxCount(lootBox,data.count));
-            }
-            return lootboxCounts;
         }
 
         public List<Equipment> DeseralizeEquipment(List<string> ids) {
@@ -145,10 +203,6 @@ namespace Player {
             return returnVal;
         }
 
-        public List<LootboxCount> getLootboxes() {
-            return null;
-        }
-
         [System.Serializable]
         private class SPlayerData {
             public SPlayerData(
@@ -156,7 +210,7 @@ namespace Player {
                 List<string> discoveredTiles, 
                 List<string> equipmentIds, 
                 string creatureData,
-                List<SLootboxData> lootboxData,
+                string lootboxData,
                 string currencyData,
                 string craftingItems
             ) {
@@ -172,7 +226,7 @@ namespace Player {
             public List<string> discoveredTiles;
             public List<string> equipmentIds;
             public string creatureData;
-            public List<SLootboxData> lootboxData;
+            public string lootboxData;
             public string currencyCountData;
             public string craftingItemData;
         }
@@ -183,9 +237,9 @@ namespace Player {
                 string currentTile, 
                 List<EquipedCreeture> creetures, 
                 List<Equipment> equipment, 
-                List<LootboxCount> lootboxCounts,
-                List<CurrencyCount> currencyCounts,
-                List<ItemSlot> craftingItems
+                List<IntItemSlot> lootboxCounts,
+                List<DoubleItemSlot> currencyCounts,
+                List<IntItemSlot> craftingItems
                 ) {
                 this.discoveredTiles = discoveredTiles;
                 this.currentTile = currentTile;
@@ -199,9 +253,9 @@ namespace Player {
             public string currentTile;
             public List<EquipedCreeture> creetures;
             public List<Equipment> equipment;
-            public List<LootboxCount> lootboxes;
-            public List<CurrencyCount> currencyCounts;
-            public List<ItemSlot> craftingItems;
+            public List<IntItemSlot> lootboxes;
+            public List<DoubleItemSlot> currencyCounts;
+            public List<IntItemSlot> craftingItems;
         }
 
         

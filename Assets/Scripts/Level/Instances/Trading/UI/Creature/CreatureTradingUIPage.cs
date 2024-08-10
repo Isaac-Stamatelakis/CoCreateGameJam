@@ -28,13 +28,6 @@ namespace Trading.UI {
             tradingCreatureList.reset();
             tradingCreatureList.display(TradingController.Instance.TradingCreatures);
         }
-
-        public void displayDetailedView(int index) {
-            aggregateTradingCreatureDisplay.gameObject.SetActive(false);
-            detailedTradingCreatureView.gameObject.SetActive(true);
-            detailedTradingCreatureView.display(TradingController.Instance.TradingCreatures[index],tradingCreatureList,index);
-        }
-
         public void FixedUpdate() {
             tradingCreatureList.refresh();
         }

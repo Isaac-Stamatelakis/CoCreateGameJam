@@ -87,8 +87,8 @@ GameObject:
   - component: {fileID: 2524430340567799176}
   - component: {fileID: 2524430340567799178}
   - component: {fileID: 2524430340567799179}
-  - component: {fileID: 6196141265664031995}
   - component: {fileID: 7770164797138762024}
+  - component: {fileID: 7294116219070947739}
   m_Layer: 5
   m_Name: Items
   m_TagString: Untagged
@@ -154,20 +154,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6196141265664031995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2524430340567799177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: defa0a473e389eb49a93df386a4d770b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slotPrefab: {fileID: 3113551200576682567, guid: 832b6ffc25190ce4d99505ff481296f2, type: 3}
-  highlightColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &7770164797138762024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,6 +178,20 @@ MonoBehaviour:
   m_Spacing: {x: 16, y: 16}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &7294116219070947739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2524430340567799177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45890815306a9b740988e0da7763d584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotPrefab: {fileID: 760522468164698552, guid: 9034ebd8bfd0622478036997e82d6cc6, type: 3}
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &2524430340682678882
 GameObject:
   m_ObjectHideFlags: 0
@@ -840,7 +840,7 @@ MonoBehaviour:
   nicknameField: {fileID: 2524430342089941341}
   levelText: {fileID: 2524430340765983410}
   xpSlider: {fileID: 2524430341625261231}
-  itemInventory: {fileID: 6196141265664031995}
+  itemInventory: {fileID: 7294116219070947739}
   recruitButton: {fileID: 2524430341565852135}
   equipButton: {fileID: 2524430340686130619}
   infoButton: {fileID: 2524430341042629193}

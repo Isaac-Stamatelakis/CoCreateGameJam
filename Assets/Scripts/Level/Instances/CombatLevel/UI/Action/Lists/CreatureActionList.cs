@@ -12,6 +12,17 @@ namespace Levels.Combat {
     public class SelectionCreatureActionList : InventoryUI<CreatureAction>, ISelectionActionList
     {
         [SerializeField] private ActionSelectUI actionSelectUI;
+
+        public override void leftClick(int index)
+        {
+            
+        }
+
+        public override void rightClick(int index)
+        {
+            
+        }
+
         public void selectAction(ICombatAction combatAction)
         {
             

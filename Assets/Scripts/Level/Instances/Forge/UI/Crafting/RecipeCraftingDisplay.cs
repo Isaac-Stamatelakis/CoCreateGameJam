@@ -11,10 +11,10 @@ namespace Crafting.UI {
     public class RecipeCraftingDisplay : UIInventoryDisplayer<Recipe>
     {
         [SerializeField] private Button craftButton;
-        [SerializeField] private ItemSlotUI output;
+        [SerializeField] private StackableItemSlotUI output;
         [SerializeField] private InventoryUI<ItemSlot> inputs;
         [SerializeField] private TextMeshProUGUI outputName;
-        public override void display(Recipe element, InventoryUI<Recipe> inventory, int index)
+        public override void display(Recipe element)
         {
             
         }

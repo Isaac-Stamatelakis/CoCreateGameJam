@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UI.Inventory;
 using Items;
+using Player;
 using Crafting.Recipes;
 
 namespace Crafting.UI {
@@ -10,16 +11,19 @@ namespace Crafting.UI {
     {
         public virtual void display(T recipe) {
             GlobalUtils.deleteChildren(transform);
+            /*
             List<ItemSlot> items = recipe.getInputs();
             foreach (ItemSlot itemSlot in items) {
                 displayItemSlot(itemSlot);
             }
+            */
         }
-        public abstract ItemSlotUI getSlotPrefab(ItemSlot itemSlot);
-        public virtual ItemSlotUI displayItemSlot(ItemSlot itemSlot) {
-            ItemSlotUI itemSlotUI = GameObject.Instantiate(getSlotPrefab(itemSlot));
+        public abstract StackableItemSlotUI getSlotPrefab(ItemSlot itemSlot);
+        public virtual StackableItemSlotUI displayItemSlot(ItemSlot itemSlot) {
+            StackableItemSlotUI itemSlotUI = GameObject.Instantiate(getSlotPrefab(itemSlot));
             itemSlotUI.transform.SetParent(transform,false);
-            itemSlotUI.display(itemSlot);
+            float amount = PlayerIO.Instance.getAmountOfLootable(itemSlot);
+            //itemSlotUI.displayWithRequirement(itemSlot,(int)amount);
             return itemSlotUI;
         }
     }
