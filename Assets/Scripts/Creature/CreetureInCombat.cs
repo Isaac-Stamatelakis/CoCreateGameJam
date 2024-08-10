@@ -40,7 +40,7 @@ namespace Creatures {
             this.creatureCombatObject = creatureCombatObject;
         }
         public void heal(float healAmount) {
-            health = Mathf.Max(equipedCreeture.getStat(CreatureStat.Health),health+healAmount);
+            health = Mathf.Min(equipedCreeture.getStat(CreatureStat.Health),health+healAmount);
         }
         public void addStatusEffect(StatusEffect statusEffect) {
             this.statusEffects.Add(statusEffect);
