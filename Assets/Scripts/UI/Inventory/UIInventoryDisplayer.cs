@@ -16,6 +16,17 @@ namespace UI.Inventory {
             display(element);
         }
 
+        public void setTheme(ColorTheme colorTheme) {
+            Image panel = GetComponent<Image>();
+            if (panel != null) {
+                panel.color = colorTheme.Primary;
+            }
+            Outline outline = GetComponent<Outline>();
+            if (outline != null) {
+                outline.effectColor = colorTheme.Tertiary;
+            }
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left) {
