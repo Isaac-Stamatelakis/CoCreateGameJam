@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace Crafting.UI {
     public class SelectableItemSlotUI : StackableItemSlotUI, IPointerClickHandler
     {
-    
+        
     }
 }
 

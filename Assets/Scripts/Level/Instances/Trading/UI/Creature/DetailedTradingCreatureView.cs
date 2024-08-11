@@ -86,7 +86,7 @@ namespace Trading.UI {
                     currentCreature.Currency,
                     currentCreature.Amount
                 );
-                ItemSlotFactory.insertList<DoubleItemSlot>(currencyCounts,creatureCurrencyCount);
+                ItemSlotUtils.insertList<DoubleItemSlot>(currencyCounts,creatureCurrencyCount);
             }
             if (currencyCount == null) {
                 currentCreature.CreatureCurrency = null;
@@ -183,7 +183,7 @@ namespace Trading.UI {
         }
 
         private void displayCurrencyPopUp(CurrencyPopUpDisplayMode mode) {
-            DoubleItemSlot playerCurrency = ItemSlotFactory.matchList<DoubleItemSlot>(
+            DoubleItemSlot playerCurrency = ItemSlotUtils.matchList<DoubleItemSlot>(
                 PlayerIO.Instance.Currencies,
                 new DoubleItemSlot(TradingCreature.Currency,TradingCreature.Amount)
             );

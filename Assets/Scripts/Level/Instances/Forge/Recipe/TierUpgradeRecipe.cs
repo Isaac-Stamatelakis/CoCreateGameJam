@@ -11,7 +11,13 @@ namespace Crafting.Recipes {
         [SerializeField] private int amount;
         [SerializeField] private Rarity inputTier;
         [SerializeField] private Sprite recipeSprite;
-        [SerializeField] private List<ItemSlot> additonalInputs;
+        [SerializeField] private List<IntItemSlot> additonalInputs;
+
+        public override List<IntItemSlot> getIntItemSlotInputs()
+        {
+            return additonalInputs;
+        }
+
         public override string getName()
         {
             return $"{inputTier+1} {type}";

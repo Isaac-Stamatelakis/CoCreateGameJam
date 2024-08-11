@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Items;
 
 
 public interface IDisplayable {
@@ -31,5 +32,6 @@ public abstract class Lootable : ScriptableObject, IDisplayable, IIdedObject {
         return name;
     }
     public abstract Sprite getSprite();
+    public abstract ItemSlotType getItemSlotType();
 }
 

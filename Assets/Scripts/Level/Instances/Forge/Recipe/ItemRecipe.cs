@@ -9,6 +9,14 @@ namespace Crafting.Recipes {
     {
         [SerializeField] private List<IntItemSlot> inputs;
         [SerializeField] private IntItemSlot output;
+
+        public IntItemSlot Output { get => output;}
+
+        public override List<IntItemSlot> getIntItemSlotInputs()
+        {
+            return inputs;
+        }
+
         public override string getName()
         {
             if (output==null) {

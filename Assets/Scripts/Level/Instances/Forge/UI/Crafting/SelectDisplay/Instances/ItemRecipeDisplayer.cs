@@ -3,25 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using Crafting.Recipes;
 using Items;
+using UI.Inventory;
 using Player;
 
 namespace Crafting.UI {
     public class ItemRecipeDisplayer : RecipeDisplayer<ItemRecipe>
     {
-        public override bool canCraft()
-        {
-            PlayerIO playerIO = PlayerIO.Instance;
-            return true;
-        }
+        [SerializeField] private InventoryUI<IntItemSlot> recipeInputList;
+        [SerializeField] protected StackableItemSlotUI outputItem;
 
-        protected override void executeCraft()
+        protected ItemRecipe itemRecipe;
+        
+        public override void craft()
         {
-            //PlayerIO.Instance.give(displayedRecipe.getOutput());
-        }
-
-        protected override void displayExtra(ItemRecipe recipe)
-        {
+            if (!PlayerIO.Instance.hasItems(itemRecipe.getIntItemSlotInputs())) {
+                craftFail();
+                return;
+            }
+            craftSucceed();
+            PlayerIO.Instance.take(itemRecipe.getIntItemSlotInputs());
+            PlayerIO.Instance.give(itemRecipe.Output);
             
+        }
+        public override void display(ItemRecipe recipe)
+        {
+            this.itemRecipe = recipe;
+            recipeInputList.display(recipe.getIntItemSlotInputs(),null);
+            outputItem.display(recipe.Output);
+            outputItem.setTheme(null);
         }
     }
 }

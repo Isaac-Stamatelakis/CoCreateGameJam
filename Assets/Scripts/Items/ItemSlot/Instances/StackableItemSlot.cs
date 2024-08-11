@@ -18,6 +18,8 @@ namespace Items {
         public abstract string amountToString();
         public abstract double amountToDouble();
         public abstract int amountToInt();
+        public abstract void subtractInt(int value);
+        public abstract void subtractDouble(double value);
     }
 }
 

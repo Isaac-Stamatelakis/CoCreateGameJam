@@ -6,7 +6,7 @@ namespace Items {
     [System.Serializable]
     public class IntItemSlot : StackableItemSlot
     {
-        private int amount;
+        [SerializeField] private int amount;
         public IntItemSlot(Lootable lootable, int amount) : base(lootable)
         {
             this.amount = amount;
@@ -34,6 +34,16 @@ namespace Items {
                 return;
             }
             amount += intItemSlot.Amount;
+        }
+
+        public override void subtractDouble(double value)
+        {
+            amount -= (int) value;
+        }
+
+        public override void subtractInt(int value)
+        {
+            amount -= value;
         }
     }
 }

@@ -2,23 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Crafting.Recipes;
+using UI.Inventory;
+using Items;
 
 namespace Crafting.UI {
     public class TierUpgradeRecipeDisplayer : RecipeDisplayer<TierUpgradeRecipe>
     {
-        public override bool canCraft()
+        [SerializeField] private InventoryUI<IntItemSlot> recipeInputList;
+        public override void craft()
         {
             throw new System.NotImplementedException();
         }
 
-        protected override void executeCraft()
+        public override void display(TierUpgradeRecipe element)
         {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void displayExtra(TierUpgradeRecipe recipe)
-        {
-            
+            recipeInputList.display(element.getIntItemSlotInputs());
         }
     }
 }

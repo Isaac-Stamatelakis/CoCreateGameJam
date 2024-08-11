@@ -13,6 +13,11 @@ namespace Items.Consumables {
             return sprite;
         }
 
+        public override ItemSlotType getItemSlotType()
+        {
+            return ItemSlotType.Int;
+        }
+
         
     }
 }

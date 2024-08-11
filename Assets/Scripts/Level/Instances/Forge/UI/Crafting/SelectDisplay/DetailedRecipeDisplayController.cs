@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Crafting.Recipes;
 using System;
+using UI.Inventory;
 using UnityEngine.UI;
 
 namespace Crafting.UI {
-    public class DetailedRecipeDisplayController : MonoBehaviour
+    public class DetailedRecipeDisplayController : UIInventoryDisplayer<Recipe>
     {
         [SerializeField] private Transform inputContentContainer;
         [SerializeField] private Button craftButton;
@@ -17,22 +18,8 @@ namespace Crafting.UI {
         public void Start() {
             craftButton.onClick.AddListener(() => {
                 currentDisplayer.craft();
-                Debug.Log("Crafted");
             });
         }
-        public void display(Recipe recipe) {
-            GlobalUtils.deleteChildren(inputContentContainer.transform);
-            GameObject recipeDisplayer = GameObject.Instantiate(getRecipeDisplayerPrefab(recipe));
-            recipeDisplayer.transform.SetParent(inputContentContainer,false);
-            // Probalby another way to do this 
-            currentDisplayer = recipeDisplayer.GetComponent<IRecipeDisplayer>();
-            if (recipe is TierUpgradeRecipe tierUpgradeRecipe) {
-                recipeDisplayer.GetComponent<TierUpgradeRecipeDisplayer>().display(tierUpgradeRecipe);
-            } else if (recipe is ItemRecipe itemRecipe) {
-                recipeDisplayer.GetComponent<ItemRecipeDisplayer>().display(itemRecipe);
-            }
-        }
-
         private GameObject getRecipeDisplayerPrefab<T>(T recipe) where T : Recipe {
             if (recipe is TierUpgradeRecipe) {
                 return tierUpgradeRecipeDisplayer.gameObject;
@@ -43,7 +30,21 @@ namespace Crafting.UI {
             }
         }
 
+        public override void display(Recipe recipe)
+        {
+            GlobalUtils.deleteChildren(inputContentContainer.transform);
+            GameObject recipeDisplayer = GameObject.Instantiate(getRecipeDisplayerPrefab(recipe));
 
+            recipeDisplayer.transform.SetParent(inputContentContainer,false);
+            recipeDisplayer.GetComponent<IRecipeDisplayer>().setButton(craftButton);
+            // Probalby another way to do this 
+            currentDisplayer = recipeDisplayer.GetComponent<IRecipeDisplayer>();
+            if (recipe is TierUpgradeRecipe tierUpgradeRecipe) {
+                recipeDisplayer.GetComponent<TierUpgradeRecipeDisplayer>().display(tierUpgradeRecipe);
+            } else if (recipe is ItemRecipe itemRecipe) {
+                recipeDisplayer.GetComponent<ItemRecipeDisplayer>().display(itemRecipe);
+            }
+        }
     }
 }
 

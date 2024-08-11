@@ -38,7 +38,7 @@ namespace LootBoxes {
                     LootFrequency lootFrequency = temp[i];
                     totalFrequency += lootFrequency.frequency;
                     if (totalFrequency > ran) {
-                        lootedItemSlots.Add(ItemSlotFactory.fromLootFrequency(lootFrequency));
+                        lootedItemSlots.Add(ItemSlotUtils.fromLootFrequency(lootFrequency));
                         if (!repetitions) {
                             temp.RemoveAt(i);
                         }
@@ -53,6 +53,10 @@ namespace LootBoxes {
         public override string ToString()
         {
             return base.ToString();
+        }
+        public override ItemSlotType getItemSlotType()
+        {
+            return ItemSlotType.Int;
         }
     }
 

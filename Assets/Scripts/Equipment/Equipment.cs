@@ -19,6 +19,11 @@ namespace Items {
         {
             return rarity.ToString();
         }
+
+        public override ItemSlotType getItemSlotType()
+        {
+            return ItemSlotType.Unique;
+        }
     }
 
     public static class EquipmentFactory {

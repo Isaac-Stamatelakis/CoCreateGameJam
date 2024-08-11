@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Creatures;
+using Items;
+
+namespace Player {
+    public static class PlayerIOUtils
+    {
+        public static void giveLootable(PlayerData playerData, Lootable lootable) {
+            if (lootable is Creature creature) {
+                playerData.creetures.Add(new EquipedCreeture(creature,new List<Equipment>()));
+            } else if (lootable is Equipment equipment) {
+                playerData.equipment.Add(equipment);
+            } else {
+                throw new System.Exception($"PlayerIOUtils method 'giveLootable' did not cover case for lootable of type {lootable.GetType()}");
+            }
+        }
+    }
+}
+

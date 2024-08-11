@@ -103,6 +103,7 @@ namespace Levels.Combat {
         }
 
         public void kill() {
+            GameObject.Destroy(highlightSprite.gameObject);
             GameObject.Destroy(combatUI.gameObject);
             StartCoroutine(killAnimation());
         }
@@ -111,6 +112,9 @@ namespace Levels.Combat {
             int speed = 3;
             Quaternion rotationDegrees = Quaternion.Euler(speed, 0, 0);
             for (int i = 0; i < 90/speed; i++) {
+                Vector3 position = transform.position;
+                position.y -= 0.025f;
+                transform.position = position;
                 Quaternion rotation = transform.rotation;
                 rotation = rotation * rotationDegrees;
                 transform.rotation = rotation;

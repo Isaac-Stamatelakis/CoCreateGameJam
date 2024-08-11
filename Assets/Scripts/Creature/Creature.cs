@@ -54,6 +54,10 @@ namespace Creatures {
         {
             return Sprite;
         }
+        public override ItemSlotType getItemSlotType()
+        {
+            return ItemSlotType.Unique;
+        }
     }
 }
 

@@ -13,6 +13,7 @@ namespace Crafting.Recipes {
     {
         public abstract string getName();
         public abstract Sprite getSprite();
+        public abstract List<IntItemSlot> getIntItemSlotInputs();
     }
 }
 

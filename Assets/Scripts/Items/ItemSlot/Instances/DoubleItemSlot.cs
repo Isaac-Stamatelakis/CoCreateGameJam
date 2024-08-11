@@ -35,6 +35,16 @@ namespace Items {
             }
             amount += doubleItemSlot.amount;
         }
+
+        public override void subtractDouble(double value)
+        {
+            amount -= value;
+        }
+
+        public override void subtractInt(int value)
+        {
+            amount -= (double) value;
+        }
     }
 }
 

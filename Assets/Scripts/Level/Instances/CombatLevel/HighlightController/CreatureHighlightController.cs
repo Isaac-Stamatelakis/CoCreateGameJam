@@ -76,13 +76,13 @@ namespace Levels.Combat {
             if (creatureCombatObject==null) {
                 return;
             }
-            bool selectedCurrentlyMovingCreature = creatureCombatObject.Equals(currentlyMovingCreature);
-            if (selectedCurrentlyMovingCreature) {
-                currentlyMovingCreature.highlight(HighlightType.Turn);
-                displayedCreatureUI.display(viewHighlightedCreature.CreatureInCombat);
-            } else {
-                creatureCombatObject.highlight(null);
+            bool selectedViewHighlightedCreature = creatureCombatObject.Equals(viewHighlightedCreature);
+            if (selectedViewHighlightedCreature) {
+                viewHighlightedCreature = null;
+                displayedCreatureUI.display(currentlyMovingCreature.CreatureInCombat);
             }
+            creatureCombatObject.highlight(null);
+            
         }
 
         public void setSelector(CreatureSelector newSelector) {

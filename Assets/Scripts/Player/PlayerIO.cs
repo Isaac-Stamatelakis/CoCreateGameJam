@@ -18,12 +18,12 @@ namespace Player {
         private List<EquipedCreeture> combatCreatures;
         public List<EquipedCreeture> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
         public List<Equipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
-        public List<IntItemSlot> LootBoxes {get => playerData.lootboxes; set => playerData.lootboxes = value;}
-        public List<IntItemSlot> CraftingItems {get => playerData.craftingItems; set => playerData.craftingItems = value;}
+        public List<IntItemSlot> LootBoxes {get => ItemSlotUtils.sortList<LootBox,IntItemSlot>(playerData.intItemSlots);}
+        public List<IntItemSlot> CraftingItems {get => ItemSlotUtils.sortList<CraftingItem,IntItemSlot>(playerData.intItemSlots);}
         private PlayerData playerData;
         public string CurrentTile {get => playerData.currentTile; set => playerData.currentTile = value;}
         public static PlayerIO Instance { get => instance;}
-        public List<DoubleItemSlot> Currencies {get=>playerData.currencyCounts;}
+        public List<DoubleItemSlot> Currencies {get=> ItemSlotUtils.sortList<Currency,DoubleItemSlot>(playerData.doubleItemSlots);}
 
         public bool hasDiscoveredTile(string tileName) {
             return playerData.discoveredTiles.Contains(tileName);
@@ -44,74 +44,90 @@ namespace Player {
                 give(itemSlot);
             }
         }
+
+        public bool hasItems(List<IntItemSlot> itemSlots) {
+            foreach (IntItemSlot itemSlot in itemSlots) {
+                if (!hasItem(itemSlot)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void take(List<IntItemSlot> itemSlots) {
+            foreach (IntItemSlot itemSlot in itemSlots) {
+                take(itemSlot);
+            }
+        }
         public void give(IntItemSlot itemSlot) {
             if (itemSlot == null || itemSlot.Lootable == null) {
                 return;
             }
             Lootable lootable = itemSlot.Lootable;
-            if (lootable is Creature creature) {
-                playerData.creetures.Add(new EquipedCreeture(creature,new List<Equipment>()));
-            } else if (lootable is Equipment equipment) {
-                playerData.equipment.Add(equipment);
-            } else if (lootable is CraftingItem craftingItem) {
-                ItemSlotFactory.insertList<IntItemSlot>(playerData.craftingItems,itemSlot);
-            } else if (lootable is LootBox lootBox) {
-                ItemSlotFactory.insertList<IntItemSlot>(playerData.lootboxes,itemSlot);
-            } else if (lootable is Currency currency) {
-                DoubleItemSlot currencySlot = ItemSlotFactory.fromIntItemSlot(itemSlot);
-                ItemSlotFactory.insertList<DoubleItemSlot>(playerData.currencyCounts,currencySlot);
+            ItemSlotType itemSlotType = lootable.getItemSlotType();
+            switch (itemSlotType) {
+                case ItemSlotType.Int:
+                    ItemSlotUtils.insertList<IntItemSlot>(playerData.intItemSlots,itemSlot);
+                    break;
+                case ItemSlotType.Double:
+                    DoubleItemSlot currencySlot = ItemSlotUtils.fromIntItemSlot(itemSlot);
+                    ItemSlotUtils.insertList<DoubleItemSlot>(playerData.doubleItemSlots,currencySlot);
+                    break;
+                case ItemSlotType.Unique:
+                    PlayerIOUtils.giveLootable(playerData,lootable);
+                    break;
             }
         }
 
-        public void give(DoubleItemSlot doubleItemSlot) {
-
+        public bool hasItem(IntItemSlot intItemSlot) {
+            if (intItemSlot == null || intItemSlot.Lootable == null) {
+                return false;
+            }
+            Lootable lootable = intItemSlot.Lootable;
+            ItemSlotType itemSlotType = lootable.getItemSlotType();
+            switch (itemSlotType) {
+                case ItemSlotType.Int:
+                    return ItemSlotUtils.hasAmount<IntItemSlot>(playerData.intItemSlots,lootable.getId(),intItemSlot.Amount);
+                case ItemSlotType.Double:
+                    return ItemSlotUtils.hasAmount<DoubleItemSlot>(playerData.doubleItemSlots,lootable.getId(),intItemSlot.Amount);
+            }
+            return false;
         }
+        public void take(IntItemSlot intItemSlot) {
+            if (intItemSlot == null || intItemSlot.Lootable == null) {
+                return;
+            }
+            Lootable lootable = intItemSlot.Lootable;
+            ItemSlotType itemSlotType = lootable.getItemSlotType();
+            switch (itemSlotType) {
+                case ItemSlotType.Int:
+                    ItemSlotUtils.takeAmount<IntItemSlot>(playerData.intItemSlots,lootable.getId(),intItemSlot.Amount);
+                    break;
+                case ItemSlotType.Double:
+                    ItemSlotUtils.takeAmount<DoubleItemSlot>(playerData.doubleItemSlots,lootable.getId(),intItemSlot.Amount);
+                    break;
+            }
+        }
+
+
 
         public int getAmountOfUniqueItem(string id, TieredItemType tieredItemType, Rarity rarity) {
             switch (tieredItemType) {
                 case TieredItemType.Creature:
-                    return ItemSlotFactory.getAmountFromList(playerData.creetures.Cast<UniqueItemSlot>().ToList(),id,rarity);
+                    return ItemSlotUtils.getAmountFromList(playerData.creetures.Cast<UniqueItemSlot>().ToList(),id,rarity);
                 case TieredItemType.Equipment:
-                    return ItemSlotFactory.getAmountFromList(playerData.equipment.Cast<UniqueItemSlot>().ToList(),id,rarity);
+                    return ItemSlotUtils.getAmountFromList(playerData.equipment.Cast<UniqueItemSlot>().ToList(),id,rarity);
             }
             return 0;
             
         }
-        public float getAmountOfLootable(ItemSlot itemSlot) {
-            /*
-            if (itemSlot == null || itemSlot.Lootable == null) {
-                return 0;
-            }
-            if (itemSlot.Lootable is LootBox lootBox) {
-                return LootableCountUtils.getCount<LootBox,LootboxCount>(lootBox,playerData.lootboxes);
-            } else if (itemSlot.Lootable is Currency currency) {
-                return LootableCountUtils.getCount<Currency,CurrencyCount>(currency,playerData.currencyCounts);
-            } else if (itemSlot.Lootable is CraftingItem craftingItem) {
-                return LootableCountUtils.getCount<CraftingItem,ItemSlot>(craftingItem,playerData.craftingItems);
-            }
-            return 0;
-            */
-            return 0;
-
-
-        }
-
+        
         public void take(TieredItemType tieredItemType, int index) {
             List<object> elements = getLootableList(tieredItemType);
             if (index < 0 || index >= elements.Count) {
                 return;
             }
             elements.RemoveAt(index);
-        }
-
-        public void take(ItemSlot itemSlot) {
-            if (itemSlot == null || itemSlot.Lootable == null) {
-                return;
-            }
-            Lootable lootable = itemSlot.Lootable;
-            if (lootable is Currency currency) {
-
-            }
         }
 
         private List<object> getLootableList(TieredItemType tieredItemType) {
@@ -133,17 +149,15 @@ namespace Player {
                 List<Equipment> equipment = DeseralizeEquipment(sPlayerData.equipmentIds);
                 EquipCreatureSerializationFactory equipCreatureSerializationFactory = new EquipCreatureSerializationFactory();
                 List<EquipedCreeture> equipedCreetures = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureData);
-                List<IntItemSlot> lootboxCounts = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.lootboxData);
-                List<DoubleItemSlot> currencyCounts = new DoubleItemSlotSerializationFactory().deserializeList(sPlayerData.currencyCountData);
-                List<IntItemSlot> craftingItems = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.craftingItemData);
+                List<IntItemSlot> intItemSlots = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.intItemSlots);
+                List<DoubleItemSlot> doubleItemSlots = new DoubleItemSlotSerializationFactory().deserializeList(sPlayerData.doubleItemSlots);
                 return new PlayerData(
                     currentTile: sPlayerData.currentTile,
                     discoveredTiles: sPlayerData.discoveredTiles,
                     creetures: equipedCreetures,
                     equipment: equipment,
-                    lootboxCounts: lootboxCounts,
-                    currencyCounts: currencyCounts,
-                    craftingItems: craftingItems
+                    intItemSlots: intItemSlots,
+                    doubleItemSlots: doubleItemSlots
                 );
             } catch (JsonSerializationException e) {
                 Debug.LogError($"Error during player deseralization {e}");
@@ -155,18 +169,16 @@ namespace Player {
 
         public string seralize() {
             List<string> equipmentIds = EquipmentFactory.serialize(playerData.equipment);
-            string lootboxData = new IntItemSlotSerializationFactory().serialize(playerData.lootboxes);
             string creatureData = new EquipCreatureSerializationFactory().serialize(playerData.creetures);
-            string currencyData = new DoubleItemSlotSerializationFactory().serialize(playerData.currencyCounts);
-            string craftingItemData = new IntItemSlotSerializationFactory().serialize(playerData.craftingItems);
+            string doubleItemSlotData = new DoubleItemSlotSerializationFactory().serialize(playerData.doubleItemSlots);
+            string intItemSlotData = new IntItemSlotSerializationFactory().serialize(playerData.intItemSlots);
             SPlayerData sPlayerData = new SPlayerData(
                 currentTileIndex: playerData.currentTile,
                 discoveredTiles: playerData.discoveredTiles,
                 equipmentIds: equipmentIds,
                 creatureData: creatureData,
-                lootboxData: lootboxData,
-                currencyData: currencyData,
-                craftingItems: craftingItemData
+                intItemSlots: intItemSlotData,
+                doubleItemSlots: doubleItemSlotData
             );
             return JsonConvert.SerializeObject(sPlayerData);
         }
@@ -183,8 +195,7 @@ namespace Player {
                 new List<EquipedCreeture>(),
                 new List<Equipment>(),
                 new List<IntItemSlot>{startingBox},
-                new List<DoubleItemSlot>(),
-                new List<IntItemSlot>()
+                new List<DoubleItemSlot>()
             );
         }
 
@@ -208,53 +219,25 @@ namespace Player {
                 List<string> discoveredTiles, 
                 List<string> equipmentIds, 
                 string creatureData,
-                string lootboxData,
-                string currencyData,
-                string craftingItems
+                string intItemSlots,
+                string doubleItemSlots
             ) {
                 this.currentTile = currentTileIndex;
                 this.discoveredTiles = discoveredTiles;
                 this.equipmentIds = equipmentIds;
                 this.creatureData = creatureData;
-                this.lootboxData = lootboxData;
-                this.currencyCountData = currencyData;
-                this.craftingItemData = craftingItems;
+                this.intItemSlots = intItemSlots;
+                this.doubleItemSlots = doubleItemSlots;
             }
             public string currentTile; 
             public List<string> discoveredTiles;
             public List<string> equipmentIds;
             public string creatureData;
-            public string lootboxData;
-            public string currencyCountData;
-            public string craftingItemData;
+            public string intItemSlots;
+            public string doubleItemSlots;
         }
 
-        private class PlayerData {
-            public PlayerData(
-                List<string> discoveredTiles, 
-                string currentTile, 
-                List<EquipedCreeture> creetures, 
-                List<Equipment> equipment, 
-                List<IntItemSlot> lootboxCounts,
-                List<DoubleItemSlot> currencyCounts,
-                List<IntItemSlot> craftingItems
-                ) {
-                this.discoveredTiles = discoveredTiles;
-                this.currentTile = currentTile;
-                this.creetures = creetures;
-                this.equipment = equipment;
-                this.lootboxes = lootboxCounts;
-                this.currencyCounts = currencyCounts;
-                this.craftingItems = craftingItems;
-            }
-            public List<string> discoveredTiles;
-            public string currentTile;
-            public List<EquipedCreeture> creetures;
-            public List<Equipment> equipment;
-            public List<IntItemSlot> lootboxes;
-            public List<DoubleItemSlot> currencyCounts;
-            public List<IntItemSlot> craftingItems;
-        }
+        
 
         
 
@@ -266,5 +249,29 @@ namespace Player {
             public string id;
             public int count;
         }
+    }
+
+    public class PlayerData {
+        public PlayerData(
+            List<string> discoveredTiles, 
+            string currentTile, 
+            List<EquipedCreeture> creetures, 
+            List<Equipment> equipment, 
+            List<IntItemSlot> intItemSlots,
+            List<DoubleItemSlot> doubleItemSlots
+            ) {
+            this.discoveredTiles = discoveredTiles;
+            this.currentTile = currentTile;
+            this.creetures = creetures;
+            this.equipment = equipment;
+            this.intItemSlots = intItemSlots;
+            this.doubleItemSlots = doubleItemSlots;
+        }
+        public List<string> discoveredTiles;
+        public string currentTile;
+        public List<EquipedCreeture> creetures;
+        public List<Equipment> equipment;
+        public List<IntItemSlot> intItemSlots;
+        public List<DoubleItemSlot> doubleItemSlots;
     }
 }

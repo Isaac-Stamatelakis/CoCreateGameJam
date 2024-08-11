@@ -472,8 +472,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a0dd3c05c2aaed428b81f22e1150faf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recipeInputList: {fileID: 5307918377666085449}
-  outputItem: {fileID: 2343575793235376715}
+  recipeInputList: {fileID: 0}
+  outputItem: {fileID: 0}
 --- !u!1 &5307918377666085461
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,7 +485,6 @@ GameObject:
   - component: {fileID: 5307918377666085460}
   - component: {fileID: 5307918377666085462}
   - component: {fileID: 5307918377666085463}
-  - component: {fileID: 5307918377666085449}
   m_Layer: 5
   m_Name: Inputs
   m_TagString: Untagged
@@ -546,20 +545,6 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &5307918377666085449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5307918377666085461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51370cac230cd46479b275da9392ea33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  staticPrefab: {fileID: 7579433242381944751, guid: 69044c5a8e3e1c94fa10f0d316531b0a, type: 3}
-  selectablePrefab: {fileID: 0}
 --- !u!1001 &5307918377187622372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -665,17 +650,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 69044c5a8e3e1c94fa10f0d316531b0a, type: 3}
---- !u!114 &2343575793235376715 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7579433242381944751, guid: 69044c5a8e3e1c94fa10f0d316531b0a, type: 3}
-  m_PrefabInstance: {fileID: 5307918377187622372}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0c9bf1a5e05e3a418bd3529e79959aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4568063848507270368 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8560364850815785220, guid: 69044c5a8e3e1c94fa10f0d316531b0a, type: 3}

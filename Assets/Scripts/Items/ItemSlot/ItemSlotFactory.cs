@@ -7,7 +7,7 @@ using LootBoxes;
 using System;
 
 namespace Items {
-    public static class ItemSlotFactory 
+    public static class ItemSlotUtils 
     {
         public static Color getColor(Rarity rarity) {
             switch (rarity) {
@@ -117,8 +117,69 @@ namespace Items {
             return null;
         }
 
+        public static bool takeAmount<T>(List<T> items, string id, int amount) where T : StackableItemSlot {
+            foreach (T value in items) {
+                if (value == null || value.Lootable == null || !value.Lootable.getId().Equals(id)) {
+                    continue;
+                }
+                if (value.amountToInt() > amount) {
+                    value.subtractInt(amount);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool hasAmount<T>(List<T> items, string id, int amount) where T : StackableItemSlot {
+            foreach (T value in items) {
+                if (value == null || value.Lootable == null || !value.Lootable.getId().Equals(id)) {
+                    continue;
+                }
+                return value.amountToInt() > amount;
+            }
+            return false;
+        }
+
+        public static bool takeAmount<T>(List<T> items, string id, double amount) where T : StackableItemSlot {
+            foreach (T value in items) {
+                if (value == null || value.Lootable == null || !value.Lootable.getId().Equals(id)) {
+                    continue;
+                }
+                if (value.amountToDouble() > amount) {
+                    value.subtractDouble(amount);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool hasAmount<T>(List<T> items, string id, double amount) where T : StackableItemSlot {
+            foreach (T value in items) {
+                if (value == null || value.Lootable == null || !value.Lootable.getId().Equals(id)) {
+                    continue;
+                }
+                return value.amountToInt() > amount;
+            }
+            return false;
+        }
+
+        public static List<G> sortList<T,G>(List<G> itemSlots) where T : Lootable where G : ItemSlot {
+            List<G> elements = new List<G>();
+            foreach (G itemSlot in itemSlots) {
+                if (itemSlot == null || itemSlot.Lootable == null || itemSlot.Lootable is not T value) {
+                    continue;
+                }
+                elements.Add(itemSlot);
+            }
+            return elements;
+        }
+
         public static DoubleItemSlot fromIntItemSlot(IntItemSlot intItemSlot) {
             return new DoubleItemSlot(intItemSlot.Lootable,(double)intItemSlot.Amount);
+        }
+
+        public static IntItemSlot fromDoubleItemSlot(DoubleItemSlot intItemSlot) {
+            return new IntItemSlot(intItemSlot.Lootable,(int)intItemSlot.Amount);
         }
     }
 }

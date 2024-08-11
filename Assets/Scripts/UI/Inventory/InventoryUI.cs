@@ -20,6 +20,17 @@ namespace UI.Inventory {
             this.elements = elements;
             loadSlots();
         }
+
+        public void display(List<T> elements, ColorTheme colorTheme) {
+            display(elements);
+            setTheme(colorTheme);
+        }
+
+        public void setTheme(ColorTheme colorTheme) {
+            foreach (UIInventoryDisplayer<T> slot in slots) {
+                slot.setTheme(colorTheme);
+            }
+        }
         protected void loadSlots() {
             RectTransform rectTransform = GetComponent<RectTransform>();
             GridLayoutGroup gridLayoutGroup = GetComponent<GridLayoutGroup>();

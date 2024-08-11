@@ -15,6 +15,11 @@ namespace Items {
         {
             return sprite;
         }
+
+        public override ItemSlotType getItemSlotType()
+        {
+            return ItemSlotType.Int;
+        }
     }
 }
 

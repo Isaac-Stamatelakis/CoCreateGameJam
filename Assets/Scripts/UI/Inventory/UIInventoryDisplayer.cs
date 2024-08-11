@@ -19,16 +19,28 @@ namespace UI.Inventory {
         public void setTheme(ColorTheme colorTheme) {
             Image panel = GetComponent<Image>();
             if (panel != null) {
-                panel.color = colorTheme.Primary;
+                if (colorTheme == null) {
+                    panel.enabled = false;
+                } else {
+                    panel.color = colorTheme.Primary;
+                }
             }
             Outline outline = GetComponent<Outline>();
             if (outline != null) {
-                outline.effectColor = colorTheme.Tertiary;
+                if (colorTheme == null) {
+                    outline.enabled = false;
+                } else {
+                    outline.effectColor = colorTheme.Tertiary;
+                }
+                
             }
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (inventory == null) {
+                return;
+            }
             if (eventData.button == PointerEventData.InputButton.Left) {
                 inventory.leftClick(index);
             } else if (eventData.button == PointerEventData.InputButton.Right) {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LootBoxes;
+using Items;
 
 namespace Trading {
     [CreateAssetMenu(fileName = "New Currency", menuName = "Item/Currency")]
@@ -16,6 +17,11 @@ namespace Trading {
         public double GrowthRate { get => hourlyGrowthRate / Global.TRADE_UPDATES_PER_HOUR;}
         public double Volatility { get => volatility; }
         public string Acroynm { get => acroynm; }
+
+        public override ItemSlotType getItemSlotType()
+        {
+            return ItemSlotType.Double;
+        }
 
         public override Sprite getSprite()
         {
