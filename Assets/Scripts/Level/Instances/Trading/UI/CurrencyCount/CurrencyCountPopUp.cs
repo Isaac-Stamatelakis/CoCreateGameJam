@@ -14,6 +14,7 @@ namespace Trading.UI {
         [SerializeField] private TMP_InputField inputAmount;
         [SerializeField] private GridLayoutGroup quickSelectButtons;
         [SerializeField] private Button submitButton;
+        [SerializeField] private GameObject buttonPrefab;
         private string lastInput;
         public void display(CurrencyPopUpDisplayMode mode, DoubleItemSlot tradingCreatureCount, DoubleItemSlot playerCount) {
             inputAmount.text = $"{0:F2}";
@@ -27,13 +28,13 @@ namespace Trading.UI {
                     balanceAmount = playerCount.Amount;
                     break;
             }
-            balance.text = ItemSlotFactory.formatAmount(balanceAmount);
+            balance.text = LootableUtils.formatAmount(balanceAmount);
             
             inputAmount.onValueChanged.AddListener((string input) => {
                 if (input.Length == 0) {
                     input = $"{0:F2}";
                 }
-                double value = ItemSlotFactory.parseAmount(input);
+                double value = LootableUtils.parseAmount(input);
                 bool valid = value != double.NaN && value >= 0;
                 if (!valid) {
                     inputAmount.text = lastInput;
@@ -53,20 +54,19 @@ namespace Trading.UI {
                     title.text = "Invest";
                     break;
             }
-            List<double> values = ItemSlotFactory.getQuickSelectOptions(balanceAmount);
-            GameObject buttonPrefab = quickSelectButtons.transform.GetChild(0).gameObject;
+            List<double> values = LootableUtils.getQuickSelectOptions(balanceAmount);
             GlobalUtils.deleteChildren(quickSelectButtons.transform);
             foreach (double value in values) {
                 GameObject button = GameObject.Instantiate(buttonPrefab);
                 button.transform.SetParent(quickSelectButtons.transform);
-                button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = ItemSlotFactory.formatAmount(value);
+                button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"${LootableUtils.formatAmount(value)}";
                 button.GetComponent<Button>().onClick.AddListener(() => {
                     quickSelect(value);
                 });
             }
 
             submitButton.onClick.AddListener(() => {
-                double value = ItemSlotFactory.parseAmount(inputAmount.text);
+                double value = LootableUtils.parseAmount(inputAmount.text);
                 switch (mode) {
                     case CurrencyPopUpDisplayMode.Withdraw:
                         playerCount.Amount += value;
@@ -86,7 +86,7 @@ namespace Trading.UI {
 
         }
         private void quickSelect(double value) {
-            inputAmount.text = ItemSlotFactory.formatAmount(value);
+            inputAmount.text = LootableUtils.formatAmount(value);
         }
     }
 

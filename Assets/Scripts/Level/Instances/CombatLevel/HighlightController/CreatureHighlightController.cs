@@ -11,6 +11,8 @@ namespace Levels.Combat {
         private CreatureCombatObject viewHighlightedCreature;
         private CombatLevelDisplayedCreatureUI displayedCreatureUI;
         private CombatPlayer humanPlayer;
+        private List<CreatureCombatObject> previouslyHighlightedEnemies;
+        private List<CreatureCombatObject> previouslyHighlightedAllies;
         public CreatureHighlightController(CombatPlayer humanPlayer, CombatLevelDisplayedCreatureUI displayedCreatureUI) {
             this.humanPlayer = humanPlayer;
             this.displayedCreatureUI = displayedCreatureUI;
@@ -40,6 +42,9 @@ namespace Levels.Combat {
         }
 
         private void highlightForSelector(CreatureCombatObject creatureCombatObject) {
+            if (creatureCombatObject == null || creatureCombatObject.CreatureInCombat.IsDead) {
+                return;
+            }
             bool isAlly = humanPlayer.Creatures.Contains(creatureCombatObject.CreatureInCombat);
             bool isSelf = creatureCombatObject.Equals(currentlyMovingCreature);
             bool validSelection = creatureSelector.isValidSelection(isAlly,isSelf);
@@ -80,13 +85,45 @@ namespace Levels.Combat {
             }
         }
 
-        public void setSelector(CreatureSelector creatureSelector) {
+        public void setSelector(CreatureSelector newSelector) {
             if (this.creatureSelector != null) {
+                List<CreatureCombatObject> creatureCombatObjects = this.creatureSelector.Creatures;
+                List<CreatureCombatObject> enemyCreatures = new List<CreatureCombatObject>();
+                List<CreatureCombatObject> allyCreatures = new List<CreatureCombatObject>();
+                foreach (CreatureCombatObject creatureCombatObject in creatureCombatObjects) {
+                    if (humanPlayer.Creatures.Contains(creatureCombatObject.CreatureInCombat)) {
+                        allyCreatures.Add(creatureCombatObject);
+                    } else {
+                        enemyCreatures.Add(creatureCombatObject);
+                    }
+                }
+                if (allyCreatures.Count > 0) {
+                    previouslyHighlightedAllies = allyCreatures;
+                }
+                if (enemyCreatures.Count > 0) {
+                    previouslyHighlightedEnemies = enemyCreatures;
+                }
                 this.creatureSelector.clear();
             }
-            this.creatureSelector = creatureSelector;
+            this.creatureSelector = newSelector;
+            if (newSelector != null) {
+                selectFromMemory(new List<CreatureCombatObject>{viewHighlightedCreature});
+                selectFromMemory(previouslyHighlightedEnemies);
+                selectFromMemory(previouslyHighlightedAllies);
+            }
         }
 
+        private void selectFromMemory(List<CreatureCombatObject> creatureCombatObjects) {
+            if (creatureCombatObjects == null) {
+                return;
+            }
+            foreach (CreatureCombatObject creatureCombatObject in creatureCombatObjects) {
+                if (creatureSelector.IsFull) {
+                    return;
+                }
+                highlightForSelector(creatureCombatObject);
+            }
+        }
         
 
         public void setCurrentCreatureTurn(CreatureCombatObject creatureCombatObject) {

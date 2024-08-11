@@ -25,6 +25,7 @@ namespace Actions {
         private bool allowSelf;
         public List<CreatureCombatObject> Creatures { get => creatures; }
         public TextMeshProUGUI TextUI { get => textUI; set => textUI = value; }
+        public bool IsFull {get => creatures.Count >= maxTargets;}
 
         public bool isValidSelection(bool isAlly, bool isSelf) {
             if (!allowSelf && isSelf) {
@@ -59,6 +60,9 @@ namespace Actions {
 
         public void clear() {
             foreach (CreatureCombatObject creatureCombatObject in creatures) {
+                if (creatureCombatObject.CreatureInCombat.IsDead) {
+                    continue;
+                }
                 creatureCombatObject.highlight(null);
             }
         }

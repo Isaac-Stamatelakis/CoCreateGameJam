@@ -57,6 +57,7 @@ namespace Levels.Combat {
             this.combatLevelActionUIController = combatLevelActionUIController;
             backButton.onClick.AddListener(() => {
                 combatLevelActionUIController.ActionSelectUI.gameObject.SetActive(true);
+                combatLevelController.CreatureHighlightController.setSelector(null);
                 GameObject.Destroy(gameObject);
             });
             

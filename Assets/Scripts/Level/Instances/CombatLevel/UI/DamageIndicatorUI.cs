@@ -8,7 +8,7 @@ namespace Levels.Combat {
     {
         [SerializeField] private TextMeshProUGUI amountText;
         public void display(float damage, DamageType damageType, Vector3 targetPosition) {
-            amountText.text = $"{damage:F0}";
+            amountText.text = $"{damage:F1}";
             RectTransform rectTransform = (RectTransform) transform;
             float RANDOM_RANGE = 32;
             Vector3 randomOffset = new Vector3(Random.Range(-RANDOM_RANGE,RANDOM_RANGE),Random.Range(-RANDOM_RANGE,RANDOM_RANGE));

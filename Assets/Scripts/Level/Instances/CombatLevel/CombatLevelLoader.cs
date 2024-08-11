@@ -19,9 +19,6 @@ namespace Levels.Combat {
                 new EquipedCreeture(registry.getLootable<Creature>("soddle"), new List<Equipment>()),
                 new EquipedCreeture(registry.getLootable<Creature>("dragoon"), new List<Equipment>())
             };
-            foreach (EquipedCreeture equipedCreeture in testingCreatings) {
-                Debug.Log(equipedCreeture.creeture.name);
-            }
             CombatPlayer humanPlayer = new CombatPlayer(testingCreatings);
             CombatPlayer aiPlayer = new CombatPlayer(level.enemyCreatures);
             combatLevelController.load(humanPlayer,aiPlayer,level);

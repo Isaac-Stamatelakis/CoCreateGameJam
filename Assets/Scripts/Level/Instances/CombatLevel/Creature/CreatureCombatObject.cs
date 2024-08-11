@@ -103,7 +103,6 @@ namespace Levels.Combat {
         }
 
         public void kill() {
-            Debug.Log($"Killed {name}");
             GameObject.Destroy(combatUI.gameObject);
             StartCoroutine(killAnimation());
         }

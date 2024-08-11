@@ -54,9 +54,7 @@ namespace Player {
             } else if (lootable is Equipment equipment) {
                 playerData.equipment.Add(equipment);
             } else if (lootable is CraftingItem craftingItem) {
-                Debug.Log("Here");
                 ItemSlotFactory.insertList<IntItemSlot>(playerData.craftingItems,itemSlot);
-                Debug.Log(playerData.craftingItems.Count);
             } else if (lootable is LootBox lootBox) {
                 ItemSlotFactory.insertList<IntItemSlot>(playerData.lootboxes,itemSlot);
             } else if (lootable is Currency currency) {

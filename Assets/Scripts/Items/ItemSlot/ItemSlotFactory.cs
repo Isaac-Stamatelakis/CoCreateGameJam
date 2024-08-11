@@ -91,17 +91,6 @@ namespace Items {
             return 0;
         }
 
-        public static string formatAmount(double amount) {
-            return "";
-        }
-
-        public static double parseAmount(string input) {
-            return 0;
-        }
-
-        public static List<double> getQuickSelectOptions(double amount) {
-            return new List<double>{100,1000,10000};
-        }
 
         public static void insertList<T>(List<T> items, T item) where T : StackableItemSlot {
             foreach (T value in items) {

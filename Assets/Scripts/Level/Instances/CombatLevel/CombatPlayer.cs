@@ -24,12 +24,7 @@ namespace Levels.Combat {
         }
 
         public bool IsDead() {
-            foreach (CreatureInCombat creatureInCombat in creatures) {
-                if (creatureInCombat.Health > 0) {
-                    return false;
-                }
-            }
-            return true;
+            return creatures.Count == 0;
         }
 
         public bool HasCreature(CreatureInCombat creature) {
