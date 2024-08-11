@@ -5,22 +5,22 @@ using UnityEngine.UI;
 using UI.Inventory;
 
 namespace Trading.UI {
-    public class CreatureTradingUIPage : MonoBehaviour
+    public class CreatureTradingUIPage : MonoBehaviour, IDisplayController
     {
         [SerializeField] private TradingCreatureList tradingCreatureList;
-        [SerializeField] private DetailedTradingCreatureView detailedTradingCreatureView;
+        [SerializeField] private Transform detailedViewContainer;
         [SerializeField] private AggregateTradingCreatureDisplay aggregateTradingCreatureDisplay;
         [SerializeField] private Button backButton;
         [SerializeField] private Button homeButton;
         public void Start() {
             backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(() => {
-                GameObject.Destroy(gameObject);
+                gameObject.SetActive(false);
             });
 
             homeButton.onClick.RemoveAllListeners();
             homeButton.onClick.AddListener(() => {
-                detailedTradingCreatureView.gameObject.SetActive(false);
+                GlobalUtils.deleteChildren(detailedViewContainer);
                 aggregateTradingCreatureDisplay.gameObject.SetActive(true);
             });
         }
@@ -30,6 +30,11 @@ namespace Trading.UI {
         }
         public void FixedUpdate() {
             tradingCreatureList.refresh();
+        }
+
+        public Transform getDetailedDisplayContainer()
+        {
+            return detailedViewContainer;
         }
     }
 }

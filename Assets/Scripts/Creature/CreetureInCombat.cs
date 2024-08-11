@@ -30,9 +30,17 @@ namespace Creatures {
             } else if (equipedCreeture.Creeture.Strengths.Contains(damageType)) {
                 damage *= Global.WEAKNESS_DAMAGE_MODIFIER;
             }
+            DamageIndicatorUI damageIndicatorUI = CombatLevelPrefabContainer.Instance.getDamageIndicator();
+            Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(Camera.main,creatureCombatObject.transform.position);
+            damageIndicatorUI.display(damage,damageType,screenPosition);
+            damageIndicatorUI.transform.SetParent(CombatLevelController.Instance.CanvasTransform);
+            if (health <= 0) {
+                return;
+            }
             health -= damage;
-            if (health < 0) {
+            if (health <= 0) {
                 health = 0;
+                creatureCombatObject.kill();
             }
             creatureCombatObject.CombatUI.display();
         }

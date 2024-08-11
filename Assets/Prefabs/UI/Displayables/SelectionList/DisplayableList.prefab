@@ -782,7 +782,7 @@ GameObject:
   - component: {fileID: 8421004933263405378}
   - component: {fileID: 8421004933263405383}
   - component: {fileID: 8421004933263405376}
-  - component: {fileID: 8421004933263405377}
+  - component: {fileID: 3016367456641913613}
   m_Layer: 5
   m_Name: DisplayableList
   m_TagString: Untagged
@@ -850,7 +850,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8421004933263405377
+--- !u!114 &3016367456641913613
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -859,12 +859,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8421004933263405379}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bd8066822d28c94aa863ad90758b4ec, type: 3}
+  m_Script: {fileID: 11500000, guid: c05271666aee75d4a8839012ada96bc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 8421004932670014060}
   mainBackground: {fileID: 8421004933263405376}
-  scrollViewBackground: {fileID: 8421004933598490024}
+  scrollViewBackground: {fileID: 8421004933472468541}
   titleBackground: {fileID: 8421004933314538039}
   scrollViewHandle: {fileID: 8421004933173009067}
   list: {fileID: 8421004933992267483}

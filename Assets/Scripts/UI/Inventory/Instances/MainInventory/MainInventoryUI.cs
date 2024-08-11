@@ -3,9 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI.Inventory {
+
+    public interface IDisplayController {
+        public Transform getDetailedDisplayContainer();
+        public void setDetailedDisplay(GameObject detailedDisplay) {
+            Transform detailedDisplayContainer = getDetailedDisplayContainer();
+            GlobalUtils.deleteChildren(detailedDisplayContainer);
+            detailedDisplay.transform.SetParent(detailedDisplayContainer,false);
+        }
+    }
     public abstract class MainInventoryUI<T> : InventoryUI<T> where T : IDisplayable
     {
-        private InventoryController controller;
+        private IDisplayController controller;
         [SerializeField] private UIInventoryDisplayer<T> detailedDisplayPrefab;
         public void Start() {
             getController();
@@ -21,7 +30,7 @@ namespace UI.Inventory {
         private void getController() {
             Transform parentTransform = transform.parent;
             while (parentTransform != null) {
-                controller = parentTransform.GetComponent<InventoryController>();
+                controller = parentTransform.GetComponent<IDisplayController>();
                 if (controller != null) {
                     return;
                 }

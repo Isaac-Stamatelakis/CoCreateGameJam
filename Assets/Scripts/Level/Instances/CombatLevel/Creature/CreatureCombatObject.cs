@@ -25,7 +25,6 @@ namespace Levels.Combat {
         public CreatureCombatUI CombatUI { get => combatUI; }
         public Animator Animator { get => animator; }
         public AudioSource AudioSource { get => audioSource; }
-
         private Vector3 originPosition;
         private List<StatusEffect> statusEffects;
 
@@ -101,6 +100,24 @@ namespace Levels.Combat {
                 yield return new WaitForFixedUpdate();
             }
             setPosition(originPosition);
+        }
+
+        public void kill() {
+            Debug.Log($"Killed {name}");
+            GameObject.Destroy(combatUI.gameObject);
+            StartCoroutine(killAnimation());
+        }
+
+        private IEnumerator killAnimation() {
+            int speed = 3;
+            Quaternion rotationDegrees = Quaternion.Euler(speed, 0, 0);
+            for (int i = 0; i < 90/speed; i++) {
+                Quaternion rotation = transform.rotation;
+                rotation = rotation * rotationDegrees;
+                transform.rotation = rotation;
+                yield return new WaitForFixedUpdate();
+            }
+            GameObject.Destroy(gameObject);
         }
     }
 }

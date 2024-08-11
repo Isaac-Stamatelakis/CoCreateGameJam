@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 namespace Levels.Combat {
-    public class GameOverUIController : MonoBehaviour
+    public class GameOverController : MonoBehaviour
     {
         [SerializeField] public Button continueButton;
         [SerializeField] public Image continueButtonImage;

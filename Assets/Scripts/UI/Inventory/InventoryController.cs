@@ -9,7 +9,7 @@ using Items;
 using System.Linq;
 
 namespace UI.Inventory {
-    public class InventoryController : MonoBehaviour
+    public class InventoryController : MonoBehaviour, IDisplayController
     {
         [SerializeField] private Button backButton;
         [SerializeField] private TextMeshProUGUI titleText;
@@ -76,11 +76,9 @@ namespace UI.Inventory {
             }
         }
 
-        public void setDetailedDisplay(GameObject detailedDisplay) {
-            for (int i = 0; i < detailedDisplayContainer.childCount; i++) {
-                GameObject.Destroy(detailedDisplayContainer.GetChild(i).gameObject);
-            }
-            detailedDisplay.transform.SetParent(detailedDisplayContainer,false);
+        public Transform getDetailedDisplayContainer()
+        {
+            return detailedDisplayContainer;
         }
     }
     public enum InventoryUIMode {

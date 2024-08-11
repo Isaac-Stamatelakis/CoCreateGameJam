@@ -8,14 +8,22 @@ using Actions.Script;
 namespace Levels.Combat {
     public class CombatLevelController : MonoBehaviour
     {
+        private static CombatLevelController instance;
+        public void Awake() {
+            instance = this;
+        }
         [SerializeField] private CombatLevelUIController uiController;
         [SerializeField] private CombatCreatureContainer humanPlayerCreatures;
         [SerializeField] private CombatCreatureContainer aiPlayerCreatures;
+        [SerializeField] private GameOverController playerLoseUIPrefab;
+        [SerializeField] private PlayerWinUI playerWinUIPrefab;
         private List<CreatureInCombat> creatureTurns;
         private CombatPlayer humanPlayer;
         private CombatPlayer aiPlayer;
         private CreatureHighlightController creatureHighlightController;
         public CreatureHighlightController CreatureHighlightController { get => creatureHighlightController; }
+        public static CombatLevelController Instance { get => instance; }
+        public Transform CanvasTransform { get => uiController.transform; }
 
         public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevel combatLevel) {
             this.humanPlayer = humanPlayer;
@@ -40,11 +48,11 @@ namespace Levels.Combat {
 
         public void handleNewCreatureTurn() {
             if (humanPlayer.IsDead()) {
-                Debug.Log("AI Win");
+                showGameOverScreen(playerLoseUIPrefab);
                 return;
             }
             if (aiPlayer.IsDead()) {
-                Debug.Log("Player Win");
+                showGameOverScreen(playerWinUIPrefab);
                 return;
             }
             if (creatureTurns.Count < 0) {
@@ -66,7 +74,17 @@ namespace Levels.Combat {
             Debug.LogError($"{currentCreatureTurn.name} Doesn't belong to the player or ai");
         }
 
+        
+
         public IEnumerator nextCreatureTurn() {
+            clearCreatureListOfDead(creatureTurns);
+            clearCreatureListOfDead(humanPlayer.Creatures);
+            clearCreatureListOfDead(aiPlayer.Creatures);
+            if (creatureTurns.Count == 0) {
+                showGameOverScreen(playerLoseUIPrefab);
+                Debug.Log("Tie");
+                yield return null;
+            }
             CreatureInCombat currentTurn = creatureTurns[0];
             yield return currentTurn.CreatureCombatObject.resetPosition();
             creatureTurns.RemoveAt(0);
@@ -75,6 +93,20 @@ namespace Levels.Combat {
                 creatureTurns.RemoveAt(0);
             }
             handleNewCreatureTurn();
+        }
+
+        private void showGameOverScreen(GameOverController prefab) {
+            GameOverController instantiated = GameObject.Instantiate(prefab);
+            instantiated.transform.SetParent(uiController.transform,false);
+        }
+
+        private void clearCreatureListOfDead(List<CreatureInCombat> creatures) {
+            for (int i = 0; i < creatures.Count; i++) {
+                if (creatures[i].IsDead) {
+                    creatures.RemoveAt(i);
+                    i--;
+                }
+            }
         }
 
         public void Update() {
