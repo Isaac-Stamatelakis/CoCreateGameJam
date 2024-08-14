@@ -8,10 +8,14 @@ namespace Crafting.Recipes {
     public class TierUpgradeRecipe : Recipe
     {
         [SerializeField] private TieredItemType type;
-        [SerializeField] private int amount;
+        [SerializeField] private int amountOfType;
         [SerializeField] private Rarity inputTier;
         [SerializeField] private Sprite recipeSprite;
         [SerializeField] private List<IntItemSlot> additonalInputs;
+
+        public TieredItemType LootableType { get => type; }
+        public Rarity InputTier { get => inputTier; }
+        public int AmountOfType { get => amountOfType; set => amountOfType = value; }
 
         public override List<IntItemSlot> getIntItemSlotInputs()
         {

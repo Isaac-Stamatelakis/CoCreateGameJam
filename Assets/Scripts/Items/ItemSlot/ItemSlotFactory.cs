@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using Creatures;
 using LootBoxes;
 using System;
+using Crafting;
+using Player;
 
 namespace Items {
     public static class ItemSlotUtils 
@@ -122,7 +124,7 @@ namespace Items {
                 if (value == null || value.Lootable == null || !value.Lootable.getId().Equals(id)) {
                     continue;
                 }
-                if (value.amountToInt() > amount) {
+                if (value.amountToInt() >= amount) {
                     value.subtractInt(amount);
                     return true;
                 }
@@ -135,7 +137,7 @@ namespace Items {
                 if (value == null || value.Lootable == null || !value.Lootable.getId().Equals(id)) {
                     continue;
                 }
-                return value.amountToInt() > amount;
+                return value.amountToInt() >= amount;
             }
             return false;
         }
@@ -145,7 +147,7 @@ namespace Items {
                 if (value == null || value.Lootable == null || !value.Lootable.getId().Equals(id)) {
                     continue;
                 }
-                if (value.amountToDouble() > amount) {
+                if (value.amountToDouble() >= amount) {
                     value.subtractDouble(amount);
                     return true;
                 }
@@ -161,6 +163,16 @@ namespace Items {
                 return value.amountToInt() > amount;
             }
             return false;
+        }
+
+        public static int getAmount<T>(List<T> items, string id) where T : StackableItemSlot {
+            foreach (T value in items) {
+                if (value == null || value.Lootable == null || !value.Lootable.getId().Equals(id)) {
+                    continue;
+                }
+                return value.amountToInt();
+            }
+            return 0;
         }
 
         public static List<G> sortList<T,G>(List<G> itemSlots) where T : Lootable where G : ItemSlot {
@@ -180,6 +192,19 @@ namespace Items {
 
         public static IntItemSlot fromDoubleItemSlot(DoubleItemSlot intItemSlot) {
             return new IntItemSlot(intItemSlot.Lootable,(int)intItemSlot.Amount);
+        }
+
+        public static List<RequirementIntItemSlot> toRequirementSlots(List<IntItemSlot> itemSlots) {
+            PlayerIO playerIO = PlayerIO.Instance;
+            List<RequirementIntItemSlot> requirementIntItemSlots = new List<RequirementIntItemSlot>();
+            foreach (IntItemSlot intItemSlot in itemSlots) {
+                if (intItemSlot == null || intItemSlot.Lootable == null) {
+                    continue;
+                }
+                int playerAmount = playerIO.amountOfItem(intItemSlot.Lootable.getId());
+                requirementIntItemSlots.Add(new RequirementIntItemSlot(intItemSlot.Lootable,intItemSlot.Amount,playerAmount));
+            }
+            return requirementIntItemSlots;
         }
     }
 }

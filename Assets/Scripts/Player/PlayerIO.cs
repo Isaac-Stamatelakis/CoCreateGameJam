@@ -109,9 +109,28 @@ namespace Player {
             }
         }
 
+        public int amountOfItem(string id) {
+            Lootable lootable = LootableRegistry.getInstance().getLootable(id);
+            ItemSlotType itemSlotType = lootable.getItemSlotType();
+            switch (itemSlotType) {
+                case ItemSlotType.Int:
+                    return ItemSlotUtils.getAmount<IntItemSlot>(playerData.intItemSlots,id);
+                case ItemSlotType.Double:
+                    return ItemSlotUtils.getAmount<DoubleItemSlot>(playerData.doubleItemSlots,id);
+                case ItemSlotType.Unique:
+                    if (lootable is Creature) {
+                        return getAmountOfUniqueItem(id,TieredItemType.Creature,null);
+                    } else if (lootable is Equipment) {
+                        return getAmountOfUniqueItem(id,TieredItemType.Equipment,null);
+                    }
+                    break;
+            }
+            return 0;
+        }
 
 
-        public int getAmountOfUniqueItem(string id, TieredItemType tieredItemType, Rarity rarity) {
+
+        public int getAmountOfUniqueItem(string id, TieredItemType tieredItemType, Rarity? rarity) {
             switch (tieredItemType) {
                 case TieredItemType.Creature:
                     return ItemSlotUtils.getAmountFromList(playerData.creetures.Cast<UniqueItemSlot>().ToList(),id,rarity);

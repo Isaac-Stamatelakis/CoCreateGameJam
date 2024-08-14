@@ -17,45 +17,46 @@ namespace Crafting.UI {
         private Button button;
         public abstract void craft();
         private bool inAnimation = false;
+        private Color buttonColor;
 
         public void setButton(Button button)
         {
             this.button = button;
+            buttonColor = button.GetComponent<Image>().color;
         }
 
         protected void craftFail() {
             if (inAnimation) {
                 return;
             }
-            StartCoroutine(craftFailAnimation());
+            StartCoroutine(craftAnimation(5,true,Color.red,20,0));
         }
 
         protected void craftSucceed() {
-            StartCoroutine(craftSucceedAnimation());
+            StartCoroutine(craftAnimation(0,false,Color.green,20,0.2f));
         }
 
-        private IEnumerator craftFailAnimation() {
-            inAnimation = true;
-            Vector3 originalPosition = button.transform.position;
+        private IEnumerator craftAnimation(float shakeRange, bool lockAnimation, Color color, int fixedUpdates, float initalDelay) {
+            if (lockAnimation) {
+                inAnimation = true;
+            }
             Image image = button.GetComponent<Image>();
-            Color originalColor = image.color;
-            image.color = Color.red;
-            float shakeRange = 5;
-            for (int i = 0; i < 20; i++) {
-                button.transform.position = originalPosition + new Vector3(Random.Range(-shakeRange,shakeRange),Random.Range(-shakeRange,shakeRange));
+            Vector3 originalPosition = button.transform.position;
+            image.color = color;
+            if (initalDelay > 0) {
+                yield return new WaitForSeconds(0.2f);
+            }
+            for (int i = 0; i < fixedUpdates; i++) {
+                float t = (float) i / fixedUpdates;
+                image.color = Color.Lerp(color, buttonColor, t);
+                if (shakeRange > 0) {
+                    button.transform.position = originalPosition + new Vector3(Random.Range(-shakeRange,shakeRange),Random.Range(-shakeRange,shakeRange));
+                }
                 yield return new WaitForFixedUpdate();
             }
+            button.GetComponent<Image>().color = buttonColor;
             button.transform.position = originalPosition;
-            button.GetComponent<Image>().color = originalColor;
             inAnimation = false;
-        }
-
-        private IEnumerator craftSucceedAnimation() {
-            Image image = button.GetComponent<Image>();
-            Color originalColor = image.color;
-            image.color = Color.green;
-            yield return new WaitForSeconds(0.2f);
-            button.GetComponent<Image>().color = originalColor;
         }
     }
 
