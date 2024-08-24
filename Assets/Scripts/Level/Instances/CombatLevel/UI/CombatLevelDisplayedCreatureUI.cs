@@ -7,6 +7,7 @@ using UI;
 using UI.Inventory;
 using Items;
 using Creatures;
+using Items.Equipment;
 
 namespace Levels.Combat {
     public class CombatLevelDisplayedCreatureUI : MonoBehaviour

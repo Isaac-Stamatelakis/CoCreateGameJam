@@ -4,6 +4,7 @@ using UnityEngine;
 using Items;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Items.Equipment;
 
 namespace UI.Inventory {
     public class EquipmentUIDisplay : UIInventoryDisplayer<Equipment>, IPointerClickHandler

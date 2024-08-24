@@ -17,7 +17,7 @@ namespace Levels.Combat {
         }
 
         public void display() {
-            healthSlider.value=creatureInCombat.Health/creatureInCombat.EquipedCreeture.getStat(Items.CreatureStat.Health);
+            healthSlider.value=creatureInCombat.Health/creatureInCombat.EquipedCreeture.getStat(CreatureStat.Health);
             manaSlider.value = 1;
         }
     }

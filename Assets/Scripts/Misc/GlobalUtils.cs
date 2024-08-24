@@ -49,11 +49,11 @@ public static class GlobalUtils
         return new Color(r/255f,g/255f,b/255f,a/255f);
     }
 
-    public static Canvas getCanvas(Transform transform) {
+    public static T getComponentInHeirarchy<T>(Transform transform) where T : Behaviour{
         while (transform != null) {
-            Canvas canvas = transform.GetComponent<Canvas>();
-            if (canvas != null) {
-                return canvas;
+            T component = transform.GetComponent<T>();
+            if (component != null) {
+                return component;
             }
             transform = transform.parent;
         }

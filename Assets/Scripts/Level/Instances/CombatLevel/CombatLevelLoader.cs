@@ -4,6 +4,7 @@ using UnityEngine;
 using Player;
 using Creatures;
 using Items;
+using Items.Equipment;
 
 namespace Levels.Combat {
     public class CombatLevelLoader : LevelLoader<CombatLevel>

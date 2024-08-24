@@ -4,6 +4,7 @@ using UnityEngine;
 using Crafting.Recipes;
 using System;
 using UI.Inventory;
+using TMPro;
 using UnityEngine.UI;
 
 namespace Crafting.UI {
@@ -13,6 +14,7 @@ namespace Crafting.UI {
         [SerializeField] private Button craftButton;
         [SerializeField] private ItemRecipeDisplayer itemRecipeDisplayer;
         [SerializeField] private TierUpgradeRecipeDisplayer tierUpgradeRecipeDisplayer;
+        [SerializeField] private TextMeshProUGUI recipeTitle;
         private IRecipeDisplayer currentDisplayer;
         public IRecipeDisplayer CurrentDisplayer { get => currentDisplayer; }
         public void Start() {
@@ -34,7 +36,7 @@ namespace Crafting.UI {
         {
             GlobalUtils.deleteChildren(inputContentContainer.transform);
             GameObject recipeDisplayer = GameObject.Instantiate(getRecipeDisplayerPrefab(recipe));
-
+            recipeTitle.text = recipe.getName();
             recipeDisplayer.transform.SetParent(inputContentContainer,false);
             recipeDisplayer.GetComponent<IRecipeDisplayer>().setButton(craftButton);
             // Probalby another way to do this 

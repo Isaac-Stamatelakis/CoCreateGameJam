@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
 using Items;
+using Items.Equipment;
 
 namespace Player {
     public static class PlayerIOUtils

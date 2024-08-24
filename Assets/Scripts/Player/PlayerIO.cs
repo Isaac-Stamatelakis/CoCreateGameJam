@@ -10,6 +10,7 @@ using System.IO;
 using Trading;
 using System.Linq;
 using System;
+using Items.Equipment;
 
 namespace Player {
     public class PlayerIO : MonoBehaviour
@@ -165,7 +166,7 @@ namespace Player {
             Debug.Log(Application.persistentDataPath);
             try {
                 SPlayerData sPlayerData = JsonConvert.DeserializeObject<SPlayerData>(data);
-                List<Equipment> equipment = DeseralizeEquipment(sPlayerData.equipmentIds);
+                List<Equipment> equipment = new EquipmentFactory().deserializeList(sPlayerData.equipmentData);
                 EquipCreatureSerializationFactory equipCreatureSerializationFactory = new EquipCreatureSerializationFactory();
                 List<EquipedCreeture> equipedCreetures = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureData);
                 List<IntItemSlot> intItemSlots = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.intItemSlots);
@@ -187,14 +188,14 @@ namespace Player {
         }
 
         public string seralize() {
-            List<string> equipmentIds = EquipmentFactory.serialize(playerData.equipment);
+            string equipmentData = new EquipmentFactory().serialize(playerData.equipment);
             string creatureData = new EquipCreatureSerializationFactory().serialize(playerData.creetures);
             string doubleItemSlotData = new DoubleItemSlotSerializationFactory().serialize(playerData.doubleItemSlots);
             string intItemSlotData = new IntItemSlotSerializationFactory().serialize(playerData.intItemSlots);
             SPlayerData sPlayerData = new SPlayerData(
                 currentTileIndex: playerData.currentTile,
                 discoveredTiles: playerData.discoveredTiles,
-                equipmentIds: equipmentIds,
+                equipmentData: equipmentData,
                 creatureData: creatureData,
                 intItemSlots: intItemSlotData,
                 doubleItemSlots: doubleItemSlotData
@@ -236,21 +237,21 @@ namespace Player {
             public SPlayerData(
                 string currentTileIndex, 
                 List<string> discoveredTiles, 
-                List<string> equipmentIds, 
+                string equipmentData, 
                 string creatureData,
                 string intItemSlots,
                 string doubleItemSlots
             ) {
                 this.currentTile = currentTileIndex;
                 this.discoveredTiles = discoveredTiles;
-                this.equipmentIds = equipmentIds;
+                this.equipmentData = equipmentData;
                 this.creatureData = creatureData;
                 this.intItemSlots = intItemSlots;
                 this.doubleItemSlots = doubleItemSlots;
             }
             public string currentTile; 
             public List<string> discoveredTiles;
-            public List<string> equipmentIds;
+            public string equipmentData;
             public string creatureData;
             public string intItemSlots;
             public string doubleItemSlots;

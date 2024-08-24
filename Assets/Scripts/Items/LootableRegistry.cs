@@ -17,7 +17,7 @@ public class LootableRegistry
             }
             dict[lootable.getId()] = lootable;
         }
-        Debug.Log(dict.Count + "Lootables Loaded");
+        Debug.Log($"{dict.Count} Lootables Loaded");
     }
     public static LootableRegistry getInstance() {
         if (instance == null) {

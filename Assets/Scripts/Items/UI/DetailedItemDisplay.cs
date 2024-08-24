@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Items;
+using Items.Equipment;
 using UnityEngine.UI;
 using TMPro;
 
@@ -14,7 +14,7 @@ namespace UI.Inventory {
         [SerializeField] private TextMeshProUGUI statText;
         public override void display(Equipment element)
         {
-            this.titleText.text = element.name;
+            this.titleText.text = element.getName();
             this.image.sprite = element.getSprite();
             this.statText.text = "";
             this.rarityText.text = "";

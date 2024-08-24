@@ -7,6 +7,7 @@ using Player;
 using Creatures;
 using Items;
 using System.Linq;
+using Items.Equipment;
 
 namespace UI.Inventory {
     public class InventoryController : MonoBehaviour, IDisplayController

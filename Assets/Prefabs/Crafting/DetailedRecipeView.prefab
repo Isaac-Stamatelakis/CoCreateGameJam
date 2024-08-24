@@ -533,6 +533,7 @@ MonoBehaviour:
   craftButton: {fileID: 2487575149386066993}
   itemRecipeDisplayer: {fileID: 1636054902783597291, guid: 5484ebe1e687cf24b8b6887453383860, type: 3}
   tierUpgradeRecipeDisplayer: {fileID: 3766688442012545407, guid: 854da83a36da29645a3bbfc9e404eeea, type: 3}
+  recipeTitle: {fileID: 2487575148903795361}
 --- !u!1 &2487575149929345816
 GameObject:
   m_ObjectHideFlags: 0

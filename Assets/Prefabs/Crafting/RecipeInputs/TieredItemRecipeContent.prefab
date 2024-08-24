@@ -811,6 +811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recipeInputList: {fileID: 4613664155945569578}
   autoFillButton: {fileID: 4272037253143544671}
+  autoFillButtonText: {fileID: 5225906866356637669}
   autoFillSelector: {fileID: 6421265210834976206}
   output: {fileID: 6212955386679919844}
   selectableItems: {fileID: 6993474590712481855}

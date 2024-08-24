@@ -35,21 +35,13 @@ namespace Crafting.UI {
             
         }
 
-        public void Start() {
-            autoFillSelector.GetComponent<Button>().onClick.AddListener(() => {
-                ColorableDisplayableList colorableDisplayableList = GameObject.Instantiate(displayableListPrefab);
-                colorableDisplayableList.display(new List<IDisplayable>(),selectFromList,displayListParameters);
-                Canvas canvas = GlobalUtils.getCanvas(transform);
-                colorableDisplayableList.transform.SetParent(canvas.transform,false);
-            });
-        }
-
         public void selectFromList(int index) {
 
         }
 
         public override void display(TierUpgradeRecipe element)
         {
+            this.tierUpgradeRecipe = element;
             recipeInputList.display(ItemSlotUtils.toRequirementSlots(element.getIntItemSlotInputs()),null);
             switch (tierUpgradeRecipe.LootableType) {
                 case TieredItemType.Creature:
@@ -59,7 +51,21 @@ namespace Crafting.UI {
                     setButtonText("some Equipment");
                     break;
             }
+
+            autoFillSelector.GetComponent<Button>().onClick.AddListener(() => {
+                ColorableDisplayableList colorableDisplayableList = GameObject.Instantiate(displayableListPrefab);
+                colorableDisplayableList.display(new List<IDisplayable>(),selectFromList,displayListParameters);
+                Canvas canvas = GlobalUtils.getComponentInHeirarchy<Canvas>(transform);
+                colorableDisplayableList.transform.SetParent(canvas.transform,false);
+            });
+
+            List<UniqueItemSlot> uniqueItemSlots = new List<UniqueItemSlot>();
+            for (int i = 0; i < element.AmountOfType; i++) {
+                uniqueItemSlots.Add(null);
+            }
+
         }
+
 
         private void setButtonText(string text) {
             autoFillButtonText.text = $"Select {text} to Autofill";

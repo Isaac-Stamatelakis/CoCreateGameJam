@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Items;
 using Newtonsoft.Json;
+using Items.Equipment;
 
 namespace Creatures {
     public interface IRarityItem {
@@ -52,7 +53,7 @@ namespace Creatures {
                 if (item == null) {
                     continue;
                 }
-                value = item.modifyType(stat,value);
+                value += item.getStat(stat);
             }
             return value;
         }
@@ -88,19 +89,12 @@ namespace Creatures {
         {
             LootableRegistry lootableRegistry = LootableRegistry.getInstance();
 
-            List<Equipment> equipments = new List<Equipment>();
             Creature creeture = lootableRegistry.getLootable<Creature>(sValue.id);
             if (creeture == null) {
                 return null;
             }
-            foreach (string equipmentID in sValue.equipmentIDs) {
-                Equipment equipment = lootableRegistry.getLootable<Equipment>(equipmentID);
-                if (equipment == null) {
-                    continue;
-                }
-                equipments.Add(equipment);
-            }
-            return new EquipedCreeture(creeture,equipments);
+            List<Equipment> equipment = new EquipmentFactory().deserializeList(sValue.equipmentData);
+            return new EquipedCreeture(creeture,equipment);
         }
         protected override SCreatureData formatValue(EquipedCreeture value)
         {
@@ -108,7 +102,7 @@ namespace Creatures {
             if (value != null && value.creeture != null) {
                 creatureId = value.creeture.Id;
             }
-            List<string> seralizedEquipment = value == null ? new List<string>() : EquipmentFactory.serialize(value.Equipment);
+            string seralizedEquipment = new EquipmentFactory().serialize(value.Equipment);
             return new SCreatureData(
                 creatureId,
                 seralizedEquipment
@@ -118,10 +112,10 @@ namespace Creatures {
 
     public class SCreatureData {
             public string id;
-            public List<string> equipmentIDs;
-            public SCreatureData(string id, List<string> equipmentIDs) {
+            public string equipmentData;
+            public SCreatureData(string id, string equipmentData) {
                 this.id = id;
-                this.equipmentIDs = equipmentIDs;
+                this.equipmentData = equipmentData;
             }
         }
 

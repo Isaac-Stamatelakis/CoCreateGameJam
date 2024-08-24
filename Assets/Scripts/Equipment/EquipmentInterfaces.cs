@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
 
-namespace Items {
-    public interface IMoveActionEquipment {
+namespace Items.Equipment {
+    public interface IOnAttackEquipment {
         public void execute(List<CreatureInCombat> creetureInCombats);
+    }
+    public interface IBonusActionEquipment {
+        
+    }
+    public interface IOnDamagedEquipment {
+
     }
 }

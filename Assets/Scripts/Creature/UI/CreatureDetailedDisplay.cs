@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using Creatures;
 using Items;
+using Items.Equipment;
 
 namespace UI.Inventory {
     public class CreatureDetailedDisplay : UIInventoryDisplayer<EquipedCreeture>

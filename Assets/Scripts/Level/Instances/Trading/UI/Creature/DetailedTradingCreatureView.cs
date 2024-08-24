@@ -109,7 +109,7 @@ namespace Trading.UI {
                 displayables.Add((IDisplayable)element);
             }
             displayableList.display(displayables,callback,displayListParameters);
-            Canvas canvas = GlobalUtils.getCanvas(transform);
+            Canvas canvas = GlobalUtils.getComponentInHeirarchy<Canvas>(transform);
             displayableList.transform.SetParent(canvas.transform,false);
         }
 
@@ -189,7 +189,7 @@ namespace Trading.UI {
             );
             CurrencyCountPopUp currencyCountPopUp = GameObject.Instantiate(currencyCountPopUpPrefab);
                 currencyCountPopUp.display(mode,TradingCreature.CreatureCurrency,playerCurrency);
-                Canvas canvas = GlobalUtils.getCanvas(transform);
+                Canvas canvas = GlobalUtils.getComponentInHeirarchy<Canvas>(transform);
                 currencyCountPopUp.transform.SetParent(canvas.transform,false);
         }
 
