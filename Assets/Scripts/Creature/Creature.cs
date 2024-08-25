@@ -22,7 +22,6 @@ namespace Creatures {
         [SerializeField] private List<DamageType> weaknesses;
         [SerializeField] private Currency favouriteCurrency;
         [SerializeField] private Currency hatedCurrency;
-        [SerializeField] private List<ScriptedAction> actions;
         #if UNITY_EDITOR
         public void setSprite(Sprite sprite) {
             this.sprite = sprite;
@@ -48,8 +47,6 @@ namespace Creatures {
         public List<DamageType> Strengths { get => strengths; }
         public List<DamageType> Weaknesses { get => weaknesses; }
         public RuntimeAnimatorController AnimationController { get => controller; }
-        public List<ScriptedAction> Actions { get => actions;}
-
         public override Sprite getSprite()
         {
             return Sprite;

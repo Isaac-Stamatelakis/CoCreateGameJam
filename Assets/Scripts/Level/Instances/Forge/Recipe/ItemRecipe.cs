@@ -32,6 +32,14 @@ namespace Crafting.Recipes {
             }
             return output.getSprite();
         }
+
+        public override string getSubText()
+        {
+            if (output==null) {
+                return null;
+            }
+            return output.amountToString();
+        }
     }
 
 }

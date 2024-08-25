@@ -73,6 +73,7 @@ namespace Player {
                 case ItemSlotType.Double:
                     DoubleItemSlot currencySlot = ItemSlotUtils.fromIntItemSlot(itemSlot);
                     ItemSlotUtils.insertList<DoubleItemSlot>(playerData.doubleItemSlots,currencySlot);
+                    Debug.Log(currencySlot.Amount);
                     break;
                 case ItemSlotType.Unique:
                     PlayerIOUtils.giveLootable(playerData,lootable);

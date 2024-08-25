@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: CreatureActions
+  m_EditorClassIdentifier: 
+  m_GroupName: CreatureActions
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 7b88cb8cd93c32d44873a83aaf60df3f
+  m_SerializeEntries:
+  - m_GUID: 49dc34eb1c1b52e46873850ac05276bb
+    m_Address: Assets/Actions/Creatures/dragoon/Fiery Slash.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - dragoon
+  - m_GUID: 109a6d3981698184bb628cc14b70d139
+    m_Address: Assets/Actions/Creatures/dragoon/Fire Ball.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - dragoon
+  - m_GUID: a007d7d191e265141963ea4ff4de5709
+    m_Address: Assets/Actions/Creatures/Clockadoodle/Clock Smash.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - clockadoodle
+  - m_GUID: 7f8e9f6e47cc87742a0d2f9f8ea04c6d
+    m_Address: Assets/Actions/Creatures/GoofBall/Goofy Smash.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - goofball
+  - m_GUID: 5542c76fcd5f7444ba565ef8ee209803
+    m_Address: Assets/Actions/Creatures/Soddle/Soddle Smash.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - soddle
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: e5149903cf2468d49bef2e23705cc07c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fc6c0b515a7751f4ab7f215069c70e90, type: 2}
+    - {fileID: 11400000, guid: 281ddb50726300847bad3e92368921e8, type: 2}

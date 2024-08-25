@@ -16,9 +16,11 @@ namespace UI.Displayables {
         [SerializeField] private Button backButton;
         [SerializeField] private Button nullButton;
         [SerializeField] private DisplayableSelectorListElement listElementPrefab;
+        private DisplayableClickCallback callback;
         public void display(List<IDisplayable> displayables, DisplayableClickCallback callback, DisplayListParameters displayListParameters) {
             title.text = displayListParameters.title;
             title.color = displayListParameters.primaryTextColor;
+            this.callback = callback;
 
             mainBackground.color = displayListParameters.primaryBackgroundColor;
             scrollViewBackground.color = displayListParameters.secondaryBackgroundColor;
@@ -63,11 +65,15 @@ namespace UI.Displayables {
             for (int i = 0; i < displayables.Count; i++)
             {
                 DisplayableSelectorListElement displayableListElement = GameObject.Instantiate(listElementPrefab);
-                displayableListElement.initalize(displayables[i],callback,i,displayListParameters,transform);
+                displayableListElement.initalize(displayables[i],onElementClick,i,displayListParameters,transform);
                 displayableListElement.transform.SetParent(list.transform,false);
             }
         }
 
+        public void onElementClick(int index) {
+            callback(index);
+            GameObject.Destroy(gameObject);
+        }
     }
 
     public class DisplayListParameters {

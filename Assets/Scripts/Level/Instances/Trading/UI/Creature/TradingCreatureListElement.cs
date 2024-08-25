@@ -43,6 +43,8 @@ namespace Trading.UI {
                     currencyImage.sprite = element.Currency.getSprite();
                     currencyName.text = element.Currency.name;
                     currencyAcroynm.text = element.Currency.Acroynm;
+                    amount.text = LootableUtils.formatAmount(element.Amount);
+                    change.text = LootableUtils.formatAmount(element.getHourChange());
                 }
             }
             

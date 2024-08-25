@@ -7,6 +7,7 @@ using Items.Consumables;
 using UI.Inventory;
 using Actions;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Levels.Combat {
     public class ActionSelectUI : MonoBehaviour
@@ -32,9 +33,8 @@ namespace Levels.Combat {
                 case ActionType.Creature:
                     dynamicActionDisplay.gameObject.SetActive(true);
                     otherActionDisplay.gameObject.SetActive(false);
-                    List<ICombatAction> actions = new List<ICombatAction>();
-                    actions.AddRange(creatureInCombat.EquipedCreeture.creeture.Actions);
-                    dynamicActionDisplay.display(actions);
+                    CreatureActionCollection creatureActionCollection = CreatureActionRegistry.getInstance().getAction(creatureInCombat.EquipedCreeture.creeture.Id);
+                    dynamicActionDisplay.display(creatureActionCollection.actions.Cast<ICombatAction>().ToList());
                     break;
                 case ActionType.Consumable:
                     dynamicActionDisplay.gameObject.SetActive(true);

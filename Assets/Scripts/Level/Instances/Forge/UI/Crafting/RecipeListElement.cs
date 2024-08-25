@@ -10,12 +10,14 @@ using Items;
 namespace Crafting.UI {
     public class RecipeListElement : UIInventoryDisplayer<Recipe>
     {
-        //[SerializeField] private StackableItemSlotUI itemSlotUI;
+        [SerializeField] private Image image;
+        [SerializeField] private TextMeshProUGUI text;
         [SerializeField] private TextMeshProUGUI nameText;
         private RecipeUIController recipeUIController;
         public override void display(Recipe element)
         {
-            //itemSlotUI.display(element.getSprite(),0);
+            image.sprite = element.getSprite();
+            text.text = element.getSubText();
             nameText.text = element.getName();
         }
     }

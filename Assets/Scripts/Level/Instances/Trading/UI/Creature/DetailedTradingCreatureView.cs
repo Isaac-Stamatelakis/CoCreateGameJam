@@ -144,7 +144,7 @@ namespace Trading.UI {
                 currencyNullText.gameObject.SetActive(false);
                 currencyName.text = tradingCreature.Currency.name;
                 currencyAcroynm.text = tradingCreature.Currency.Acroynm;
-                currencyAmount.text = $"{LootableUtils.formatAmount(tradingCreature.Amount)}";
+                currencyAmount.text = LootableUtils.formatAmount(tradingCreature.Amount);
                 hourChange.text = $"";
             }
         }

@@ -31,6 +31,11 @@ namespace Crafting.Recipes {
         {
             return recipeSprite;
         }
+
+        public override string getSubText()
+        {
+            return "";
+        }
     }
 }
 public enum TieredItemType {

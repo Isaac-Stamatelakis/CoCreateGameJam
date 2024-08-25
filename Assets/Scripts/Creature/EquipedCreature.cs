@@ -98,11 +98,11 @@ namespace Creatures {
         }
         protected override SCreatureData formatValue(EquipedCreeture value)
         {
-            string creatureId = null;
-            if (value != null && value.creeture != null) {
-                creatureId = value.creeture.Id;
+            if (value == null) {
+                return null;
             }
-            string seralizedEquipment = new EquipmentFactory().serialize(value.Equipment);
+            string creatureId = value.creeture == null ? null : value.creeture.Id;
+            string seralizedEquipment = value.Equipment == null ? null : new EquipmentFactory().serialize(value.Equipment);
             return new SCreatureData(
                 creatureId,
                 seralizedEquipment
