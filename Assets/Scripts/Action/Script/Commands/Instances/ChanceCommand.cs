@@ -21,7 +21,7 @@ namespace Actions.Script {
             float num = (float) numerator / denominator;
             System.Random random = new System.Random();
             float ran = (float)random.NextDouble();
-            Debug.Log($"{num}|{ran}");
+            //Debug.Log($"{num}|{ran}");
             if (ran >= num) {
                 endExecution(commandExecutionState);
             }

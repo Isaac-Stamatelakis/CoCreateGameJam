@@ -98,7 +98,7 @@ namespace Levels.Combat {
         private void showGameOverScreen(GameOverController prefab) {
             GameOverController instantiated = GameObject.Instantiate(prefab);
             instantiated.transform.SetParent(uiController.transform,false);
-            CreatureActionRegistry.getInstance().free();
+            ActionRegistry.getInstance().freeAll();
         }
 
         private void clearCreatureListOfDead(List<CreatureInCombat> creatures) {
@@ -130,7 +130,7 @@ namespace Levels.Combat {
 
         private IEnumerator moveAI() {
             CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
-            CreatureActionCollection creatureActionCollection = CreatureActionRegistry.getInstance().getAction(currentCreatureTurn.CreatureInCombat.EquipedCreeture.creeture.Id);
+            CreatureActionCollection creatureActionCollection = ActionRegistry.getInstance().getAction<CreatureActionCollection>(currentCreatureTurn.CreatureInCombat.EquipedCreeture.creeture.Id);
             List<ScriptedAction> actions = creatureActionCollection.actions;
             if (actions.Count == 0) {
                 Debug.LogWarning($"{currentCreatureTurn.name} has no actions");

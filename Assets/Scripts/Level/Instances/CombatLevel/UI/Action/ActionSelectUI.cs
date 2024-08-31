@@ -33,7 +33,7 @@ namespace Levels.Combat {
                 case ActionType.Creature:
                     dynamicActionDisplay.gameObject.SetActive(true);
                     otherActionDisplay.gameObject.SetActive(false);
-                    CreatureActionCollection creatureActionCollection = CreatureActionRegistry.getInstance().getAction(creatureInCombat.EquipedCreeture.creeture.Id);
+                    CreatureActionCollection creatureActionCollection = ActionRegistry.getInstance().getAction<CreatureActionCollection>(creatureInCombat.EquipedCreeture.creeture.Id);
                     dynamicActionDisplay.display(creatureActionCollection.actions.Cast<ICombatAction>().ToList());
                     break;
                 case ActionType.Consumable:

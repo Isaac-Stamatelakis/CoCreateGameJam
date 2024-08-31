@@ -5,6 +5,7 @@ using Player;
 using Creatures;
 using Items;
 using Items.Equipment;
+using Actions;
 using System.Threading.Tasks;
 
 namespace Levels.Combat {
@@ -31,9 +32,9 @@ namespace Levels.Combat {
         }
 
         private async Task loadPlayerCreatureActions(CombatPlayer combatPlayer) {
-            CreatureActionRegistry creatureActionRegistry = CreatureActionRegistry.getInstance();
+            ActionRegistry actionRegistry = ActionRegistry.getInstance();
             foreach (CreatureInCombat creatureInCombat in combatPlayer.Creatures) {
-                await creatureActionRegistry.loadActions(creatureInCombat.EquipedCreeture.creeture.Id);
+                await actionRegistry.loadActions(creatureInCombat.EquipedCreeture.creeture.Id,ActionBundleType.Creature);
             }
         }
     }

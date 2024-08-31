@@ -3,37 +3,90 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Creatures;
+using Items.Equipment;
+using System.Threading.Tasks;
 
 namespace Actions {
-    public class CreatureActionRegistry<T,V> where T : RetrievedHandle<V>
+    public class ActionRegistry
     {
-        private static CreatureActionRegistry<T,V> instance;
-        private Dictionary<string,T> actions;
-        private CreatureActionRegistry() {
-            actions = new Dictionary<string, T>();
+        private static ActionRegistry instance;
+        private Dictionary<string,IRetrivedHandle> actions;
+        private ActionRegistry() {
+            actions = new Dictionary<string, IRetrivedHandle>();
         }
-        public static CreatureActionRegistry<T,V> getInstance() {
+        public static ActionRegistry getInstance() {
             if (instance == null) {
-                instance = new CreatureActionRegistry<T,V>();
+                instance = new ActionRegistry();
             }
             return instance;
         }
-        public V getAction(string id) {
-            return actions.ContainsKey(id) ? actions[id].Value : default(V);
+        public T getAction<T>(string id) {
+            if (!actions.ContainsKey(id)) {
+                return default(T);
+            }
+            if (actions[id].getValue() is T value) {
+                return value;
+            }
+            return default(T);
         }
-        public async void loadActions(string id) {
+
+        public void freeAll() {
+            foreach (IRetrivedHandle handle in actions.Values) {
+                handle.free();
+            }
+            actions = new Dictionary<string, IRetrivedHandle>();
+        }
+
+        public void free<T>() {
+            List<string> idsToRemove = new List<string>();
+            foreach (KeyValuePair<string,IRetrivedHandle> kvp in actions) {
+                IRetrivedHandle handle = kvp.Value;
+                string id = kvp.Key;
+                if (handle.getValue() is T) {
+                    handle.free();
+                    idsToRemove.Add(id);
+                }
+            }
+            foreach (string id in idsToRemove) {
+                actions.Remove(id);
+            }
+
+        }
+        public async Task loadActions(string id, ActionBundleType actionBundleType) {
             AsyncOperationHandle<IList<ScriptableObject>> handle = Addressables.LoadAssetsAsync<ScriptableObject>(id, null);
             await handle.Task;
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                T retrieveHandle = (T)System.Activator.CreateInstance(typeof(T), handle);
+                IRetrivedHandle retrieveHandle = ActionHandleFactory.formatHandle(handle,actionBundleType);
                 actions[id] = retrieveHandle;
             }
         }
     }
 
-    public abstract class RetrievedHandle<T> {
+    public static class ActionHandleFactory {
+        public static IRetrivedHandle formatHandle(AsyncOperationHandle<IList<ScriptableObject>> handle, ActionBundleType actionBundleType) {
+            switch (actionBundleType) {
+                case ActionBundleType.Creature:
+                    return new CreatureActionHandle(handle);
+                case ActionBundleType.Equipment:
+                    return new EquipmentActionHandle(handle);
+                default:
+                    throw new System.Exception($"ActionHandleFactory did not cover case for {actionBundleType}");
+            }
+        }
+    }
+    public enum ActionBundleType {
+        Creature,
+        Equipment
+    }
+    public interface IRetrivedHandle {
+        public object getValue();
+        public void free();
+    }
+
+    public abstract class RetrievedHandle<T> : IRetrivedHandle {
         protected AsyncOperationHandle<IList<ScriptableObject>> handle;
         public RetrievedHandle(AsyncOperationHandle<IList<ScriptableObject>> handle) {
             this.handle = handle;
@@ -44,6 +97,12 @@ namespace Actions {
         public void free() {
             Addressables.Release(handle);
         }
+
+        public object getValue()
+        {
+            return value;
+        }
+
         public T Value {get => value;}
     }
 }

@@ -8,48 +8,6 @@ using Actions;
 using System.Threading.Tasks;
 
 namespace Creatures {
-    public class CreatureActionRegistry
-    {
-        private static CreatureActionRegistry instance;
-        private Dictionary<string,CreatureActionHandle> actions;
-        public int Count {get => actions.Count;}
-        private CreatureActionRegistry() {
-            actions = new Dictionary<string, CreatureActionHandle>();
-        }
-        public static CreatureActionRegistry getInstance() {
-            if (instance == null) {
-                instance = new CreatureActionRegistry();
-            }
-            return instance;
-        }
-        public CreatureActionCollection getAction(string id) {
-            return actions.ContainsKey(id) ? actions[id].Value : null;
-        }
-        public async Task loadActions(string id) {
-            if (actions.ContainsKey(id)) {
-                return;
-            }
-            AsyncOperationHandle<IList<ScriptableObject>> handle = Addressables.LoadAssetsAsync<ScriptableObject>(id, null);
-            await handle.Task;
-
-            if (handle.Status == AsyncOperationStatus.Succeeded)
-            {
-                CreatureActionHandle retrieveHandle = new CreatureActionHandle(handle);
-                actions[id] = retrieveHandle;
-            } else {
-                Debug.Log(handle.Status);
-            }
-        }
-
-        public void free() {
-            foreach (CreatureActionHandle creatureActionHandle in actions.Values) {
-                creatureActionHandle.free();
-            }
-            actions = new Dictionary<string, CreatureActionHandle>();
-        }
-    }
-
-    
 
     public class CreatureActionCollection {
         public List<ScriptedAction> actions;
