@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Actions.Script;
 using System;
 
-// Make sure your custom editor is within an Editor folder
 [CustomEditor(typeof(ScriptedAction))]
 public class ScriptableActionViewer : Editor
 {
@@ -55,7 +54,7 @@ public class ScriptableActionViewer : Editor
         EditorGUILayout.LabelField("Description", EditorStyles.boldLabel);
         GUIStyle textAreaStyle = new GUIStyle(EditorStyles.textArea);
         textAreaStyle.wordWrap = true;
-        
+
         GUI.enabled = false;
         EditorGUILayout.TextArea(description, textAreaStyle,GUILayout.MinHeight(100));
         GUI.enabled = true;

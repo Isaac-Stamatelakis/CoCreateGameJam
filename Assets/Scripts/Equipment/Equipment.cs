@@ -4,7 +4,7 @@ using UnityEngine;
 using Actions.Script;
 
 namespace Items.Equipment {
-    [CreateAssetMenu(fileName = "New Equipment", menuName = "Equipment")]
+    [CreateAssetMenu(fileName = "New Equipment", menuName = "Equipment/Instance")]
     public class Equipment : Lootable, ISecondaryHeaderDisplayable
     {
         [SerializeField] private Sprite sprite;
@@ -16,6 +16,20 @@ namespace Items.Equipment {
         [SerializeField] private int health;
         [SerializeField] private int maxMana;
         [SerializeField] private int bonusMana;
+
+        #if UNITY_EDITOR
+        public Sprite Sprite {set => sprite=value;}
+        public Rarity Rarity { set => rarity = value; }
+        public int Attack { set => attack = value; }
+        public int Defense { set => defense = value; }
+        public int Ability { set => ability = value; }
+        public int Speed { set => speed = value; }
+        public int Health { set => health = value; }
+        public int MaxMana { set => maxMana = value; }
+        public int BonusMana { set => bonusMana = value; }
+        public string Id {set => id=value;}
+        #endif
+        
         protected Equipment(string id, Sprite sprite)
         {
             this.id = id;
