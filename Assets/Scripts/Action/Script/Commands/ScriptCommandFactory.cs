@@ -32,6 +32,8 @@ namespace Actions.Script {
                     return new StatusCommand(formattedScriptCommand);
                 case "heal":
                     return new HealCommand(formattedScriptCommand);
+                case "chance":
+                    return new ChanceCommand(formattedScriptCommand);
                 default:
                     ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,$"{formattedScriptCommand.Command} is not a valid command");
                     break;

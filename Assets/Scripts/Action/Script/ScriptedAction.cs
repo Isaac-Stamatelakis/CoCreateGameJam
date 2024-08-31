@@ -8,6 +8,7 @@ namespace Actions.Script {
     [CreateAssetMenu(fileName = "New Action Script", menuName = "Action/Script")]
     public class ScriptedAction : ScriptableObject, ICombatAction
     {
+        [SerializeField] private ScriptedActionType type;
         [SerializeField] private Sprite sprite;
         [SerializeField] private List<Declaration<RuntimeAnimatorController>> animations;
         [SerializeField] private List<Declaration<GameObject>> prefabs;
@@ -20,6 +21,8 @@ namespace Actions.Script {
         public Dictionary<string,GameObject> PrefabDict {get => DeclarationFactory.ToDict<GameObject>(prefabs);}
         public Dictionary<string,RuntimeAnimatorController> AnimationDict {get => DeclarationFactory.ToDict<RuntimeAnimatorController>(animations);}
         public Dictionary<string,AudioClip> SoundDict {get => DeclarationFactory.ToDict<AudioClip>(sounds);}
+        public ScriptedActionType ActionType { get => type;}
+
         [System.Serializable]
         private class Declaration<T> {
             [SerializeField] private string key;
@@ -62,6 +65,13 @@ namespace Actions.Script {
         {
             return name;
         }
+    }
+
+    public enum ScriptedActionType {
+        Standard,
+        OnDamaged,
+        OnAttack,
+        OnHealed
     }
 }
 

@@ -24,6 +24,7 @@ namespace Actions.Script {
         private Dictionary<string,GameObject> spawnedObjects = new Dictionary<string, GameObject>();
         public CreatureSelector CreatureSelector;
         public bool PausedForSelection;
+        public bool Run = true;
         private RuntimeAnimatorController defaultAnimation;
         private CreatureCombatObject selfCreature;
         public SelectionCommandLoop SubStack;
@@ -68,15 +69,12 @@ namespace Actions.Script {
             while (CommandStack.Count > 0 && !PausedForSelection) {
                 ScriptCommand command = CommandStack.Pop();
                 yield return ScriptCommandUtils.executeCommand(this, command);
-            }
-            if (CommandStack.Count == 0) {
-                if (spawnedObjects.Count > 0) {
-                    string creaturesNotFreed = "";
-                    foreach (string key in spawnedObjects.Keys) {
-                        creaturesNotFreed += $"{key}, ";
-                    }
-                    throw new Exception($"{creaturesNotFreed} were not freed");
+                if (!Run) {
+                    break;
                 }
+            }
+            foreach (GameObject spawnedObject in spawnedObjects.Values) {
+                GameObject.Destroy(spawnedObject);
             }
         }
         public CreatureSelector getCurrentSelector() {

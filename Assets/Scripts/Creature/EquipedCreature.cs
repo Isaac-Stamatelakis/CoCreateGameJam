@@ -11,20 +11,20 @@ namespace Creatures {
     }
     [System.Serializable]
     public class EquipedCreeture : IDisplayable, IRarityItem {
-        public Creature creeture;
-        private List<Equipment> equipment;
+        [SerializeField] public Creature creeture;
+        [SerializeField] private List<EnchantedEquipment> equipment;
         private string nickname;
         private float mood;
         private int level;
         private int xp;
         public Creature Creeture { get => creeture; }
-        public List<Equipment> Equipment { get => equipment;}
+        public List<EnchantedEquipment> EnchantedEquipment { get => equipment;}
         public Rarity rarity;
         public string Nickname { get => nickname; set => nickname = value;}
         public int Level { get => level; }
         public int XP { get => xp; }
 
-        public EquipedCreeture(Creature creeture, List<Equipment> equipment) {
+        public EquipedCreeture(Creature creeture, List<EnchantedEquipment> equipment) {
             this.creeture = creeture;
             this.equipment = equipment;
         }
@@ -49,11 +49,11 @@ namespace Creatures {
                 default:
                     throw new System.Exception($"Did not cover switch case in for {stat}");
             }
-            foreach (Equipment item in equipment) {
+            foreach (EnchantedEquipment item in equipment) {
                 if (item == null) {
                     continue;
                 }
-                value += item.getStat(stat);
+                item.modifyStat(ref value, stat);
             }
             return value;
         }
@@ -93,7 +93,7 @@ namespace Creatures {
             if (creeture == null) {
                 return null;
             }
-            List<Equipment> equipment = new EquipmentFactory().deserializeList(sValue.equipmentData);
+            List<EnchantedEquipment> equipment = new EquipmentFactory().deserializeList(sValue.equipmentData);
             return new EquipedCreeture(creeture,equipment);
         }
         protected override SCreatureData formatValue(EquipedCreeture value)
@@ -102,7 +102,7 @@ namespace Creatures {
                 return null;
             }
             string creatureId = value.creeture == null ? null : value.creeture.Id;
-            string seralizedEquipment = value.Equipment == null ? null : new EquipmentFactory().serialize(value.Equipment);
+            string seralizedEquipment = value.EnchantedEquipment == null ? null : new EquipmentFactory().serialize(value.EnchantedEquipment);
             return new SCreatureData(
                 creatureId,
                 seralizedEquipment

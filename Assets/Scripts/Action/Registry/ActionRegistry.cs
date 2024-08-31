@@ -34,7 +34,7 @@ namespace Actions {
     }
 
     public abstract class RetrievedHandle<T> {
-        private AsyncOperationHandle<IList<ScriptableObject>> handle;
+        protected AsyncOperationHandle<IList<ScriptableObject>> handle;
         public RetrievedHandle(AsyncOperationHandle<IList<ScriptableObject>> handle) {
             this.handle = handle;
             value = setValue(handle);

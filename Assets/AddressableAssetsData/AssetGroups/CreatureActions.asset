@@ -36,7 +36,7 @@ MonoBehaviour:
     m_Address: Assets/Actions/Creatures/GoofBall/Goofy Smash.asset
     m_ReadOnly: 0
     m_SerializedLabels:
-    - goofball
+    - goof_ball
   - m_GUID: 5542c76fcd5f7444ba565ef8ee209803
     m_Address: Assets/Actions/Creatures/Soddle/Soddle Smash.asset
     m_ReadOnly: 0

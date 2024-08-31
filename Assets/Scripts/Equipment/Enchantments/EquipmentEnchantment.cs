@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Items.Equipment {
     public abstract class EquipmentEnchant {
-        
+        private string id;
+        public string Id;
     }
 }

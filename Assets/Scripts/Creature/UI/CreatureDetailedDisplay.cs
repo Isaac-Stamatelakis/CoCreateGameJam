@@ -34,8 +34,8 @@ namespace UI.Inventory {
 
             int i = 0;
             List<Equipment> toDisplay = new List<Equipment>();
-            while (i < element.Equipment.Count && i < 3) {
-                toDisplay.Add(element.Equipment[i]);
+            while (i < element.EnchantedEquipment.Count && i < 3) {
+                toDisplay.Add(element.EnchantedEquipment[i].Equipment);
                 i++;
             }
             while (i < 3) {

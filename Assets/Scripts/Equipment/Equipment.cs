@@ -16,12 +16,6 @@ namespace Items.Equipment {
         [SerializeField] private int health;
         [SerializeField] private int maxMana;
         [SerializeField] private int bonusMana;
-        [SerializeField] private List<ScriptedAction> selectableActions;
-        [SerializeField] private ScriptedAction onAttackAction;
-        [SerializeField] private ScriptedAction onHitAction;
-
-        
-
         protected Equipment(string id, Sprite sprite)
         {
             this.id = id;

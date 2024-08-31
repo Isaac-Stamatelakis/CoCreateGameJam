@@ -10,9 +10,9 @@ namespace Player {
     {
         public static void giveLootable(PlayerData playerData, Lootable lootable) {
             if (lootable is Creature creature) {
-                playerData.creetures.Add(new EquipedCreeture(creature,new List<Equipment>()));
+                playerData.creetures.Add(new EquipedCreeture(creature,new List<EnchantedEquipment>()));
             } else if (lootable is Equipment equipment) {
-                playerData.equipment.Add(equipment);
+                playerData.equipment.Add(new EnchantedEquipment(equipment,null));
             } else {
                 throw new System.Exception($"PlayerIOUtils method 'giveLootable' did not cover case for lootable of type {lootable.GetType()}");
             }

@@ -18,7 +18,7 @@ namespace Player {
         private static PlayerIO instance;
         private List<EquipedCreeture> combatCreatures;
         public List<EquipedCreeture> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
-        public List<Equipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
+        public List<EnchantedEquipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
         public List<IntItemSlot> LootBoxes {get => ItemSlotUtils.sortList<LootBox,IntItemSlot>(playerData.intItemSlots);}
         public List<IntItemSlot> CraftingItems {get => ItemSlotUtils.sortList<CraftingItem,IntItemSlot>(playerData.intItemSlots);}
         private PlayerData playerData;
@@ -167,7 +167,7 @@ namespace Player {
             Debug.Log(Application.persistentDataPath);
             try {
                 SPlayerData sPlayerData = JsonConvert.DeserializeObject<SPlayerData>(data);
-                List<Equipment> equipment = new EquipmentFactory().deserializeList(sPlayerData.equipmentData);
+                List<EnchantedEquipment> equipment = new EquipmentFactory().deserializeList(sPlayerData.equipmentData);
                 EquipCreatureSerializationFactory equipCreatureSerializationFactory = new EquipCreatureSerializationFactory();
                 List<EquipedCreeture> equipedCreetures = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureData);
                 List<IntItemSlot> intItemSlots = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.intItemSlots);
@@ -214,7 +214,7 @@ namespace Player {
                 new List<string>(),
                 null,
                 new List<EquipedCreeture>(),
-                new List<Equipment>(),
+                new List<EnchantedEquipment>(),
                 new List<IntItemSlot>{startingBox},
                 new List<DoubleItemSlot>()
             );
@@ -277,7 +277,7 @@ namespace Player {
             List<string> discoveredTiles, 
             string currentTile, 
             List<EquipedCreeture> creetures, 
-            List<Equipment> equipment, 
+            List<EnchantedEquipment> equipment, 
             List<IntItemSlot> intItemSlots,
             List<DoubleItemSlot> doubleItemSlots
             ) {
@@ -291,7 +291,7 @@ namespace Player {
         public List<string> discoveredTiles;
         public string currentTile;
         public List<EquipedCreeture> creetures;
-        public List<Equipment> equipment;
+        public List<EnchantedEquipment> equipment;
         public List<IntItemSlot> intItemSlots;
         public List<DoubleItemSlot> doubleItemSlots;
     }

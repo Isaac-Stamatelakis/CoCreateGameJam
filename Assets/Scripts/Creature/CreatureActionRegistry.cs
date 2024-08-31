@@ -36,6 +36,8 @@ namespace Creatures {
             {
                 CreatureActionHandle retrieveHandle = new CreatureActionHandle(handle);
                 actions[id] = retrieveHandle;
+            } else {
+                Debug.Log(handle.Status);
             }
         }
 
@@ -54,7 +56,6 @@ namespace Creatures {
 
         public CreatureActionCollection(List<ScriptedAction> actions)
         {
-            Debug.Log(actions.Count);
             this.actions = actions;
         }
     }

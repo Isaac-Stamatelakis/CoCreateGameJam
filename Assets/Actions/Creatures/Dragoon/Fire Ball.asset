@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 209d2f40468806142b44b9eca2e2ee2a, type: 3}
   m_Name: Fire Ball
   m_EditorClassIdentifier: 
+  type: 0
   sprite: {fileID: 0}
   animations:
   - key: fire
@@ -25,13 +26,16 @@ MonoBehaviour:
   postSelectDescription: 
   actionScript: 'select 1 enemy;
 
+    chance 6 7;
+
     animation fire loop=false;
 
-    spawn fireball;
+    spawn
+    fireball;
 
-    action
-    fireball move;
+    action fireball move;
 
     attack 6 range=1 type=fire;
 
-    end spawn fireball;'
+    end
+    spawn fireball;'
