@@ -22,7 +22,7 @@ namespace Actions {
             return instance;
         }
         public T getAction<T>(string id) {
-            if (!actions.ContainsKey(id)) {
+            if (id == null || !actions.ContainsKey(id)) {
                 return default(T);
             }
             if (actions[id].getValue() is T value) {
@@ -54,6 +54,9 @@ namespace Actions {
 
         }
         public async Task loadActions(string id, ActionBundleType actionBundleType) {
+            if (actions.ContainsKey(id)) {
+                return;
+            }
             AsyncOperationHandle<IList<ScriptableObject>> handle = Addressables.LoadAssetsAsync<ScriptableObject>(id, null);
             await handle.Task;
 

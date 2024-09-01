@@ -36,8 +36,10 @@ namespace Actions.Script {
         public RuntimeAnimatorController DefaultAnimation { get => defaultAnimation; }
         public Dictionary<string, RuntimeAnimatorController> Animations { get => animations; }
         public Dictionary<string, AudioClip> Sounds { get => sounds; }
+        public SpecialActionExecutor SpecialActionExecutor { get => specialActionExecutor; }
+        private SpecialActionExecutor specialActionExecutor;
 
-        public CommandExecutionState(ScriptedAction scriptedAction, CreatureCombatObject selfCreature)
+        public CommandExecutionState(ScriptedAction scriptedAction, CreatureCombatObject selfCreature, bool executeSpecialActions)
         {
             this.CommandStack = ScriptCommandFactory.parseCommands(scriptedAction.ActionScript);
             this.objectPrefabs = scriptedAction.PrefabDict;
@@ -45,8 +47,10 @@ namespace Actions.Script {
             this.sounds = scriptedAction.SoundDict;
             this.selfCreature = selfCreature;
             defaultAnimation = selfCreature.Animator.runtimeAnimatorController;
+            if (executeSpecialActions) {
+                specialActionExecutor = new SpecialActionExecutor();
+            }
         }
-
         public IEnumerator executeSection() {
             if (SubStack != null) {
                 SubStack.iterations = CreatureSelector.Creatures.Count;
@@ -63,6 +67,10 @@ namespace Actions.Script {
                         yield return ScriptCommandUtils.executeCommand(this, command);
                     }
                     SubStack.iterations--;
+                    if (specialActionExecutor != null) {
+                        yield return specialActionExecutor.execute();
+                        specialActionExecutor = new SpecialActionExecutor();
+                    }
                 }
             }
             PausedForSelection = false;

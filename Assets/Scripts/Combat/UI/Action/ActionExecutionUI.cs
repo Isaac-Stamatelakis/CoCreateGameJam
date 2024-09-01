@@ -47,7 +47,7 @@ namespace Levels.Combat {
             combatLevelController = combatLevelActionUIController.CombatLevelUIController.CombatLevelController;
             if (combatAction is ScriptedAction scriptedAction) {
                 CreatureCombatObject currentlyMovingCreature = combatLevelController.getCurrentlyMovingCreature();
-                commandExecutionState = new CommandExecutionState(scriptedAction,currentlyMovingCreature);
+                commandExecutionState = new CommandExecutionState(scriptedAction,currentlyMovingCreature,true);
                 StartCoroutine(commandExecutionState.executeSection());
                 displaySelector();
             }

@@ -25,28 +25,10 @@ namespace Actions.Script {
                 maxTargets: targets
             );
             commandExecutionState.PausedForSelection = true;
-            Stack<ScriptCommand> reversedStack = new Stack<ScriptCommand>();
-            while (commandExecutionState.CommandStack.Count > 0) {
-                ScriptCommand command = commandExecutionState.CommandStack.Pop();
-                reversedStack.Push(command);
-                if (command is not EndCommand endCommand) {
-                    continue;
-                }
-                if (!endCommand.endsSelect()) {
-                    continue;
-                }
-                reversedStack.Pop(); // Remove end
-                break;
-            }
-            Stack<ScriptCommand> subCommandStack = new Stack<ScriptCommand>();
-            while (reversedStack.Count > 0) {
-                subCommandStack.Push(reversedStack.Pop());
-            }
-            commandExecutionState.SubStack = new SelectionCommandLoop(subCommandStack);
+            CommandExecutionStateUtils.generateSubStack(commandExecutionState);
+            
         }
         public static (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) parse(FormattedScriptCommand scriptCommand) {
-            
-            
             List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
             parseInstructions: new List<ParseInstruction>{
                     new ParseInstruction(ParseType.Integer,"targets",true),
@@ -106,11 +88,5 @@ namespace Actions.Script {
             }
             return $"{selectString} ";
         }
-    }
-
-    public enum SpecialSelectTarget {
-        Attacker,
-        Target,
-        Healer,
     }
 }

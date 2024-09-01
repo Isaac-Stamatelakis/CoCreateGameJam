@@ -41,9 +41,10 @@ namespace Items.Equipment {
             foreach (var obj in handle.Result)
             {
                 ScriptedAction action = obj as ScriptedAction;
+                ScriptedActionType type = ActionScriptCommandParser.getScriptedActionType(action);
                 if (action != null)
                 {
-                    switch (action.ActionType) {
+                    switch (type) {
                         case ScriptedActionType.Standard:
                             actions.Add(action);
                             break;

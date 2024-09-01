@@ -4,6 +4,7 @@ using UnityEngine;
 using Creatures;
 using Actions;
 using Actions.Script;
+using Items.Equipment;
 
 namespace Levels.Combat {
     public class CombatLevelController : MonoBehaviour
@@ -25,7 +26,6 @@ namespace Levels.Combat {
         public CreatureHighlightController CreatureHighlightController { get => creatureHighlightController; }
         public static CombatLevelController Instance { get => instance; }
         public Transform CanvasTransform { get => uiController.transform; }
-
         public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevel combatLevel) {
             this.humanPlayer = humanPlayer;
             humanPlayerCreatures.displayCreatures(humanPlayer.Creatures);
@@ -45,6 +45,37 @@ namespace Levels.Combat {
 
         public CreatureCombatObject getCurrentlyMovingCreature() {
             return creatureTurns[0].CreatureCombatObject;
+        }
+
+        public IEnumerator specialActionCoRoutine(CreatureCombatObject selfCreature, CreatureCombatObject target, SpecialSelectTarget specialSelectTarget) {
+            yield return StartCoroutine(specialAction(selfCreature,target,specialSelectTarget));
+        }
+
+        public IEnumerator specialAction(CreatureCombatObject selfCreature, CreatureCombatObject target, SpecialSelectTarget specialSelectTarget) {
+            if (selfCreature != null && target != null) {
+                foreach (EnchantedEquipment enchantedEquipment in selfCreature.CreatureInCombat.EquipedCreeture.EnchantedEquipment) {
+                    if (enchantedEquipment == null || enchantedEquipment.Equipment == null) {
+                        continue;
+                    }
+                    EquipmentActionCollection equipmentActionCollection = ActionRegistry.getInstance().getAction<EquipmentActionCollection>(enchantedEquipment.getId());
+                    if (equipmentActionCollection == null) {
+                        continue;
+                    }
+                    ScriptedAction scriptedAction = SpecialSelectCommandUtils.getAction(equipmentActionCollection,specialSelectTarget);
+                    if (scriptedAction == null) {
+                        continue;
+                    }
+                    CommandExecutionState commandExecutionState = new CommandExecutionState(scriptedAction,selfCreature,false);
+                    yield return StartCoroutine(commandExecutionState.executeSection());
+                    while (!commandExecutionState.Complete) {
+                        CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
+                        commandExecutionState.CreatureSelector.Creatures.Add(target);
+                        yield return StartCoroutine(commandExecutionState.executeSection());
+                    }
+                    yield return null;
+                }
+            }
+            
         }
 
         public void handleNewCreatureTurn() {
@@ -147,7 +178,7 @@ namespace Levels.Combat {
             }
             int ran = Random.Range(0,actions.Count);
             ScriptedAction chosenAction = actions[ran];
-            CommandExecutionState commandExecutionState = new CommandExecutionState(chosenAction,currentCreatureTurn);
+            CommandExecutionState commandExecutionState = new CommandExecutionState(chosenAction,currentCreatureTurn,true);
             yield return StartCoroutine(commandExecutionState.executeSection());
             while (!commandExecutionState.Complete) {
                 CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();

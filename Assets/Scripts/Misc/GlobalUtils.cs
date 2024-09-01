@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Globalization;
+using System.Linq;
 
 public static class GlobalUtils
 {
@@ -58,5 +59,9 @@ public static class GlobalUtils
             transform = transform.parent;
         }
         return null;
+    }
+
+    public static T[] getAllEnums<T>() where T : Enum {
+        return Enum.GetValues(typeof(T)).Cast<T>().ToArray();
     }
 }

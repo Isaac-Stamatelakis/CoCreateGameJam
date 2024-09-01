@@ -34,6 +34,8 @@ namespace Actions.Script {
                     return new HealCommand(formattedScriptCommand);
                 case "chance":
                     return new ChanceCommand(formattedScriptCommand);
+                case "selectf":
+                    return new SpecialSelectCommand(formattedScriptCommand);
                 default:
                     ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,$"{formattedScriptCommand.Command} is not a valid command");
                     break;
@@ -42,6 +44,9 @@ namespace Actions.Script {
         }
         public static Stack<ScriptCommand> parseCommands(string script) {
             Stack<ScriptCommand> commandStack = new Stack<ScriptCommand>();
+            if (script == null) {
+                return new Stack<ScriptCommand>();
+            }
             string[] lines = script.Split(";");
             for (int lineIndex = lines.Length-1; lineIndex >= 0; lineIndex--) {
                 string line = lines[lineIndex];

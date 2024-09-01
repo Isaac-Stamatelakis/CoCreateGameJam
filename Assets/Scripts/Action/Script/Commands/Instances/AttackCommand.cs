@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Levels.Combat;
+using Items.Equipment;
 
 namespace Actions.Script {
     public class AttackCommand : DelayScriptCommand
@@ -17,9 +18,17 @@ namespace Actions.Script {
             float realDamage = UnityEngine.Random.Range(damage-range,damage+range);
             realDamage += falloff * commandExecutionState.SubStack.iterations;
             target.CreatureInCombat.hit(realDamage,damageType);
+            if (commandExecutionState.SpecialActionExecutor != null) {
+                commandExecutionState.SpecialActionExecutor.setAttack(commandExecutionState.SelfCreature,target);
+                if (realDamage*lifesteal > 0) {
+                    commandExecutionState.SpecialActionExecutor.setHeal(commandExecutionState.SelfCreature,commandExecutionState.SelfCreature);
+                }
+            }
             commandExecutionState.SelfCreature.CreatureInCombat.heal(realDamage*lifesteal);
             yield return new WaitForSeconds(0.1f);
         }
+
+        
 
         public static (float damage, float range, DamageType type, float falloff, float lifesteal, bool self) parse(FormattedScriptCommand scriptCommand) {
             List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(

@@ -161,6 +161,8 @@ namespace Actions.Script {
             }
             return dict;
         }
+
+        
             
     }
 
@@ -178,6 +180,26 @@ namespace Actions.Script {
             }
             bool targetSelf = (bool) parameters["self"];
             return targetSelf ? ActionTargetType.Self : ActionTargetType.Target;
+        }
+
+        public static ScriptedActionType getScriptedActionType(ScriptedAction scriptedAction) {
+            Stack<ScriptCommand> commands = ScriptCommandFactory.parseCommands(scriptedAction.ActionScript);
+            foreach (ScriptCommand scriptCommand in commands) {
+                if (scriptCommand is SpecialSelectCommand specialSelectCommand) {
+                    string val = specialSelectCommand.getFormattedScriptCommand().Parameters[0];
+                    switch (val) {
+                        case "target":
+                            return ScriptedActionType.OnAttack;
+                        case "attacker":
+                            return ScriptedActionType.OnDamaged;
+                        case "healer":
+                            return ScriptedActionType.OnHealed;
+                        default:
+                            throw new Exception($"{val} is not a valid selectf parameter");
+                    }
+                }
+            }
+            return ScriptedActionType.Standard;
         }
     }
 

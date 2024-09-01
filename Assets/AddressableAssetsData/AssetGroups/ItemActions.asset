@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: ItemActions
+  m_EditorClassIdentifier: 
+  m_GroupName: ItemActions
+  m_Data:
+    m_SerializedData: []
+  m_GUID: e524fd262157ad74e8c0c1065d15274a
+  m_SerializeEntries:
+  - m_GUID: 380959575cfc4b548b53d809f38ebc71
+    m_Address: Assets/Actions/Items/mazda5/OnAttack.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - mazda5
+  - m_GUID: d646114751d29ec409c709381e3604e5
+    m_Address: Assets/Actions/Items/absorber/Absorber_OnHit.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - absorber
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: e5149903cf2468d49bef2e23705cc07c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: dc605199c9b0b78448ae552a849b9794, type: 2}
+    - {fileID: 11400000, guid: 3a0d105e918ae0f479d80d3157d2e665, type: 2}

@@ -13,7 +13,6 @@ public class ScriptableActionViewer : Editor
     SerializedProperty preSelectDescription;
     SerializedProperty selectDescription;
     SerializedProperty postSelectDescription;
-    SerializedProperty actionType;
     ScriptedAction scriptedAction;
 
     private readonly int PADDING = 20;
@@ -28,10 +27,18 @@ public class ScriptableActionViewer : Editor
         preSelectDescription = serializedObject.FindProperty("preSelectDescription");
         selectDescription = serializedObject.FindProperty("selectDescription");
         postSelectDescription = serializedObject.FindProperty("postSelectDescription");
-        actionType = serializedObject.FindProperty("type");
         scriptedAction = (ScriptedAction) target;
-        description = "Invalid Script";
-        description = scriptedAction.getDescription();
+        setDescription();
+        
+    }
+    
+    private void setDescription() {
+        try {
+            description = scriptedAction.getDescription();
+        } catch (Exception e) {
+            description = $"Invalid Script\n{e.Message}";
+            throw new Exception(e.Message,e);
+        }
     }
 
     public override void OnInspectorGUI()
@@ -43,7 +50,6 @@ public class ScriptableActionViewer : Editor
             EditorGUILayout.TextArea(scriptedAction.getDescription(), GUILayout.MinHeight(150));
         }
         GUILayout.Space(PADDING);
-        EditorGUILayout.PropertyField(actionType,true);
         string[] splitLines = actionScriptProp.stringValue.Split('\n');
         int lineCount = splitLines.Length;
         EditorGUILayout.LabelField("Action Script", EditorStyles.boldLabel);
