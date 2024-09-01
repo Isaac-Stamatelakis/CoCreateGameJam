@@ -15,6 +15,9 @@ namespace Actions.Script {
         {
             (float damage, float range, DamageType damageType, float falloff, float lifesteal, bool self) = parse(formattedScriptCommand);
             CreatureCombatObject target = commandExecutionState.getActionTarget(self);
+            if (target==null) {
+                yield break;
+            }
             float realDamage = UnityEngine.Random.Range(damage-range,damage+range);
             realDamage += falloff * commandExecutionState.SubStack.iterations;
             target.CreatureInCombat.hit(realDamage,damageType);

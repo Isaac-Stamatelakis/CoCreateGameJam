@@ -7,6 +7,7 @@ using System.Linq;
 using Creatures;
 using Items;
 
+
 using Actions.Script.Execution;
 
 namespace Actions.Script {
@@ -17,6 +18,7 @@ namespace Actions.Script {
         }        
     }
     public class CommandExecutionState {
+        private CombatLevelController combatLevelController;
         public Stack<ScriptCommand> CommandStack;
         private Dictionary<string, GameObject> objectPrefabs;
         private Dictionary<string, RuntimeAnimatorController> animations;
@@ -37,9 +39,10 @@ namespace Actions.Script {
         public Dictionary<string, RuntimeAnimatorController> Animations { get => animations; }
         public Dictionary<string, AudioClip> Sounds { get => sounds; }
         public SpecialActionExecutor SpecialActionExecutor { get => specialActionExecutor; }
+        public CombatLevelController CombatLevelController { get => combatLevelController; }
         private SpecialActionExecutor specialActionExecutor;
 
-        public CommandExecutionState(ScriptedAction scriptedAction, CreatureCombatObject selfCreature, bool executeSpecialActions)
+        public CommandExecutionState(ScriptedAction scriptedAction, CreatureCombatObject selfCreature, CombatLevelController combatLevelController, bool executeSpecialActions)
         {
             this.CommandStack = ScriptCommandFactory.parseCommands(scriptedAction.ActionScript);
             this.objectPrefabs = scriptedAction.PrefabDict;
@@ -47,6 +50,7 @@ namespace Actions.Script {
             this.sounds = scriptedAction.SoundDict;
             this.selfCreature = selfCreature;
             defaultAnimation = selfCreature.Animator.runtimeAnimatorController;
+            this.combatLevelController = combatLevelController;
             if (executeSpecialActions) {
                 specialActionExecutor = new SpecialActionExecutor();
             }
@@ -63,6 +67,9 @@ namespace Actions.Script {
                         SubStack.commands.Push(scriptCommand);
                     }
                     while (SubStack.commands.Count > 0) {
+                        if (selfCreature == null) {
+                            yield break;
+                        }
                         ScriptCommand command = SubStack.commands.Pop();
                         yield return ScriptCommandUtils.executeCommand(this, command);
                     }

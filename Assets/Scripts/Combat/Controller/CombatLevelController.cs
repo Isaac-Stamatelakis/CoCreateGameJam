@@ -44,7 +44,19 @@ namespace Levels.Combat {
         }
 
         public CreatureCombatObject getCurrentlyMovingCreature() {
+            if (creatureTurns.Count == 0) {
+                return null;
+            }
             return creatureTurns[0].CreatureCombatObject;
+        }
+
+        public CreatureInCombat getRandomCreature(bool includeCurrentlyMoving) {
+            if (includeCurrentlyMoving && creatureTurns.Count == 1) {
+                return null;
+            }
+            int startIndex = includeCurrentlyMoving ? 0 : 1;
+            int rand = Random.Range(startIndex,creatureTurns.Count);
+            return creatureTurns[rand];
         }
 
         public IEnumerator specialActionCoRoutine(CreatureCombatObject selfCreature, CreatureCombatObject target, SpecialSelectTarget specialSelectTarget) {
@@ -65,7 +77,7 @@ namespace Levels.Combat {
                     if (scriptedAction == null) {
                         continue;
                     }
-                    CommandExecutionState commandExecutionState = new CommandExecutionState(scriptedAction,selfCreature,false);
+                    CommandExecutionState commandExecutionState = new CommandExecutionState(scriptedAction,selfCreature,this,false);
                     yield return StartCoroutine(commandExecutionState.executeSection());
                     while (!commandExecutionState.Complete) {
                         CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
@@ -113,6 +125,15 @@ namespace Levels.Combat {
         
 
         public IEnumerator nextCreatureTurn() {
+            CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
+            if (currentCreatureTurn != null) {
+                Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
+                currentTurnPosition.z += CURRENT_TURN_Z_CHANGE;
+                currentCreatureTurn.transform.position = currentTurnPosition;
+                yield return currentCreatureTurn.resetPosition();
+            }
+            creatureTurns.RemoveAt(0);
+            creatureTurns.Add(currentCreatureTurn.CreatureInCombat);
             clearCreatureListOfDead(creatureTurns);
             clearCreatureListOfDead(humanPlayer.Creatures);
             clearCreatureListOfDead(aiPlayer.Creatures);
@@ -120,16 +141,6 @@ namespace Levels.Combat {
                 showGameOverScreen(playerLoseUIPrefab);
                 Debug.Log("Tie");
                 yield return null;
-            }
-            CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
-            Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
-            currentTurnPosition.z += CURRENT_TURN_Z_CHANGE;
-            currentCreatureTurn.transform.position = currentTurnPosition;
-            yield return currentCreatureTurn.resetPosition();
-            creatureTurns.RemoveAt(0);
-            creatureTurns.Add(currentCreatureTurn.CreatureInCombat);
-            while (creatureTurns.Count > 0 && creatureTurns[0].IsDead) {
-                creatureTurns.RemoveAt(0);
             }
             handleNewCreatureTurn();
         }
@@ -178,7 +189,7 @@ namespace Levels.Combat {
             }
             int ran = Random.Range(0,actions.Count);
             ScriptedAction chosenAction = actions[ran];
-            CommandExecutionState commandExecutionState = new CommandExecutionState(chosenAction,currentCreatureTurn,true);
+            CommandExecutionState commandExecutionState = new CommandExecutionState(chosenAction,currentCreatureTurn,this,true);
             yield return StartCoroutine(commandExecutionState.executeSection());
             while (!commandExecutionState.Complete) {
                 CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();

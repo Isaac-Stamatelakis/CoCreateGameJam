@@ -15,10 +15,13 @@ namespace Actions {
         private int maxTargets;
         private List<CreatureCombatObject> creatures = new List<CreatureCombatObject>();
         private TextMeshProUGUI textUI;
-        public CreatureSelector(CreatureSelectionType targetType, bool allowSelf, int maxTargets)
+        private bool random;
+        public CreatureSelector(CreatureSelectionType targetType, bool allowSelf, int maxTargets, bool random)
         {
             this.targetType = targetType;
+            this.allowSelf = allowSelf;
             this.maxTargets = maxTargets;
+            this.random = random;
         }
         public int MaxTargets { get => maxTargets;}
         public CreatureSelectionType TargetType { get => targetType;}
@@ -50,8 +53,14 @@ namespace Actions {
         }
 
         public string getTextDescription() {
-            string formattedTarget = targetType.formatSelection(allowSelf);
-            return $"{creatures.Count}/{maxTargets} {formattedTarget} Selected";
+            if (random) {
+                string formattedTarget = targetType.formatSelection(allowSelf,maxTargets==1);
+                return $"Targets {maxTargets} Random {formattedTarget}";
+            } else {
+                string formattedTarget = targetType.formatSelection(allowSelf,false);
+                return $"{creatures.Count}/{maxTargets} {formattedTarget} Selected";
+            }
+            
         }
 
         public void updateDescription() {

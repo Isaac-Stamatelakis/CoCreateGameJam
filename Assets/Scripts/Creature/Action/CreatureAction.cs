@@ -11,18 +11,23 @@ namespace Actions {
         Any,
     }
     public static class TargetTypeExtension {
-        public static string formatSelection(this CreatureSelectionType targetType, bool allowSelf) {
+        public static string formatSelection(this CreatureSelectionType targetType, bool allowSelf, bool single) {
             switch (targetType) {
                 case CreatureSelectionType.Ally:
-                    return allowSelf ? "Allies" : "Allies except caster";
+                    return single 
+                        ? (allowSelf ? "Ally" : "Ally except caster") 
+                        : (allowSelf ? "Allies" : "Allies except caster");
                 case CreatureSelectionType.Enemy:
-                    return "Enemies";
+                    return single ? "Enemy" : "Enemies";
                 case CreatureSelectionType.Any:
-                    return allowSelf ? "Creatures" : "Creatures except caster";
+                    return single 
+                        ? (allowSelf ? "Creature" : "Creature except caster") 
+                        : (allowSelf ? "Creatures" : "Creatures except caster");
                 default:
                     throw new System.Exception($"Target type {targetType} not covered");
             }
         }
+
     }
     public abstract class CreatureAction : ScriptedAction
     {

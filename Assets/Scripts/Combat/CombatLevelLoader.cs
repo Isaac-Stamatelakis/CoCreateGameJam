@@ -19,9 +19,9 @@ namespace Levels.Combat {
             LootableRegistry registry = LootableRegistry.getInstance();
             EnchantedEquipment mazda5 = new EnchantedEquipment(LootableRegistry.getInstance().getLootable<Equipment>("mazda5"),null);
             List<EquipedCreeture> testingCreatings = new List<EquipedCreeture> {
-                //new EquipedCreeture(registry.getLootable<Creature>("ambersand"), new List<EnchantedEquipment>()),
-                //new EquipedCreeture(registry.getLootable<Creature>("soddle"), new List<EnchantedEquipment>()),
-                //new EquipedCreeture(registry.getLootable<Creature>("dragoon"), new List<EnchantedEquipment>()),
+                new EquipedCreeture(registry.getLootable<Creature>("ambersand"), new List<EnchantedEquipment>()),
+                new EquipedCreeture(registry.getLootable<Creature>("soddle"), new List<EnchantedEquipment>()),
+                new EquipedCreeture(registry.getLootable<Creature>("dragoon"), new List<EnchantedEquipment>()),
                 new EquipedCreeture(registry.getLootable<Creature>("gun_crab"), new List<EnchantedEquipment>{mazda5})
             };
             CombatPlayer humanPlayer = new CombatPlayer(testingCreatings);

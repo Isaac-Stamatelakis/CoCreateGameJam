@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyCreatures:
   - creeture: {fileID: 11400000, guid: e0612e60202bf2647aa51dc74373a01e, type: 2}
-    equipment:
-    - equipment: {fileID: 11400000, guid: f1c26d39de224fc48bc5e2a842e2cdec, type: 2}
+    equipment: []
     rarity: 0
   - creeture: {fileID: 11400000, guid: e0612e60202bf2647aa51dc74373a01e, type: 2}
     equipment:

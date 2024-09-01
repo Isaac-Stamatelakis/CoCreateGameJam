@@ -17,7 +17,8 @@ namespace Actions.Script {
             commandExecutionState.CreatureSelector = new CreatureSelector(
                 targetType: CreatureSelectionType.Any,
                 allowSelf: false,
-                maxTargets: 1
+                maxTargets: 1,
+                random: false
             );
             //commandExecutionState.PausedForSelection=true;
             CommandExecutionStateUtils.generateSubStack(commandExecutionState);

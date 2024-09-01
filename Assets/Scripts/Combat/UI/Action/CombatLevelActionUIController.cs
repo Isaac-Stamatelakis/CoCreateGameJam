@@ -10,7 +10,6 @@ namespace Levels.Combat {
         [SerializeField] private ActionSelectUI actionSelectUI;
         [SerializeField] private EnemyTurnUI enemyTurnUI;
         private GameObject currentlyDisplayed;
-
         public ActionSelectUI ActionSelectUI { get => actionSelectUI;}
         public CombatLevelUIController CombatLevelUIController { get => combatLevelUIController;  }
 

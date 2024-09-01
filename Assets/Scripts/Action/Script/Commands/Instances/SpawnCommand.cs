@@ -19,6 +19,11 @@ namespace Actions.Script {
             if (!commandExecutionState.ObjectPrefabs.ContainsKey(spawnName)) {
                 ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,$"Prefab {spawnName} is already spawned");
             }
+            if (commandExecutionState.SelfCreature == null) {
+                // Prevents debuging errors from calling actions on objects which are not spawned
+                commandExecutionState.SpawnedObjects[spawnName] = null;
+                return;
+            }
             GameObject instantiated = GameObject.Instantiate(commandExecutionState.ObjectPrefabs[spawnName]);
             instantiated.transform.SetParent(commandExecutionState.SelfCreature.transform,false);
             commandExecutionState.SpawnedObjects[spawnName] = instantiated;

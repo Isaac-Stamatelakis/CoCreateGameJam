@@ -29,11 +29,17 @@ namespace Actions.Script {
                 ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,$"Cannot begin action on object {objectName} as it is not spawned");
             }
             GameObject gameObject = commandExecutionState.SpawnedObjects[objectName];
+            if (gameObject == null) {
+                yield break;
+            }
             switch (actionName) {
                 case "move":
                     IActionSpawnObject actionSpawnObject = gameObject.GetComponent<IActionSpawnObject>();
                     if (actionSpawnObject == null) {
                         ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,"Object has no move component");
+                    }
+                    if (commandExecutionState.TargetCreature == null) {
+                        yield break;
                     }
                     yield return actionSpawnObject.moveToTarget(commandExecutionState.TargetCreature.transform);
                     break;

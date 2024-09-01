@@ -21,4 +21,4 @@ MonoBehaviour:
   postSelectDescription: 
   actionScript: 'selectf attacker;
 
-    attack 1 range=2;'
+    attack 10 range=2;'

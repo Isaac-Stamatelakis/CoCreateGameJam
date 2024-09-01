@@ -44,6 +44,9 @@ namespace Levels.Combat {
         }
 
         public void resetUIPosition() {
+            if (combatUI==null) {
+                return;
+            }
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
             Vector3 SizeY = new Vector3(0,spriteRenderer.size.y/2f*1.25f,0);
             Vector3 creatureTopPosition = originPosition + SizeY;

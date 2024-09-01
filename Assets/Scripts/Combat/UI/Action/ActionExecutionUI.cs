@@ -29,12 +29,19 @@ namespace Levels.Combat {
 
         public IEnumerator execute() {
             yield return StartCoroutine(commandExecutionState.executeSection());
+            
+            yield return StartCoroutine(combatLevelController.nextCreatureTurn());
+            GameObject.Destroy(gameObject);
+            
+            /*
             if (commandExecutionState.Complete) {
                 yield return StartCoroutine(combatLevelController.nextCreatureTurn());
                 GameObject.Destroy(gameObject);
             } else {
                 displaySelector();
             }
+            */
+            
         }
 
         private void displaySelector() {
@@ -47,7 +54,8 @@ namespace Levels.Combat {
             combatLevelController = combatLevelActionUIController.CombatLevelUIController.CombatLevelController;
             if (combatAction is ScriptedAction scriptedAction) {
                 CreatureCombatObject currentlyMovingCreature = combatLevelController.getCurrentlyMovingCreature();
-                commandExecutionState = new CommandExecutionState(scriptedAction,currentlyMovingCreature,true);
+                // TODO remove singleton usage
+                commandExecutionState = new CommandExecutionState(scriptedAction,currentlyMovingCreature,CombatLevelController.Instance,true);
                 StartCoroutine(commandExecutionState.executeSection());
                 displaySelector();
             }

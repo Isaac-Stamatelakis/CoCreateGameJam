@@ -6,6 +6,7 @@ using Actions.Script.Execution;
 using Creatures;
 using System;
 using Actions.Script.Description;
+using Levels.Combat;
 
 namespace Actions.Script {
 
@@ -22,9 +23,18 @@ namespace Actions.Script {
             commandExecutionState.CreatureSelector = new CreatureSelector(
                 targetType: targetType,
                 allowSelf: targetSelf,
-                maxTargets: targets
+                maxTargets: targets,
+                random: random
             );
-            commandExecutionState.PausedForSelection = true;
+            if (random) {
+                for (int i = 0; i < targets; i++) {
+                    commandExecutionState.CreatureSelector.Creatures.Add(
+                        commandExecutionState.CombatLevelController.getRandomCreature(targetSelf).CreatureCombatObject
+                    );
+                }
+            } else {
+                commandExecutionState.PausedForSelection = true;
+            }
             CommandExecutionStateUtils.generateSubStack(commandExecutionState);
             
         }
