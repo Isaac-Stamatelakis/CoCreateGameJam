@@ -55,7 +55,8 @@ namespace Actions.Script.Description {
             description += formatDictCollection(ParseStage.PreSelect,preSelectDescription,actionOrder);
             description += formatDictCollection(ParseStage.Selection,selectDescription,actionOrder);
             description += formatDictCollection(ParseStage.PostSelect,postSelectDescription,actionOrder);
-            return description.Substring(0, description.Length - 1); // Remove empty space at end
+            return description;
+            //return description.Substring(0, description.Length - 1); // Remove empty space at end
         }
 
         private string listToDescription(List<ActionDictCollection> actionDictCollections, List<string> actionOrder) {
@@ -72,10 +73,10 @@ namespace Actions.Script.Description {
         }
 
         private string formatDictCollection(ParseStage parseStage, string prefix, List<string> actionOrder) {
-            if (ParseStageDictCollections[parseStage].Count == 0) {
+            string dictCollectionDescription = listToDescription(ParseStageDictCollections[parseStage],actionOrder);
+            if (dictCollectionDescription.Length == 0) {
                 return "";
             }
-            string dictCollectionDescription = listToDescription(ParseStageDictCollections[parseStage],actionOrder);
             return $"{prefix} {dictCollectionDescription}";
         }
     }

@@ -28,6 +28,6 @@ MonoBehaviour:
   - val: {fileID: 11400000, guid: cdb25ca96c985904b8564e47dc4dca62, type: 2}
     frequency: 5
     amount: 5
-  rolls: 4
-  repetitions: 1
+  rolls: 1
+  repetitions: 0
   animation: {fileID: 5531758582210896768, guid: 6aa11ac0b1bca3e41a89ee07404fbfce, type: 3}

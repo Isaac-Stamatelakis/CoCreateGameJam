@@ -28,6 +28,14 @@ namespace Items {
             return amount.ToString();
         }
 
+        public override StackableItemSlot clone()
+        {
+            return new IntItemSlot(
+                this.Lootable,
+                this.amount
+            );
+        }
+
         public override void merge(StackableItemSlot stackableItemSlot)
         {
             if (stackableItemSlot is not IntItemSlot intItemSlot) {

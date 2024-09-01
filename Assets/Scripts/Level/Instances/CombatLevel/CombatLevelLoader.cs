@@ -18,9 +18,10 @@ namespace Levels.Combat {
             List<EquipedCreeture> creatures = playerIO.EquipedCreetures;
             LootableRegistry registry = LootableRegistry.getInstance();
             List<EquipedCreeture> testingCreatings = new List<EquipedCreeture> {
-                new EquipedCreeture(registry.getLootable<Creature>("clockadoodle"), new List<EnchantedEquipment>()),
-                new EquipedCreeture(registry.getLootable<Creature>("soddle"), new List<EnchantedEquipment>()),
-                new EquipedCreeture(registry.getLootable<Creature>("dragoon"), new List<EnchantedEquipment>())
+                //new EquipedCreeture(registry.getLootable<Creature>("ambersand"), new List<EnchantedEquipment>()),
+                //new EquipedCreeture(registry.getLootable<Creature>("soddle"), new List<EnchantedEquipment>()),
+                //new EquipedCreeture(registry.getLootable<Creature>("dragoon"), new List<EnchantedEquipment>()),
+                new EquipedCreeture(registry.getLootable<Creature>("gun_crab"), new List<EnchantedEquipment>())
             };
             CombatPlayer humanPlayer = new CombatPlayer(testingCreatings);
             CombatPlayer aiPlayer = new CombatPlayer(level.enemyCreatures);

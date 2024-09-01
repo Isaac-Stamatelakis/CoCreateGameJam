@@ -28,6 +28,14 @@ namespace Items {
             return $"{amount}:F1";
         }
 
+        public override StackableItemSlot clone()
+        {
+            return new DoubleItemSlot(
+                this.Lootable,
+                this.amount
+            );
+        }
+
         public override void merge(StackableItemSlot stackableItemSlot)
         {
             if (stackableItemSlot is not DoubleItemSlot doubleItemSlot) {

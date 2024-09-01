@@ -45,6 +45,8 @@ namespace Actions.Script {
             commandExecutionState.SubStack = new SelectionCommandLoop(subCommandStack);
         }
         public static (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) parse(FormattedScriptCommand scriptCommand) {
+            
+            
             List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
             parseInstructions: new List<ParseInstruction>{
                     new ParseInstruction(ParseType.Integer,"targets",true),
@@ -97,11 +99,18 @@ namespace Actions.Script {
             if (random) {
                 selectString += " random";
             }
-            selectString += $" {type}";
+            string targetTypeString = type.ToString().ToLower();
+            selectString += $" {targetTypeString}";
             if (!targetSelf) {
                 selectString += " except them";
             }
             return $"{selectString} ";
         }
+    }
+
+    public enum SpecialSelectTarget {
+        Attacker,
+        Target,
+        Healer,
     }
 }

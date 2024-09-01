@@ -29,4 +29,6 @@ MonoBehaviour:
     animation slash;
 
     attack
-    4 range=1;'
+    4 range=1;
+
+    attack 4 range=1 type=fire;'

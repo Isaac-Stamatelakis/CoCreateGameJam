@@ -17,6 +17,7 @@ namespace Levels.Combat {
         [SerializeField] private CombatCreatureContainer aiPlayerCreatures;
         [SerializeField] private GameOverController playerLoseUIPrefab;
         [SerializeField] private PlayerWinUI playerWinUIPrefab;
+        private readonly int CURRENT_TURN_Z_CHANGE = 1;
         private List<CreatureInCombat> creatureTurns;
         private CombatPlayer humanPlayer;
         private CombatPlayer aiPlayer;
@@ -61,6 +62,10 @@ namespace Levels.Combat {
             }
             creatureHighlightController.setSelector(null);
             CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
+            Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
+            currentTurnPosition.z -= CURRENT_TURN_Z_CHANGE;
+            currentCreatureTurn.transform.position = currentTurnPosition;
+
             creatureHighlightController.setCurrentCreatureTurn(currentCreatureTurn);
             if (humanPlayer.Creatures.Contains(currentCreatureTurn.CreatureInCombat)) {
                 uiController.ActionUIController.displaySelect(creatureTurns[0],humanPlayer);
@@ -85,10 +90,13 @@ namespace Levels.Combat {
                 Debug.Log("Tie");
                 yield return null;
             }
-            CreatureInCombat currentTurn = creatureTurns[0];
-            yield return currentTurn.CreatureCombatObject.resetPosition();
+            CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
+            Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
+            currentTurnPosition.z += CURRENT_TURN_Z_CHANGE;
+            currentCreatureTurn.transform.position = currentTurnPosition;
+            yield return currentCreatureTurn.resetPosition();
             creatureTurns.RemoveAt(0);
-            creatureTurns.Add(currentTurn);
+            creatureTurns.Add(currentCreatureTurn.CreatureInCombat);
             while (creatureTurns.Count > 0 && creatureTurns[0].IsDead) {
                 creatureTurns.RemoveAt(0);
             }
@@ -100,6 +108,7 @@ namespace Levels.Combat {
             instantiated.transform.SetParent(uiController.transform,false);
             ActionRegistry.getInstance().freeAll();
         }
+
 
         private void clearCreatureListOfDead(List<CreatureInCombat> creatures) {
             for (int i = 0; i < creatures.Count; i++) {

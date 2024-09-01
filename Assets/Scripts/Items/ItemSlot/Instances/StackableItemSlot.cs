@@ -20,6 +20,7 @@ namespace Items {
         public abstract int amountToInt();
         public abstract void subtractInt(int value);
         public abstract void subtractDouble(double value);
+        public abstract StackableItemSlot clone();
     }
 }
 

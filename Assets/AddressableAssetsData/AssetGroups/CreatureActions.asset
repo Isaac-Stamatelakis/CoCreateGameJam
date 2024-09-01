@@ -42,6 +42,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - soddle
+  - m_GUID: 8cda8785e19ef444c9ee2fe4feb6f1b2
+    m_Address: Assets/Actions/Creatures/Ambersand/Ambersand Smash.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ambersand
+  - m_GUID: 9f2fefa6cd770f64ca7b6329629ae137
+    m_Address: Assets/Actions/Creatures/GunCrab/Glock 47.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - gun_crab
+  - m_GUID: f6b816a62873b5e4dbeba98f5ce23f44
+    m_Address: Assets/Actions/Creatures/GunCrab/Spray and Pray.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - gun_crab
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e5149903cf2468d49bef2e23705cc07c, type: 2}
   m_SchemaSet:

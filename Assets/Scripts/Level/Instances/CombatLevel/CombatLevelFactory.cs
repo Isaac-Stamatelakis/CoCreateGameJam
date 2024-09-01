@@ -20,7 +20,7 @@ namespace Levels.Combat {
             foreach (CombatPlayer player in players) {
                 creatures.AddRange(player.Creatures);
             }
-            creatures = creatures.OrderBy(creature => creature.EquipedCreeture.getStat(CreatureStat.Speed)).ToList();
+            creatures = creatures.OrderByDescending(creature => creature.EquipedCreeture.getStat(CreatureStat.Speed)).ToList();
             return creatures;
         }
 

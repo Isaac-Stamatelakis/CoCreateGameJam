@@ -88,8 +88,10 @@ MonoBehaviour:
     - default
     - clockadoodle
     - dragoon
-    - goofball
+    - goof_ball
     - soddle
+    - ambersand
+    - gun_crab
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 59805baec6fa4b843a473bc7e503b17e, type: 2}

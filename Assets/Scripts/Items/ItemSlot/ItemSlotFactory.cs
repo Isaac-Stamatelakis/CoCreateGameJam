@@ -104,7 +104,7 @@ namespace Items {
                     return;
                 }
             }
-            items.Add(item);
+            items.Add(item.clone() as T);
         }
 
         public static T matchList<T>(List<T> items, T item) where T : StackableItemSlot {

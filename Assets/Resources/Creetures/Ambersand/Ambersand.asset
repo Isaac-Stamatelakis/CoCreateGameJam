@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
+  m_Name: Ambersand
+  m_EditorClassIdentifier: 
+  id: ambersand
+  sprite: {fileID: 1772808584, guid: bcc05d75d7bb5704e865219d0fb3e93d, type: 3}
+  speed: 5
+  strength: 5
+  health: 5
+  mana: 0
+  description: 
+  controller: {fileID: 9100000, guid: 45faf5610397d1c459e88675084486b5, type: 2}
+  strengths: 
+  weaknesses: 
+  favouriteCurrency: {fileID: 0}
+  hatedCurrency: {fileID: 0}
