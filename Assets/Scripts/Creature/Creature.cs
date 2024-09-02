@@ -44,6 +44,7 @@ namespace Creatures {
         public int Speed {get => speed;}
         public int Strength {get => strength;}
         public int Health {get => health;}
+        public int MaxMana {get => mana;}
         public List<DamageType> Strengths { get => strengths; }
         public List<DamageType> Weaknesses { get => weaknesses; }
         public RuntimeAnimatorController AnimationController { get => controller; }

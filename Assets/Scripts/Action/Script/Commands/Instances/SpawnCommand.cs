@@ -25,7 +25,8 @@ namespace Actions.Script {
                 return;
             }
             GameObject instantiated = GameObject.Instantiate(commandExecutionState.ObjectPrefabs[spawnName]);
-            instantiated.transform.SetParent(commandExecutionState.SelfCreature.transform,false);
+            instantiated.transform.SetParent(commandExecutionState.CombatLevelController.SpawnedObjectContainer,false);
+            instantiated.transform.position += commandExecutionState.SelfCreature.transform.position;
             commandExecutionState.SpawnedObjects[spawnName] = instantiated;
         }
 

@@ -55,6 +55,12 @@ namespace Actions.Script {
                 specialActionExecutor = new SpecialActionExecutor();
             }
         }
+
+        private void endExecution() {
+            foreach (GameObject spawnedObject in spawnedObjects.Values) {
+                GameObject.Destroy(spawnedObject);
+            }
+        }
         public IEnumerator executeSection() {
             if (SubStack != null) {
                 SubStack.iterations = CreatureSelector.Creatures.Count;
@@ -68,6 +74,7 @@ namespace Actions.Script {
                     }
                     while (SubStack.commands.Count > 0) {
                         if (selfCreature == null) {
+                            endExecution();
                             yield break;
                         }
                         ScriptCommand command = SubStack.commands.Pop();
@@ -88,9 +95,7 @@ namespace Actions.Script {
                     break;
                 }
             }
-            foreach (GameObject spawnedObject in spawnedObjects.Values) {
-                GameObject.Destroy(spawnedObject);
-            }
+            endExecution();
         }
         public CreatureSelector getCurrentSelector() {
             return CreatureSelector;

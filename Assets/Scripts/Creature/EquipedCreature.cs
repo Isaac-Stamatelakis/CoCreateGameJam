@@ -46,6 +46,9 @@ namespace Creatures {
                 case CreatureStat.Health:
                     value = creeture.Health;
                     break;
+                case CreatureStat.MaxMana:
+                    value = creeture.MaxMana;
+                    break;
                 default:
                     throw new System.Exception($"Did not cover switch case in for {stat}");
             }

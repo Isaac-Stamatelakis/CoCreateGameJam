@@ -5,17 +5,18 @@ using UnityEngine.UI;
 using TMPro;
 using UI.Inventory;
 using Creatures;
+using Actions.Script;
 
 namespace Levels.Combat {
-    public class EnemyTurnUI : UIInventoryDisplayer<EquipedCreeture>
+    public class EnemyTurnUI : MonoBehaviour
     {
         [SerializeField] private Image creatureImage;
         [SerializeField] private TextMeshProUGUI text;
 
-        public override void display(EquipedCreeture element)
+        public void display(EquipedCreeture element, ScriptedAction scriptedAction)
         {
             creatureImage.sprite = element.getSprite();
-            text.text = CombatLevelUtils.getEnemyTurnText(element.getName());
+            text.text = CombatLevelUtils.getEnemyTurnText(element.getName(), scriptedAction);
         }
     }
 }

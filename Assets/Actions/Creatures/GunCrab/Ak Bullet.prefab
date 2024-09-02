@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8152300251986351572}
   - component: {fileID: 6657466811329808989}
   m_Layer: 0
-  m_Name: Glock Bullet
+  m_Name: Ak Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 92a2c585d6c8ddb4fab36b3e249e19cf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cd033dea2b0461e49a6c6da5f2b47e92, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,6 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47bc8572c9cd7b3459c12e7c1c2d5029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 2.5
   hitAnimation: {fileID: 0}
   animator: {fileID: 0}

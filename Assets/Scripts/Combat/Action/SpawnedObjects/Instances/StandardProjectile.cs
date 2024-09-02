@@ -20,9 +20,6 @@ namespace Actions.Objects {
             Vector3 movementVector = tuple.Item1;
             int iterations = tuple.Item2;
             while (iterations > 0) {
-                if (gameObject == null) {
-                    yield break;
-                }
                 iterations--;
                 transform.position += movementVector;
                 yield return new WaitForFixedUpdate();

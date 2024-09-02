@@ -18,6 +18,7 @@ namespace Levels.Combat {
         [SerializeField] private CombatCreatureContainer aiPlayerCreatures;
         [SerializeField] private GameOverController playerLoseUIPrefab;
         [SerializeField] private PlayerWinUI playerWinUIPrefab;
+        [SerializeField] private Transform spawnedObjectContainer;
         private readonly int CURRENT_TURN_Z_CHANGE = 1;
         private List<CreatureInCombat> creatureTurns;
         private CombatPlayer humanPlayer;
@@ -26,6 +27,8 @@ namespace Levels.Combat {
         public CreatureHighlightController CreatureHighlightController { get => creatureHighlightController; }
         public static CombatLevelController Instance { get => instance; }
         public Transform CanvasTransform { get => uiController.transform; }
+        public List<CreatureInCombat> CreatureTurns {get => creatureTurns;}
+        public Transform SpawnedObjectContainer {get => spawnedObjectContainer;}
         public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevel combatLevel) {
             this.humanPlayer = humanPlayer;
             humanPlayerCreatures.displayCreatures(humanPlayer.Creatures);
@@ -115,7 +118,6 @@ namespace Levels.Combat {
                 return;
             }
             if (aiPlayer.Creatures.Contains(currentCreatureTurn.CreatureInCombat)) {
-                uiController.ActionUIController.displayEnemyTurn(creatureTurns[0]);
                 StartCoroutine(moveAI());
                 return;
             }
@@ -189,22 +191,21 @@ namespace Levels.Combat {
             }
             int ran = Random.Range(0,actions.Count);
             ScriptedAction chosenAction = actions[ran];
+            uiController.ActionUIController.displayEnemyTurn(creatureTurns[0],chosenAction);
             CommandExecutionState commandExecutionState = new CommandExecutionState(chosenAction,currentCreatureTurn,this,true);
             yield return StartCoroutine(commandExecutionState.executeSection());
-            while (!commandExecutionState.Complete) {
-                CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
-                switch (creatureSelector.TargetType) {
-                    case CreatureSelectionType.Ally:
-                        ran = Random.Range(0,aiPlayer.Creatures.Count);
-                        creatureSelector.Creatures.Add(aiPlayer.Creatures[ran].CreatureCombatObject);
-                        break;
-                    case CreatureSelectionType.Enemy:
-                        ran = Random.Range(0,humanPlayer.Creatures.Count);
-                        creatureSelector.Creatures.Add(humanPlayer.Creatures[ran].CreatureCombatObject);
-                        break;
-                }
-                yield return StartCoroutine(commandExecutionState.executeSection());
+            CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
+            switch (creatureSelector.TargetType) {
+                case CreatureSelectionType.Ally:
+                    ran = Random.Range(0,aiPlayer.Creatures.Count);
+                    creatureSelector.Creatures.Add(aiPlayer.Creatures[ran].CreatureCombatObject);
+                    break;
+                case CreatureSelectionType.Enemy:
+                    ran = Random.Range(0,humanPlayer.Creatures.Count);
+                    creatureSelector.Creatures.Add(humanPlayer.Creatures[ran].CreatureCombatObject);
+                    break;
             }
+            yield return StartCoroutine(commandExecutionState.executeSection());
             yield return StartCoroutine(nextCreatureTurn());
 
         }

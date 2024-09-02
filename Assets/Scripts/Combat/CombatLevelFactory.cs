@@ -4,6 +4,7 @@ using UnityEngine;
 using Creatures;
 using System.Linq;
 using Items;
+using Actions.Script;
 
 namespace Levels.Combat {
     public static class CombatLevelUtils
@@ -24,9 +25,10 @@ namespace Levels.Combat {
             return creatures;
         }
 
-        public static string getEnemyTurnText(string creatureName) {
-            int ran = Random.Range(0,enemyTurnTexts.Count);
-            return enemyTurnTexts[ran].Replace("{name}",creatureName);
+        public static string getEnemyTurnText(string creatureName, ScriptedAction scriptedAction) {
+            return $"{creatureName} uses {scriptedAction.name}!";
+            //int ran = Random.Range(0,enemyTurnTexts.Count);
+            //return enemyTurnTexts[ran].Replace("{name}",creatureName);
         }
     }
 }

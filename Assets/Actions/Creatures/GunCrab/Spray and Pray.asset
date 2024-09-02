@@ -15,19 +15,19 @@ MonoBehaviour:
   sprite: {fileID: 0}
   animations: []
   prefabs:
-  - key: glock
-    value: {fileID: 527500381919247703, guid: 17e31bc8b74d28545a457110e22a3173, type: 3}
+  - key: bullet
+    value: {fileID: 527500381919247703, guid: 4fff03c466de55f40963ba86447902a7, type: 3}
   sounds: []
   preSelectDescription: 
-  selectDescription: Dragoon shoots a fireball at
+  selectDescription: Gun Crab indiscriminately fires at
   postSelectDescription: 
   actionScript: 'select 20 any random=true self=true;
 
-    spawn glock;
+    spawn bullet;
 
     action
-    glock move;
+    bullet move;
 
     attack 2 range=1;
 
-    end spawn glock;'
+    end spawn bullet;'

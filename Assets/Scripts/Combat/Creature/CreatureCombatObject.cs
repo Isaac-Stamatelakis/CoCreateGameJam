@@ -55,6 +55,9 @@ namespace Levels.Combat {
         }
 
         public void highlight(HighlightType? highlightType) {
+            if (highlightSprite==null) {
+                return;
+            }
             switch (highlightType) {
                 case HighlightType.Turn:
                     changeHighlightColor(Color.cyan);

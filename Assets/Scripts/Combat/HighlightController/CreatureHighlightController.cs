@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Actions;
+using Creatures;
 
 namespace Levels.Combat {
     public class CreatureHighlightController
@@ -103,14 +104,32 @@ namespace Levels.Combat {
                 if (enemyCreatures.Count > 0) {
                     previouslyHighlightedEnemies = enemyCreatures;
                 }
-                this.creatureSelector.clear();
             }
             this.creatureSelector = newSelector;
-            if (newSelector != null) {
+            if (creatureSelector != null) {
                 selectFromMemory(new List<CreatureCombatObject>{viewHighlightedCreature});
                 selectFromMemory(previouslyHighlightedEnemies);
                 selectFromMemory(previouslyHighlightedAllies);
             }
+            
+
+            // TODO auto select when only one option
+            /*
+            if (!creatureSelector.isSatisfied()) {
+                List<CreatureCombatObject> enemiesNotInMemory = new List<CreatureCombatObject>();
+                List<CreatureCombatObject> alliesNotInMemory = new List<CreatureCombatObject>();
+                foreach (CreatureInCombat creatureInCombat in CombatLevelController.Instance.CreatureTurns) {
+                    if (previouslyHighlightedEnemies.Contains(creatureInCombat.CreatureCombatObject) || previouslyHighlightedAllies.Contains(creatureInCombat.CreatureCombatObject)) {
+                        continue;
+                    }
+                    if (humanPlayer.Creatures.Contains(creatureInCombat)) {
+                        alliesNotInMemory.Add(creatureInCombat.CreatureCombatObject);
+                    } else {
+                        enemiesNotInMemory.Add(creatureInCombat.CreatureCombatObject);
+                    }
+                }  
+            }
+            */
         }
 
         private void selectFromMemory(List<CreatureCombatObject> creatureCombatObjects) {

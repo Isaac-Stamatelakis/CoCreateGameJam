@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
-  m_Name: Ambersand
+  m_Name: AnterSand
   m_EditorClassIdentifier: 
   id: ambersand
   sprite: {fileID: 1772808584, guid: bcc05d75d7bb5704e865219d0fb3e93d, type: 3}

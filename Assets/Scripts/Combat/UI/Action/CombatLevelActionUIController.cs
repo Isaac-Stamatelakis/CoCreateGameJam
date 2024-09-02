@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
+using Actions.Script;
 
 namespace Levels.Combat {
     public class CombatLevelActionUIController : MonoBehaviour
@@ -38,9 +39,9 @@ namespace Levels.Combat {
             actionExecutionUI.display(combatAction,this);
         }
 
-        public void displayEnemyTurn(CreatureInCombat creatureInCombat) {
+        public void displayEnemyTurn(CreatureInCombat creatureInCombat, ScriptedAction scriptedAction) {
             toggleDisplay(enemyTurnUI.gameObject);
-            enemyTurnUI.display(creatureInCombat.EquipedCreeture);
+            enemyTurnUI.display(creatureInCombat.EquipedCreeture,scriptedAction);
         }
     }
 }

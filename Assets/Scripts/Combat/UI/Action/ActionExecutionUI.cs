@@ -29,19 +29,8 @@ namespace Levels.Combat {
 
         public IEnumerator execute() {
             yield return StartCoroutine(commandExecutionState.executeSection());
-            
             yield return StartCoroutine(combatLevelController.nextCreatureTurn());
             GameObject.Destroy(gameObject);
-            
-            /*
-            if (commandExecutionState.Complete) {
-                yield return StartCoroutine(combatLevelController.nextCreatureTurn());
-                GameObject.Destroy(gameObject);
-            } else {
-                displaySelector();
-            }
-            */
-            
         }
 
         private void displaySelector() {

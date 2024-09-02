@@ -9,9 +9,14 @@ namespace UI {
     {
         [SerializeField] private Slider slider;
         [SerializeField] private TextMeshProUGUI text;
-        public void display(int current, int max) {
-            slider.value = ((float) current) / max;
-            text.text = $"{current}/{max}";
+        public void display(float current, int max) {
+            if (max == 0) {
+                slider.value = 0;
+            } else {
+                slider.value = current / max;
+            }
+            
+            //text.text = $"{current}/{max}";
         }
     }
 

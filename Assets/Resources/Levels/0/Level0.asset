@@ -16,7 +16,7 @@ MonoBehaviour:
   - creeture: {fileID: 11400000, guid: e0612e60202bf2647aa51dc74373a01e, type: 2}
     equipment: []
     rarity: 0
-  - creeture: {fileID: 11400000, guid: e0612e60202bf2647aa51dc74373a01e, type: 2}
+  - creeture: {fileID: 11400000, guid: fa017282e748e3548b885059d3c3aefb, type: 2}
     equipment:
     - equipment: {fileID: 0}
     rarity: 0
