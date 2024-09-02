@@ -7,20 +7,20 @@ using Levels.Combat;
 namespace Creatures {
     public class CreatureInCombat
     {
-        private EquipedCreeture equipedCreeture;
+        private EquipedCreature equipedCreeture;
         private float health;
         private float mana;
         public bool IsDead{get => health <= 0;}
         public float Health { get => health;}
         public float HealthPercent { get => health/equipedCreeture.getStat(CreatureStat.Health);}
-        public EquipedCreeture EquipedCreeture { get => equipedCreeture; }
+        public EquipedCreature EquipedCreeture { get => equipedCreeture; }
         private HashSet<StatusEffect> statusEffects = new HashSet<StatusEffect>();
         private CreatureCombatObject creatureCombatObject;
         public CreatureCombatObject CreatureCombatObject {get => creatureCombatObject;}
         public float Mana { get => mana; }
         public float ManaPercent {get => mana/equipedCreeture.getStat(CreatureStat.MaxMana);}
 
-        public CreatureInCombat(EquipedCreeture equipedCreeture) {
+        public CreatureInCombat(EquipedCreature equipedCreeture) {
             this.equipedCreeture = equipedCreeture;
             this.health = equipedCreeture.getStat(CreatureStat.Health);
         }

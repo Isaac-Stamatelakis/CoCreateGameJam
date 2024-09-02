@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public abstract class UIInventoryDisplayer<T> : MonoBehaviour, IUIDisplayer<T>, IPointerClickHandler where T : IDisplayable
     {
         protected InventoryUI<T> inventory;

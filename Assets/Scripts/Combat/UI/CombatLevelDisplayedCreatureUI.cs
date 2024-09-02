@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UI;
-using UI.Inventory;
+using UI.Lists;
 using Items;
 using Creatures;
 using Items.Equipment;

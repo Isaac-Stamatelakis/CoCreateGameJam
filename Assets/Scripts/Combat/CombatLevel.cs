@@ -10,10 +10,10 @@ namespace Levels.Combat {
     public class CombatLevel : Level
     {
         
-        private List<EquipedCreeture> playerCreatures;
-        [SerializeField] public List<EquipedCreeture> enemyCreatures;
+        private List<EquipedCreature> playerCreatures;
+        [SerializeField] public List<EquipedCreature> enemyCreatures;
         [SerializeField] public List<Lootable> lootables;
-        public void initalize(List<EquipedCreeture> playerCreatures) {
+        public void initalize(List<EquipedCreature> playerCreatures) {
             this.playerCreatures = playerCreatures;
         }
 

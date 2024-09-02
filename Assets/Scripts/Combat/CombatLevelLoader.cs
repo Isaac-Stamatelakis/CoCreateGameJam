@@ -15,14 +15,14 @@ namespace Levels.Combat {
         protected override async void loadLevel(CombatLevel level)
         {
             PlayerIO playerIO = PlayerIO.Instance;
-            List<EquipedCreeture> creatures = playerIO.EquipedCreetures;
+            List<EquipedCreature> creatures = playerIO.EquipedCreetures;
             LootableRegistry registry = LootableRegistry.getInstance();
             EnchantedEquipment mazda5 = new EnchantedEquipment(LootableRegistry.getInstance().getLootable<Equipment>("mazda5"),null);
-            List<EquipedCreeture> testingCreatings = new List<EquipedCreeture> {
-                new EquipedCreeture(registry.getLootable<Creature>("ambersand"), new List<EnchantedEquipment>()),
-                new EquipedCreeture(registry.getLootable<Creature>("soddle"), new List<EnchantedEquipment>()),
-                new EquipedCreeture(registry.getLootable<Creature>("dragoon"), new List<EnchantedEquipment>()),
-                new EquipedCreeture(registry.getLootable<Creature>("gun_crab"), new List<EnchantedEquipment>{mazda5})
+            List<EquipedCreature> testingCreatings = new List<EquipedCreature> {
+                new EquipedCreature(registry.getLootable<Creature>("ambersand"), new List<EnchantedEquipment>()),
+                new EquipedCreature(registry.getLootable<Creature>("soddle"), new List<EnchantedEquipment>()),
+                new EquipedCreature(registry.getLootable<Creature>("dragoon"), new List<EnchantedEquipment>()),
+                new EquipedCreature(registry.getLootable<Creature>("gun_crab"), new List<EnchantedEquipment>{mazda5})
             };
             CombatPlayer humanPlayer = new CombatPlayer(testingCreatings);
             CombatPlayer aiPlayer = new CombatPlayer(level.enemyCreatures);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Crafting.Recipes;
 using System;
-using UI.Inventory;
+using UI.Lists;
 using TMPro;
 using UnityEngine.UI;
 

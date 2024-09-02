@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UI.Inventory;
+using UI.Lists;
 
 namespace Trading.UI {
     public class CreatureTradingUIPage : MonoBehaviour, IDisplayController

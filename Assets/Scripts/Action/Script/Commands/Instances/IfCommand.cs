@@ -43,6 +43,7 @@ namespace Actions.Script {
             ) {
                 double a = ActionScriptParseUtils.parseDoubleValue(first,formattedScriptCommand,commandExecutionState);
                 double b = ActionScriptParseUtils.parseDoubleValue(second,formattedScriptCommand,commandExecutionState);
+                Debug.Log($"{a} {booleanOperator} {b}");
                 switch (booleanOperator) {
                     case "<":
                         statementPassed = a < b;

@@ -16,8 +16,8 @@ namespace Player {
     public class PlayerIO : MonoBehaviour
     {
         private static PlayerIO instance;
-        private List<EquipedCreeture> combatCreatures;
-        public List<EquipedCreeture> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
+        private List<EquipedCreature> combatCreatures;
+        public List<EquipedCreature> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
         public List<EnchantedEquipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
         public List<IntItemSlot> LootBoxes {get => ItemSlotUtils.sortList<LootBox,IntItemSlot>(playerData.intItemSlots);}
         public List<IntItemSlot> CraftingItems {get => ItemSlotUtils.sortList<CraftingItem,IntItemSlot>(playerData.intItemSlots);}
@@ -25,6 +25,7 @@ namespace Player {
         public string CurrentTile {get => playerData.currentTile; set => playerData.currentTile = value;}
         public static PlayerIO Instance { get => instance;}
         public List<DoubleItemSlot> Currencies {get=> ItemSlotUtils.sortList<Currency,DoubleItemSlot>(playerData.doubleItemSlots);}
+
 
         public bool hasDiscoveredTile(string tileName) {
             return playerData.discoveredTiles.Contains(tileName);
@@ -44,6 +45,14 @@ namespace Player {
             foreach (IntItemSlot itemSlot in itemSlots) {
                 give(itemSlot);
             }
+        }
+
+        public List<EquipedCreature> getPlayerTeam() {
+            if (playerData.playerTeam==null) {
+                playerData.playerTeam = PlayerIOUtils.initalizePlayerTeam();
+            }
+            PlayerIOUtils.clampPlayerTeam(playerData.playerTeam);
+            return playerData.playerTeam;
         }
 
         public bool hasItems(List<IntItemSlot> itemSlots) {
@@ -169,13 +178,15 @@ namespace Player {
                 SPlayerData sPlayerData = JsonConvert.DeserializeObject<SPlayerData>(data);
                 List<EnchantedEquipment> equipment = new EquipmentFactory().deserializeList(sPlayerData.equipmentData);
                 EquipCreatureSerializationFactory equipCreatureSerializationFactory = new EquipCreatureSerializationFactory();
-                List<EquipedCreeture> equipedCreetures = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureData);
+                List<EquipedCreature> equipedCreetures = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureData);
+                List<EquipedCreature> playerTeam = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureTeamData);
                 List<IntItemSlot> intItemSlots = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.intItemSlots);
                 List<DoubleItemSlot> doubleItemSlots = new DoubleItemSlotSerializationFactory().deserializeList(sPlayerData.doubleItemSlots);
                 return new PlayerData(
                     currentTile: sPlayerData.currentTile,
                     discoveredTiles: sPlayerData.discoveredTiles,
                     creetures: equipedCreetures,
+                    playerTeam: playerTeam,
                     equipment: equipment,
                     intItemSlots: intItemSlots,
                     doubleItemSlots: doubleItemSlots
@@ -191,6 +202,7 @@ namespace Player {
         public string seralize() {
             string equipmentData = new EquipmentFactory().serialize(playerData.equipment);
             string creatureData = new EquipCreatureSerializationFactory().serialize(playerData.creetures);
+            string teamData = new EquipCreatureSerializationFactory().serialize(playerData.playerTeam);
             string doubleItemSlotData = new DoubleItemSlotSerializationFactory().serialize(playerData.doubleItemSlots);
             string intItemSlotData = new IntItemSlotSerializationFactory().serialize(playerData.intItemSlots);
             SPlayerData sPlayerData = new SPlayerData(
@@ -198,6 +210,7 @@ namespace Player {
                 discoveredTiles: playerData.discoveredTiles,
                 equipmentData: equipmentData,
                 creatureData: creatureData,
+                creatureTeamData: teamData,
                 intItemSlots: intItemSlotData,
                 doubleItemSlots: doubleItemSlotData
             );
@@ -210,10 +223,15 @@ namespace Player {
                 cardboardBox,
                 9999
             );
+            List<EquipedCreature> defaultTeam = new List<EquipedCreature>();
+            for (int i = 0; i < Global.PLAYER_TEAM_SIZE; i++) {
+                defaultTeam.Add(null);
+            }
             return new PlayerData(
                 new List<string>(),
                 null,
-                new List<EquipedCreeture>(),
+                new List<EquipedCreature>(),
+                defaultTeam,
                 new List<EnchantedEquipment>(),
                 new List<IntItemSlot>{startingBox},
                 new List<DoubleItemSlot>()
@@ -240,6 +258,7 @@ namespace Player {
                 List<string> discoveredTiles, 
                 string equipmentData, 
                 string creatureData,
+                string creatureTeamData,
                 string intItemSlots,
                 string doubleItemSlots
             ) {
@@ -249,11 +268,13 @@ namespace Player {
                 this.creatureData = creatureData;
                 this.intItemSlots = intItemSlots;
                 this.doubleItemSlots = doubleItemSlots;
+                this.creatureTeamData = creatureTeamData;
             }
             public string currentTile; 
             public List<string> discoveredTiles;
             public string equipmentData;
             public string creatureData;
+            public string creatureTeamData;
             public string intItemSlots;
             public string doubleItemSlots;
         }
@@ -276,7 +297,8 @@ namespace Player {
         public PlayerData(
             List<string> discoveredTiles, 
             string currentTile, 
-            List<EquipedCreeture> creetures, 
+            List<EquipedCreature> creetures,
+            List<EquipedCreature> playerTeam, 
             List<EnchantedEquipment> equipment, 
             List<IntItemSlot> intItemSlots,
             List<DoubleItemSlot> doubleItemSlots
@@ -284,13 +306,15 @@ namespace Player {
             this.discoveredTiles = discoveredTiles;
             this.currentTile = currentTile;
             this.creetures = creetures;
+            this.playerTeam = playerTeam;
             this.equipment = equipment;
             this.intItemSlots = intItemSlots;
             this.doubleItemSlots = doubleItemSlots;
         }
         public List<string> discoveredTiles;
         public string currentTile;
-        public List<EquipedCreeture> creetures;
+        public List<EquipedCreature> creetures;
+        public List<EquipedCreature> playerTeam;
         public List<EnchantedEquipment> equipment;
         public List<IntItemSlot> intItemSlots;
         public List<DoubleItemSlot> doubleItemSlots;

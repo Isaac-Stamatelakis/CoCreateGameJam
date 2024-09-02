@@ -13,9 +13,9 @@ namespace Levels.Combat {
         public List<CreatureInCombat> Creatures {get => creatures;}
         public List<Consumable> Consumables { get => consumables; }
 
-        public CombatPlayer(List<EquipedCreeture> equipedCreetures) {
+        public CombatPlayer(List<EquipedCreature> equipedCreetures) {
             creatures = new List<CreatureInCombat>();
-            foreach (EquipedCreeture creeture in equipedCreetures) {
+            foreach (EquipedCreature creeture in equipedCreetures) {
                 if (creeture == null) {
                     continue;
                 }

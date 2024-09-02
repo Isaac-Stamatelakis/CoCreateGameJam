@@ -5,7 +5,7 @@ using Items.Equipment;
 using UnityEngine.UI;
 using TMPro;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public class DetailedItemDisplay : UIInventoryDisplayer<Equipment>
     {
         [SerializeField] private Image image;

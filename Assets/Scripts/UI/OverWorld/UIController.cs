@@ -6,10 +6,12 @@ namespace UI {
     public class UIController : MonoBehaviour
     {
         public void displayElement(Transform element) {
-            for (int i = 0; i < transform.childCount; i++) {
-                GameObject.Destroy(transform.GetChild(i).gameObject);
-            }
+            GlobalUtils.deleteChildren(transform);
             element.SetParent(transform,false);
+        }
+
+        public void displayNested(Transform element) {
+            element.transform.SetParent(transform,false);
         }
     }
 }

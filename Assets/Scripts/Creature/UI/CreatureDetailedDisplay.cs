@@ -7,8 +7,8 @@ using Creatures;
 using Items;
 using Items.Equipment;
 
-namespace UI.Inventory {
-    public class CreatureDetailedDisplay : UIInventoryDisplayer<EquipedCreeture>
+namespace UI.Lists {
+    public class CreatureDetailedDisplay : UIInventoryDisplayer<EquipedCreature>
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private Image creatureImage;
@@ -20,7 +20,7 @@ namespace UI.Inventory {
         [SerializeField] private Button equipButton;
         [SerializeField] private Button infoButton;
 
-        public override void display(EquipedCreeture element)
+        public override void display(EquipedCreature element)
         {
             nameText.text = element.Creeture.name;
             creatureImage.sprite = element.Creeture.Sprite;

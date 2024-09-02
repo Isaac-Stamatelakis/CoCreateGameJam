@@ -10,11 +10,28 @@ namespace Player {
     {
         public static void giveLootable(PlayerData playerData, Lootable lootable) {
             if (lootable is Creature creature) {
-                playerData.creetures.Add(new EquipedCreeture(creature,new List<EnchantedEquipment>()));
+                playerData.creetures.Add(new EquipedCreature(creature,new List<EnchantedEquipment>()));
             } else if (lootable is Equipment equipment) {
                 playerData.equipment.Add(new EnchantedEquipment(equipment,null));
             } else {
                 throw new System.Exception($"PlayerIOUtils method 'giveLootable' did not cover case for lootable of type {lootable.GetType()}");
+            }
+        }
+
+        public static List<EquipedCreature> initalizePlayerTeam() {
+            List<EquipedCreature> playerTeam = new List<EquipedCreature>();
+            for (int i = 0; i < Global.PLAYER_TEAM_SIZE; i++) {
+                playerTeam.Add(null);
+            }
+            return playerTeam;  
+        }
+
+        public static void clampPlayerTeam(List<EquipedCreature> playerTeam) {
+            while (playerTeam.Count > Global.PLAYER_TEAM_SIZE) {
+                playerTeam.RemoveAt(playerTeam.Count-1);
+            }
+            while (playerTeam.Count < Global.PLAYER_TEAM_SIZE) {
+                playerTeam.Add(null);
             }
         }
     }

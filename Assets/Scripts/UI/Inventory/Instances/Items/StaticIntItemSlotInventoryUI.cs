@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Items;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public class StaticIntItemSlotInventoryUI : InventoryUI<IntItemSlot>
     {
         public override void leftClick(int index)

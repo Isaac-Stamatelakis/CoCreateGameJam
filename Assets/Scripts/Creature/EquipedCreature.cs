@@ -10,7 +10,7 @@ namespace Creatures {
         public Rarity getRarity();
     }
     [System.Serializable]
-    public class EquipedCreeture : IDisplayable, IRarityItem {
+    public class EquipedCreature : IDisplayable, IRarityItem {
         [SerializeField] public Creature creeture;
         [SerializeField] private List<EnchantedEquipment> equipment;
         private string nickname;
@@ -24,7 +24,7 @@ namespace Creatures {
         public int Level { get => level; }
         public int XP { get => xp; }
 
-        public EquipedCreeture(Creature creeture, List<EnchantedEquipment> equipment) {
+        public EquipedCreature(Creature creeture, List<EnchantedEquipment> equipment) {
             this.creeture = creeture;
             this.equipment = equipment;
         }
@@ -86,9 +86,9 @@ namespace Creatures {
         }
     }
     
-    public class EquipCreatureSerializationFactory : SerializationFactory<EquipedCreeture, SCreatureData>
+    public class EquipCreatureSerializationFactory : SerializationFactory<EquipedCreature, SCreatureData>
     {
-        protected override EquipedCreeture deserializeValue(SCreatureData sValue)
+        protected override EquipedCreature deserializeValue(SCreatureData sValue)
         {
             LootableRegistry lootableRegistry = LootableRegistry.getInstance();
 
@@ -97,9 +97,9 @@ namespace Creatures {
                 return null;
             }
             List<EnchantedEquipment> equipment = new EquipmentFactory().deserializeList(sValue.equipmentData);
-            return new EquipedCreeture(creeture,equipment);
+            return new EquipedCreature(creeture,equipment);
         }
-        protected override SCreatureData formatValue(EquipedCreeture value)
+        protected override SCreatureData formatValue(EquipedCreature value)
         {
             if (value == null) {
                 return null;

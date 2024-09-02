@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Crafting.Recipes;
 using Items;
-using UI.Inventory;
+using UI.Lists;
 using Player;
 
 namespace Crafting.UI {

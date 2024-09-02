@@ -11,11 +11,11 @@ using Items;
 namespace Trading {
     public class TradingCreature : IDisplayable
     {
-        private EquipedCreeture equipedCreeture;
+        private EquipedCreature equipedCreeture;
         private DoubleItemSlot currencyCount;
         private TradingHistory tradingHistory;
         private float mood;
-        public TradingCreature(EquipedCreeture equipedCreeture, DoubleItemSlot currencyCount, TradingHistory tradingHistory, float mood)
+        public TradingCreature(EquipedCreature equipedCreeture, DoubleItemSlot currencyCount, TradingHistory tradingHistory, float mood)
         {
             this.equipedCreeture = equipedCreeture;
             this.currencyCount = currencyCount;
@@ -23,7 +23,7 @@ namespace Trading {
             this.mood = mood;
         }
 
-        public EquipedCreeture EquipedCreeture { get => equipedCreeture; set => equipedCreeture = value;}
+        public EquipedCreature EquipedCreeture { get => equipedCreeture; set => equipedCreeture = value;}
         public Currency Currency { get => currencyCount==null || currencyCount.Lootable == null ? null : (Currency) currencyCount.Lootable;}
         public double Amount {get => currencyCount == null ? 0 : currencyCount.Amount;}
         public float Mood {get => mood;}

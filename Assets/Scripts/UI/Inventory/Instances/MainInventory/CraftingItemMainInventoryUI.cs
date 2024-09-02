@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Items;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public class CraftingItemMainInventoryUI : MainInventoryUI<StackableItemSlot>
     {
         

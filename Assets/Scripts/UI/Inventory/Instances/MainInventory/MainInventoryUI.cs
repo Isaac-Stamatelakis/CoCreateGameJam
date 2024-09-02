@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UI.Inventory {
+namespace UI.Lists {
 
     public interface IDisplayController {
         public Transform getDetailedDisplayContainer();

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Items.Equipment;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public class EquipmentUIDisplay : UIInventoryDisplayer<Equipment>, IPointerClickHandler
     {
         [SerializeField] private Image image;

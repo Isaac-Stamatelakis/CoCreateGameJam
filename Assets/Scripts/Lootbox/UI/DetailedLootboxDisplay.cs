@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using Items;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public class DetailedLootboxDisplay : UIInventoryDisplayer<StackableItemSlot>, ILootBoxDisplayer
     {
         [SerializeField] private TextMeshProUGUI title;

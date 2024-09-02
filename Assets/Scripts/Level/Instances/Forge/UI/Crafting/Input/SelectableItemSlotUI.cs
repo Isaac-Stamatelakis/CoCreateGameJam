@@ -5,7 +5,7 @@ using Items;
 using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
-using UI.Inventory;
+using UI.Lists;
 
 namespace Crafting.UI {
     public class SelectableItemSlotUI : UIInventoryDisplayer<UniqueItemSlot>, IPointerClickHandler

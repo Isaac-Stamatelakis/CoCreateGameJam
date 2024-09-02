@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UI.Inventory;
+using UI.Lists;
 using UnityEngine.EventSystems;
 
 namespace Trading.UI {

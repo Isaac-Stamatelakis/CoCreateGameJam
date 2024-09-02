@@ -4,7 +4,7 @@ using UnityEngine;
 using UI;
 using Creatures;
 using Items.Consumables;
-using UI.Inventory;
+using UI.Lists;
 using Actions;
 using UnityEngine.UI;
 using System.Linq;

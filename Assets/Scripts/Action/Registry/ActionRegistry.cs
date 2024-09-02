@@ -57,14 +57,23 @@ namespace Actions {
             if (actions.ContainsKey(id)) {
                 return;
             }
+
             AsyncOperationHandle<IList<ScriptableObject>> handle = Addressables.LoadAssetsAsync<ScriptableObject>(id, null);
             await handle.Task;
-
+            if (handle.OperationException is InvalidKeyException e) {
+                Debug.LogWarning($"Action Registry could not load {actionBundleType} for id {id}\nError:{e}");
+                return;
+            }
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 IRetrivedHandle retrieveHandle = ActionHandleFactory.formatHandle(handle,actionBundleType);
                 actions[id] = retrieveHandle;
             }
+            
+                
+            
+            
+            
         }
     }
 

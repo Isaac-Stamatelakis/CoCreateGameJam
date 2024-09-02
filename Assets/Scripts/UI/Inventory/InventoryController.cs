@@ -9,7 +9,7 @@ using Items;
 using System.Linq;
 using Items.Equipment;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public class InventoryController : MonoBehaviour, IDisplayController
     {
         [SerializeField] private Button backButton;

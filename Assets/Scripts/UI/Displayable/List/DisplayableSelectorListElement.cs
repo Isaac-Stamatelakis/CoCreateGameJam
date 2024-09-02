@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UI.Inventory;
+using UI.Lists;
 
 namespace UI.Displayables {
     public class DisplayableSelectorListElement : UIDisplayer<IDisplayable>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Items;
-namespace UI.Inventory {
+namespace UI.Lists {
     public class InventoryCategorySelector : MonoBehaviour
     {
         [SerializeField] private Button creatureButton;

@@ -4,7 +4,7 @@ using UnityEngine;
 using LootBoxes;
 using Items;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public class MainLootboxInventory : MainInventoryUI<StackableItemSlot>
     {
         

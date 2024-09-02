@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UI.Inventory;
+using UI.Lists;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -64,9 +64,9 @@ namespace Trading.UI {
         }
         private void selectCreature(int playerCreatureIndex) {
             TradingCreature currentCreature = TradingCreature;
-            List<EquipedCreeture> playerCreatures = PlayerIO.Instance.EquipedCreetures;
+            List<EquipedCreature> playerCreatures = PlayerIO.Instance.EquipedCreetures;
             bool nullSelected = playerCreatureIndex < 0;
-            EquipedCreeture playerCreature = nullSelected ? null : playerCreatures[playerCreatureIndex];
+            EquipedCreature playerCreature = nullSelected ? null : playerCreatures[playerCreatureIndex];
             if (!nullSelected) {
                 playerCreatures.RemoveAt(playerCreatureIndex);
             }
@@ -152,7 +152,7 @@ namespace Trading.UI {
         {
             creatureImage.GetComponent<Button>().onClick.RemoveAllListeners();
             creatureImage.GetComponent<Button>().onClick.AddListener(() => {
-                selectionButton<EquipedCreeture>(
+                selectionButton<EquipedCreature>(
                     title: "Select a Creature",
                     elements: PlayerIO.Instance.EquipedCreetures,
                     selectCreature

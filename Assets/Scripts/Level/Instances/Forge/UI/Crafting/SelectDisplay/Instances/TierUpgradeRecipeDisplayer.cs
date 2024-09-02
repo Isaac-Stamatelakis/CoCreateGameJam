@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Crafting.Recipes;
-using UI.Inventory;
+using UI.Lists;
 using Items;
 using UnityEngine.UI;
 using TMPro;

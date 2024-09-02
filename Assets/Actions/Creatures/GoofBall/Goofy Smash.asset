@@ -26,11 +26,10 @@ MonoBehaviour:
     attack 6 range=1 type=physical;
 
     if
-    self.health > target.health;
+    self.health < target.health;
 
-    attack 1 range=0.5 type=physical;
+    attack 6 range=1 type=physical;
 
-    end
-    if;
+    end if;
 
 '

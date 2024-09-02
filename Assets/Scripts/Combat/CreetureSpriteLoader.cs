@@ -8,7 +8,7 @@ using TMPro;
 namespace Levels.Combat {
     public static class CreetureSpriteLoader 
     {
-        public static GameObject loadCreature(EquipedCreeture equipedCreeture, int order,  Side side) {
+        public static GameObject loadCreature(EquipedCreature equipedCreeture, int order,  Side side) {
             GameObject creature = new GameObject();
             creature.name = equipedCreeture.Creeture.name;
             SpriteRenderer spriteRenderer = creature.AddComponent<SpriteRenderer>();

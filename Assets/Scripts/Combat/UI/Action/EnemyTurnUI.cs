@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UI.Inventory;
+using UI.Lists;
 using Creatures;
 using Actions.Script;
 
@@ -13,7 +13,7 @@ namespace Levels.Combat {
         [SerializeField] private Image creatureImage;
         [SerializeField] private TextMeshProUGUI text;
 
-        public void display(EquipedCreeture element, ScriptedAction scriptedAction)
+        public void display(EquipedCreature element, ScriptedAction scriptedAction)
         {
             creatureImage.sprite = element.getSprite();
             text.text = CombatLevelUtils.getEnemyTurnText(element.getName(), scriptedAction);

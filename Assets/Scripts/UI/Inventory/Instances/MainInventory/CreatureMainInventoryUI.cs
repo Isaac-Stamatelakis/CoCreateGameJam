@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
 
-namespace UI.Inventory {
-    public class CreatureMainInventoryUI : MainInventoryUI<EquipedCreeture>
+namespace UI.Lists {
+    public class CreatureMainInventoryUI : MainInventoryUI<EquipedCreature>
     {
         
     }

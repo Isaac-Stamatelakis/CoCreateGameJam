@@ -4,7 +4,7 @@ using UnityEngine;
 using Levels.Forge;
 using UnityEngine.UI;
 using TMPro;
-using UI.Inventory;
+using UI.Lists;
 
 namespace Crafting.UI {
     public class ForgeSceneUIController : MonoBehaviour, IDisplayController

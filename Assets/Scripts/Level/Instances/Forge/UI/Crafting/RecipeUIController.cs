@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UI.Inventory;
+using UI.Lists;
 using Items;
 using Crafting.Recipes;
 using UnityEngine.UI;

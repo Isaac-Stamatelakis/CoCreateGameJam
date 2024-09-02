@@ -5,7 +5,7 @@ using Player;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UI.Inventory {
+namespace UI.Lists {
     public abstract class InventoryUI<T> : MonoBehaviour where T : IDisplayable
     {
         [SerializeField] protected UIInventoryDisplayer<T> slotPrefab;
