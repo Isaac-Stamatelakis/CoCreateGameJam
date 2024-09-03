@@ -6,7 +6,6 @@ using UnityEngine.Tilemaps;
 using Creatures;
 
 public class AnimationCreator : EditorWindow {
-    private string savePath = "Assets/EditorCreations";
     private Texture2D spriteSheet;
     [MenuItem("Tools/Sprite/Animation")]
     public static void ShowWindow()

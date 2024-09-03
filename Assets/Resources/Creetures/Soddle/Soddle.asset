@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
+  m_Name: Soddle
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 1039628608, guid: 44ade7b084e85ff43a432bf5e09d0ca4, type: 3}
+  id: soddle
+  speed: 5
+  strength: 5
+  health: 10
+  mana: 50
+  description: 
+  controller: {fileID: 9100000, guid: 0b93c56f6381440419b8aeb1ea056970, type: 2}
+  strengths: 
+  weaknesses: 
+  actions:
+  - {fileID: 11400000, guid: 5542c76fcd5f7444ba565ef8ee209803, type: 2}

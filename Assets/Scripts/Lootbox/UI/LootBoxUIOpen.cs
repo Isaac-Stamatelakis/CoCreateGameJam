@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Player;
+using Items;
 
 namespace LootBoxes {
     public interface INavigatable {
@@ -16,14 +17,13 @@ namespace LootBoxes {
         [SerializeField] public PlayerIO playerIO;
         [SerializeField] public TextMeshProUGUI countText;
         private GameObject lootboxOpenAnimationPrefab;
-
-        private LootboxCount lootboxCount;
+        private IntItemSlot lootboxItem;
         
-        public void load(LootboxCount lootboxCount) {
+        public void load(IntItemSlot lootboxItem) {
             lootboxImage.gameObject.SetActive(true);
-            this.lootboxCount = lootboxCount;
-            this.lootboxImage.sprite = lootboxCount.lootBox.sprite;
-            this.countText.text = lootboxCount.count.ToString();
+            this.lootboxItem = lootboxItem;
+            this.lootboxImage.sprite = lootboxItem.Lootable.getSprite();
+            this.countText.text = lootboxItem.amountToString();
             openButton.onClick.AddListener(open);
         }
 

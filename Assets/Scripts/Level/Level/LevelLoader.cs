@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Player;
 using Levels.Combat;
+using System;
+using System.Linq;
 
 namespace Levels {
     public interface ILevelLoader {
@@ -11,13 +13,27 @@ namespace Levels {
     }
     public abstract class LevelLoader<T> : MonoBehaviour, ILevelLoader where T : Level
     {
-        private T level;
-        public void initalize(Level level) {
-            this.level = (T) level;
+        [SerializeField] private T testLevel;
+        private bool loaded = false;
+        public void Awake() {
+            StartCoroutine(loadTest());
+        }
+
+        private IEnumerator loadTest() {
+            yield return new WaitForFixedUpdate();
+            if (loaded) {
+                yield return null;
+            }
+            Debug.Log("Loading Test Level");
+            load(testLevel);
         }
         public void load(Level level) {
+            string levelType = level.GetType().ToString().Split(".").Last();
+            string sceneName = SceneManager.GetActiveScene().name;
+            Debug.Log($"{levelType} '{level.name}' Loaded In Scene '{sceneName}'");
             PrepareToLoad();
             loadLevel((T)level);
+            loaded = true;
             GameObject.Destroy(this);
         }
 
@@ -26,7 +42,6 @@ namespace Levels {
             player.name = "Player";
             player.AddComponent<PlayerIO>();
         }
-
         protected abstract void loadLevel(T level);
     }
     

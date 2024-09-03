@@ -12,12 +12,18 @@ namespace UI.OverWorld {
 
         public void Start() {
             foreach (ButtonObjectPair buttonPrefabPair in prefabButtons) {
+                if (buttonPrefabPair.button == null || buttonPrefabPair.gameObject == null) {
+                    continue;
+                }
                 buttonPrefabPair.button.onClick.AddListener(() => {
                     GameObject clone = GameObject.Instantiate(buttonPrefabPair.gameObject);
                     uIController.displayElement(clone.transform);
                 });
             }
             foreach (ButtonObjectPair buttonObjectPair in activateButtons) {
+                if (buttonObjectPair.button == null || buttonObjectPair.gameObject == null) {
+                    continue;
+                }
                 buttonObjectPair.button.onClick.AddListener(() => {
                     buttonObjectPair.gameObject.SetActive(true);
                 });

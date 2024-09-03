@@ -7,29 +7,33 @@ using Items;
 using LootBoxes;
 using WorldCreationModule;
 using System.IO;
-using CurrencyModule;
+using Trading;
+using System.Linq;
+using System;
+using Items.Equipment;
 
 namespace Player {
     public class PlayerIO : MonoBehaviour
     {
         private static PlayerIO instance;
-        private List<EquipedCreeture> combatCreatures;
-        public List<EquipedCreeture> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
-        public List<Equipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
-        public List<LootboxCount> LootBoxes {get => playerData.lootboxes; set => playerData.lootboxes = value;}
+        private List<EquipedCreature> combatCreatures;
+        public List<EquipedCreature> EquipedCreetures {get => playerData.creetures; set => playerData.creetures = value;}
+        public List<EnchantedEquipment> Equipment {get => playerData.equipment; set => playerData.equipment = value;}
+        public List<IntItemSlot> LootBoxes {get => ItemSlotUtils.sortList<LootBox,IntItemSlot>(playerData.intItemSlots);}
+        public List<IntItemSlot> CraftingItems {get => ItemSlotUtils.sortList<CraftingItem,IntItemSlot>(playerData.intItemSlots);}
         private PlayerData playerData;
         public string CurrentTile {get => playerData.currentTile; set => playerData.currentTile = value;}
         public static PlayerIO Instance { get => instance;}
-        public List<EquipedCreeture> CombatCreatures { get => combatCreatures; set => combatCreatures = value; }
+        public List<DoubleItemSlot> Currencies {get=> ItemSlotUtils.sortList<Currency,DoubleItemSlot>(playerData.doubleItemSlots);}
+
 
         public bool hasDiscoveredTile(string tileName) {
             return playerData.discoveredTiles.Contains(tileName);
         }
         public void Awake() {
-            string path = WorldCreation.getPlayerDataPath(Global.WorldName);
-            string data = File.ReadAllText(path);
-            deseralize(data);
             instance = this;
+            string path = WorldCreation.getPlayerDataPath(Global.WorldName);
+            playerData = File.Exists(path) ? deseralize(File.ReadAllText(path)) : initPlayerData();
         }
 
         public void OnDestroy() {
@@ -37,124 +41,208 @@ namespace Player {
             string path = WorldCreation.getPlayerDataPath(Global.WorldName);
             File.WriteAllText(path,data);
         }
-
-        public void give(Lootable lootable) {
-            if (lootable is LootBox lootBox) {
-                foreach (LootboxCount lootboxCount in playerData.lootboxes) {
-                    if (lootboxCount.lootBox.id == lootBox.id) {
-                        lootboxCount.count++;
-                        return;
-                    }
-                }
-                playerData.lootboxes.Add(new LootboxCount(lootBox,1));
-            } else if (lootable is Currency currency) {
-                
-            } else if (lootable is Equipment equipment) {
-                playerData.equipment.Add(equipment);
-            } else if (lootable is Creature creeture) {
-                playerData.creetures.Add(new EquipedCreeture(creeture,new List<Equipment>()));
+        public void give(List<IntItemSlot> itemSlots) {
+            foreach (IntItemSlot itemSlot in itemSlots) {
+                give(itemSlot);
             }
+        }
+
+        public List<EquipedCreature> getPlayerTeam() {
+            if (playerData.playerTeam==null) {
+                playerData.playerTeam = PlayerIOUtils.initalizePlayerTeam();
+            }
+            PlayerIOUtils.clampPlayerTeam(playerData.playerTeam);
+            return playerData.playerTeam;
+        }
+
+        public bool hasItems(List<IntItemSlot> itemSlots) {
+            foreach (IntItemSlot itemSlot in itemSlots) {
+                if (!hasItem(itemSlot)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void take(List<IntItemSlot> itemSlots) {
+            foreach (IntItemSlot itemSlot in itemSlots) {
+                take(itemSlot);
+            }
+        }
+        public void give(IntItemSlot itemSlot) {
+            if (itemSlot == null || itemSlot.Lootable == null) {
+                return;
+            }
+            Lootable lootable = itemSlot.Lootable;
+            ItemSlotType itemSlotType = lootable.getItemSlotType();
+            switch (itemSlotType) {
+                case ItemSlotType.Int:
+                    ItemSlotUtils.insertList<IntItemSlot>(playerData.intItemSlots,itemSlot);
+                    break;
+                case ItemSlotType.Double:
+                    DoubleItemSlot currencySlot = ItemSlotUtils.fromIntItemSlot(itemSlot);
+                    ItemSlotUtils.insertList<DoubleItemSlot>(playerData.doubleItemSlots,currencySlot);
+                    Debug.Log(currencySlot.Amount);
+                    break;
+                case ItemSlotType.Unique:
+                    PlayerIOUtils.giveLootable(playerData,lootable);
+                    break;
+            }
+        }
+
+        public bool hasItem(IntItemSlot intItemSlot) {
+            if (intItemSlot == null || intItemSlot.Lootable == null) {
+                return false;
+            }
+            Lootable lootable = intItemSlot.Lootable;
+            ItemSlotType itemSlotType = lootable.getItemSlotType();
+            switch (itemSlotType) {
+                case ItemSlotType.Int:
+                    return ItemSlotUtils.hasAmount<IntItemSlot>(playerData.intItemSlots,lootable.getId(),intItemSlot.Amount);
+                case ItemSlotType.Double:
+                    return ItemSlotUtils.hasAmount<DoubleItemSlot>(playerData.doubleItemSlots,lootable.getId(),intItemSlot.Amount);
+            }
+            return false;
+        }
+        public void take(IntItemSlot intItemSlot) {
+            if (intItemSlot == null || intItemSlot.Lootable == null) {
+                return;
+            }
+            Lootable lootable = intItemSlot.Lootable;
+            ItemSlotType itemSlotType = lootable.getItemSlotType();
+            switch (itemSlotType) {
+                case ItemSlotType.Int:
+                    ItemSlotUtils.takeAmount<IntItemSlot>(playerData.intItemSlots,lootable.getId(),intItemSlot.Amount);
+                    break;
+                case ItemSlotType.Double:
+                    ItemSlotUtils.takeAmount<DoubleItemSlot>(playerData.doubleItemSlots,lootable.getId(),intItemSlot.Amount);
+                    break;
+            }
+        }
+
+        public int amountOfItem(string id) {
+            Lootable lootable = LootableRegistry.getInstance().getLootable(id);
+            ItemSlotType itemSlotType = lootable.getItemSlotType();
+            switch (itemSlotType) {
+                case ItemSlotType.Int:
+                    return ItemSlotUtils.getAmount<IntItemSlot>(playerData.intItemSlots,id);
+                case ItemSlotType.Double:
+                    return ItemSlotUtils.getAmount<DoubleItemSlot>(playerData.doubleItemSlots,id);
+                case ItemSlotType.Unique:
+                    if (lootable is Creature) {
+                        return getAmountOfUniqueItem(id,TieredItemType.Creature,null);
+                    } else if (lootable is Equipment) {
+                        return getAmountOfUniqueItem(id,TieredItemType.Equipment,null);
+                    }
+                    break;
+            }
+            return 0;
+        }
+
+
+
+        public int getAmountOfUniqueItem(string id, TieredItemType tieredItemType, Rarity? rarity) {
+            switch (tieredItemType) {
+                case TieredItemType.Creature:
+                    return ItemSlotUtils.getAmountFromList(playerData.creetures.Cast<UniqueItemSlot>().ToList(),id,rarity);
+                case TieredItemType.Equipment:
+                    return ItemSlotUtils.getAmountFromList(playerData.equipment.Cast<UniqueItemSlot>().ToList(),id,rarity);
+            }
+            return 0;
             
         }
-        public void deseralize(string data) {
-            SPlayerData sPlayerData = JsonConvert.DeserializeObject<SPlayerData>(data);
-            List<Equipment> equipment = DeseralizeEquipment(sPlayerData.equipmentIds);
-            List<EquipedCreeture> equipedCreetures = DeseralizeCreetures(sPlayerData.creatureData);
-            List<LootboxCount> lootboxCounts = deseralizeLootboxes(sPlayerData.lootboxData);
-            playerData = new PlayerData(
-                currentTile: sPlayerData.currentTile,
-                discoveredTiles: sPlayerData.discoveredTiles,
-                creetures: equipedCreetures,
-                equipment: equipment,
-                lootboxCounts: lootboxCounts
-            );
+        
+        public void take(TieredItemType tieredItemType, int index) {
+            List<object> elements = getLootableList(tieredItemType);
+            if (index < 0 || index >= elements.Count) {
+                return;
+            }
+            elements.RemoveAt(index);
+        }
+
+        private List<object> getLootableList(TieredItemType tieredItemType) {
+            switch (tieredItemType) {
+                case TieredItemType.Creature:
+                    return playerData.creetures.Cast<object>().ToList();
+                case TieredItemType.Equipment:
+                    return playerData.equipment.Cast<object>().ToList();
+                default:
+                    throw new System.Exception($"{tieredItemType} was not covered by get lootable list");
+            }
+        }
+
+        
+        private PlayerData deseralize(string data) {
+            Debug.Log(Application.persistentDataPath);
+            try {
+                SPlayerData sPlayerData = JsonConvert.DeserializeObject<SPlayerData>(data);
+                List<EnchantedEquipment> equipment = new EquipmentFactory().deserializeList(sPlayerData.equipmentData);
+                EquipCreatureSerializationFactory equipCreatureSerializationFactory = new EquipCreatureSerializationFactory();
+                List<EquipedCreature> equipedCreetures = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureData);
+                List<EquipedCreature> playerTeam = equipCreatureSerializationFactory.deserializeList(sPlayerData.creatureTeamData);
+                List<IntItemSlot> intItemSlots = new IntItemSlotSerializationFactory().deserializeList(sPlayerData.intItemSlots);
+                List<DoubleItemSlot> doubleItemSlots = new DoubleItemSlotSerializationFactory().deserializeList(sPlayerData.doubleItemSlots);
+                return new PlayerData(
+                    currentTile: sPlayerData.currentTile,
+                    discoveredTiles: sPlayerData.discoveredTiles,
+                    creetures: equipedCreetures,
+                    playerTeam: playerTeam,
+                    equipment: equipment,
+                    intItemSlots: intItemSlots,
+                    doubleItemSlots: doubleItemSlots
+                );
+            } catch (JsonSerializationException e) {
+                Debug.LogError($"Error during player deseralization {e}");
+                return initPlayerData();
+            }
+            
+            
         }
 
         public string seralize() {
-            List<string> equipmentIds = seralizeEquipment(playerData.equipment);
-            List<SLootboxData> lootboxData = new List<SLootboxData>();
-            foreach (LootboxCount lootboxCount in playerData.lootboxes) {
-                lootboxData.Add(new SLootboxData(lootboxCount.lootBox.id,lootboxCount.count));
-            }
-            List<SCreatureData> creatureData = new List<SCreatureData>();
-            foreach (EquipedCreeture equipedCreeture in playerData.creetures) {
-                creatureData.Add(new SCreatureData(equipedCreeture.Creeture.Id,seralizeEquipment(equipedCreeture.Equipment)));
-            }
+            string equipmentData = new EquipmentFactory().serialize(playerData.equipment);
+            string creatureData = new EquipCreatureSerializationFactory().serialize(playerData.creetures);
+            string teamData = new EquipCreatureSerializationFactory().serialize(playerData.playerTeam);
+            string doubleItemSlotData = new DoubleItemSlotSerializationFactory().serialize(playerData.doubleItemSlots);
+            string intItemSlotData = new IntItemSlotSerializationFactory().serialize(playerData.intItemSlots);
             SPlayerData sPlayerData = new SPlayerData(
                 currentTileIndex: playerData.currentTile,
                 discoveredTiles: playerData.discoveredTiles,
-                equipmentIds: equipmentIds,
+                equipmentData: equipmentData,
                 creatureData: creatureData,
-                lootboxData: lootboxData
+                creatureTeamData: teamData,
+                intItemSlots: intItemSlotData,
+                doubleItemSlots: doubleItemSlotData
             );
             return JsonConvert.SerializeObject(sPlayerData);
         }
 
-        private List<string> seralizeEquipment(List<Equipment> equipmentList) {
-            List<string> equipmentIds = new List<string>();
-            foreach (Equipment equipment in equipmentList) {
-                equipmentIds.Add(equipment.Id);
-            }
-            return equipmentIds;
-        }
-
-        private List<EquipedCreeture> DeseralizeCreetures(List<SCreatureData> sCreatureData) {
-            List<EquipedCreeture> equipedCreetures = new List<EquipedCreeture>();
-            CreatureRegistry creetureRegistry = CreatureRegistry.getInstance();
-            EquipmentRegistry equipmentRegistry = EquipmentRegistry.getInstance();
-            foreach (SCreatureData data in sCreatureData) {
-                List<Equipment> equipments = new List<Equipment>();
-                Creature creeture = creetureRegistry.getCreature(data.id);
-                if (creeture == null) {
-                    continue;
-                }
-                foreach (string equipmentID in data.equipmentIDs) {
-                    Equipment equipment = equipmentRegistry.getEquipment(equipmentID);
-                    if (equipment == null) {
-                        continue;
-                    }
-                    equipments.Add(equipment);
-                }
-                equipedCreetures.Add(new EquipedCreeture(creeture,equipments));
-            }
-            return equipedCreetures;
-        }
-
-        public static string initPlayerData() {
-            SPlayerData sPlayerData = new SPlayerData(
-                null,
-                new List<string>(),
-                new List<string>(),
-                new List<SCreatureData>{
-                    new SCreatureData(
-                        "mike",
-                        new List<string>{
-                            "sword4"
-                        }
-                    )
-                },
-                new List<SLootboxData>()
+        private static PlayerData initPlayerData() {
+            LootBox cardboardBox = LootBoxRegistry.getInstance().getLootbox("cardboard_box");
+            IntItemSlot startingBox = new IntItemSlot(
+                cardboardBox,
+                9999
             );
-            string data = JsonConvert.SerializeObject(sPlayerData);
-            SPlayerData test = JsonConvert.DeserializeObject<SPlayerData>(data);
-            return data;
-        }
-
-        private List<LootboxCount> deseralizeLootboxes(List<SLootboxData> lootboxData) {
-            List<LootboxCount> lootboxCounts = new List<LootboxCount>();
-            LootBoxRegistry lootBoxRegistry = LootBoxRegistry.getInstance();
-            foreach (SLootboxData data in lootboxData) {
-                LootBox lootBox = lootBoxRegistry.getLootbox(data.id);
-                lootboxCounts.Add(new LootboxCount(lootBox,data.count));
+            List<EquipedCreature> defaultTeam = new List<EquipedCreature>();
+            for (int i = 0; i < Global.PLAYER_TEAM_SIZE; i++) {
+                defaultTeam.Add(null);
             }
-            return lootboxCounts;
+            return new PlayerData(
+                new List<string>(),
+                null,
+                new List<EquipedCreature>(),
+                defaultTeam,
+                new List<EnchantedEquipment>(),
+                new List<IntItemSlot>{startingBox},
+                new List<DoubleItemSlot>()
+            );
         }
 
         public List<Equipment> DeseralizeEquipment(List<string> ids) {
-            EquipmentRegistry registry = EquipmentRegistry.getInstance();
+            LootableRegistry registry = LootableRegistry.getInstance();
             List<Equipment> returnVal = new List<Equipment>();
             foreach (string id in ids) {
-                Equipment equipment = registry.getEquipment(id);
+                Equipment equipment = registry.getLootable<Equipment>(id);
                 if (equipment == null) {
                     continue;
                 }
@@ -163,60 +251,37 @@ namespace Player {
             return returnVal;
         }
 
-        public List<LootboxCount> getLootboxes() {
-            return null;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
         [System.Serializable]
         private class SPlayerData {
             public SPlayerData(
                 string currentTileIndex, 
                 List<string> discoveredTiles, 
-                List<string> equipmentIds, 
-                List<SCreatureData> creatureData,
-                List<SLootboxData> lootboxData
+                string equipmentData, 
+                string creatureData,
+                string creatureTeamData,
+                string intItemSlots,
+                string doubleItemSlots
             ) {
                 this.currentTile = currentTileIndex;
                 this.discoveredTiles = discoveredTiles;
-                this.equipmentIds = equipmentIds;
+                this.equipmentData = equipmentData;
                 this.creatureData = creatureData;
-                this.lootboxData = lootboxData;
+                this.intItemSlots = intItemSlots;
+                this.doubleItemSlots = doubleItemSlots;
+                this.creatureTeamData = creatureTeamData;
             }
             public string currentTile; 
             public List<string> discoveredTiles;
-            public List<string> equipmentIds;
-            public List<SCreatureData> creatureData;
-            public List<SLootboxData> lootboxData;
+            public string equipmentData;
+            public string creatureData;
+            public string creatureTeamData;
+            public string intItemSlots;
+            public string doubleItemSlots;
         }
 
-        private class PlayerData {
-            public PlayerData(List<string> discoveredTiles, string currentTile, List<EquipedCreeture> creetures, List<Equipment> equipment, List<LootboxCount> lootboxCounts) {
-                this.discoveredTiles = discoveredTiles;
-                this.currentTile = currentTile;
-                this.creetures = creetures;
-                this.equipment = equipment;
-                this.lootboxes = lootboxCounts;
-            }
-            public List<string> discoveredTiles;
-            public string currentTile;
-            public List<EquipedCreeture> creetures;
-            public List<Equipment> equipment;
-            public List<LootboxCount> lootboxes;
-        }
+        
 
-        private class SCreatureData {
-            public string id;
-            public List<string> equipmentIDs;
-            public SCreatureData(string id, List<string> equipmentIDs) {
-                this.id = id;
-                this.equipmentIDs = equipmentIDs;
-            }
-        }
+        
 
         private class SLootboxData {
             public SLootboxData(string id, int count) {
@@ -226,5 +291,32 @@ namespace Player {
             public string id;
             public int count;
         }
+    }
+
+    public class PlayerData {
+        public PlayerData(
+            List<string> discoveredTiles, 
+            string currentTile, 
+            List<EquipedCreature> creetures,
+            List<EquipedCreature> playerTeam, 
+            List<EnchantedEquipment> equipment, 
+            List<IntItemSlot> intItemSlots,
+            List<DoubleItemSlot> doubleItemSlots
+            ) {
+            this.discoveredTiles = discoveredTiles;
+            this.currentTile = currentTile;
+            this.creetures = creetures;
+            this.playerTeam = playerTeam;
+            this.equipment = equipment;
+            this.intItemSlots = intItemSlots;
+            this.doubleItemSlots = doubleItemSlots;
+        }
+        public List<string> discoveredTiles;
+        public string currentTile;
+        public List<EquipedCreature> creetures;
+        public List<EquipedCreature> playerTeam;
+        public List<EnchantedEquipment> equipment;
+        public List<IntItemSlot> intItemSlots;
+        public List<DoubleItemSlot> doubleItemSlots;
     }
 }

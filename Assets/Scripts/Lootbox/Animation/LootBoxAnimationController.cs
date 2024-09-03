@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UI.Inventory;
+using UI.Lists;
 using Player;
 using UnityEngine.UI;
 using TMPro;
+using Items;
+using UI.Displayables;
+using System.Linq;
 
 namespace LootBoxes {
     public class LootBoxAnimationController : MonoBehaviour
     {
-        private LootboxCount lootboxCount;
+        private IntItemSlot lootboxCount;
         private ILootBoxDisplayer displayer;
-        [SerializeField] private LootableInventoryUI lootableInventoryUI;
+        [SerializeField] private InventoryUI<IntItemSlot> itemSlotListUI;
         [SerializeField] private Button continueButton;
         public void Start() {
             continueButton.onClick.AddListener(() => {
@@ -20,13 +23,12 @@ namespace LootBoxes {
             });
             continueButton.gameObject.SetActive(false);
         }
-        public IEnumerator open(LootboxCount lootboxCount, ILootBoxDisplayer displayer) {
-            
-            this.lootboxCount = lootboxCount;
+        public IEnumerator open(IntItemSlot lootboxItemSlot, ILootBoxDisplayer displayer) {
+            this.lootboxCount = lootboxItemSlot;
             this.displayer = displayer;
-            lootboxCount.count--;
+            lootboxItemSlot.Amount--;
             GameObject animationObject = null;
-            LootBox lootBox = lootboxCount.lootBox;
+            LootBox lootBox = (LootBox) lootboxItemSlot.Lootable;
             if (lootBox is PrefabAnimatedLootbox prefabAnimatedLootbox) {
                 LootBoxAnimation animation = GameObject.Instantiate(prefabAnimatedLootbox.Animation);
                 animationObject = animation.gameObject;
@@ -56,9 +58,9 @@ namespace LootBoxes {
                 animator.StartPlayback();
                 yield return waitForAnimation(animator);
             }
-            Lootable loot = lootboxCount.lootBox.open();
+            List<IntItemSlot> loot = lootBox.open();
             PlayerIO.Instance.give(loot);
-            lootableInventoryUI.display(new List<Lootable>{loot});
+            itemSlotListUI.display(loot);
             continueButton.gameObject.SetActive(true);
         }
 

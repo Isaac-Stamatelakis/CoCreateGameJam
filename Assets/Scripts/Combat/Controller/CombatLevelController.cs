@@ -1,0 +1,214 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Creatures;
+using Actions;
+using Actions.Script;
+using Items.Equipment;
+
+namespace Levels.Combat {
+    public class CombatLevelController : MonoBehaviour
+    {
+        private static CombatLevelController instance;
+        public void Awake() {
+            instance = this;
+        }
+        [SerializeField] private CombatLevelUIController uiController;
+        [SerializeField] private CombatCreatureContainer humanPlayerCreatures;
+        [SerializeField] private CombatCreatureContainer aiPlayerCreatures;
+        [SerializeField] private GameOverController playerLoseUIPrefab;
+        [SerializeField] private PlayerWinUI playerWinUIPrefab;
+        [SerializeField] private Transform spawnedObjectContainer;
+        private readonly int CURRENT_TURN_Z_CHANGE = 1;
+        private List<CreatureInCombat> creatureTurns;
+        private CombatPlayer humanPlayer;
+        private CombatPlayer aiPlayer;
+        private CreatureHighlightController creatureHighlightController;
+        public CreatureHighlightController CreatureHighlightController { get => creatureHighlightController; }
+        public static CombatLevelController Instance { get => instance; }
+        public Transform CanvasTransform { get => uiController.transform; }
+        public List<CreatureInCombat> CreatureTurns {get => creatureTurns;}
+        public Transform SpawnedObjectContainer {get => spawnedObjectContainer;}
+        public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevel combatLevel) {
+            this.humanPlayer = humanPlayer;
+            humanPlayerCreatures.displayCreatures(humanPlayer.Creatures);
+            this.aiPlayer = aiPlayer;
+            aiPlayerCreatures.displayCreatures(aiPlayer.Creatures);
+            List<CombatPlayer> players = new List<CombatPlayer>{
+                humanPlayer,
+                aiPlayer
+            };
+            creatureTurns = CombatLevelUtils.generateTurns(players);
+            foreach (CreatureInCombat creatureInCombat in creatureTurns) {
+                uiController.CombatCreatureUIContainer.addCreature(creatureInCombat.CreatureCombatObject);
+            }
+            creatureHighlightController = new CreatureHighlightController(humanPlayer,uiController.DisplayedCreatureUI);
+            handleNewCreatureTurn();
+        }
+
+        public CreatureCombatObject getCurrentlyMovingCreature() {
+            if (creatureTurns.Count == 0) {
+                return null;
+            }
+            return creatureTurns[0].CreatureCombatObject;
+        }
+
+        public CreatureInCombat getRandomCreature(bool includeCurrentlyMoving) {
+            if (includeCurrentlyMoving && creatureTurns.Count == 1) {
+                return null;
+            }
+            int startIndex = includeCurrentlyMoving ? 0 : 1;
+            int rand = Random.Range(startIndex,creatureTurns.Count);
+            return creatureTurns[rand];
+        }
+
+        public IEnumerator specialActionCoRoutine(CreatureCombatObject selfCreature, CreatureCombatObject target, SpecialSelectTarget specialSelectTarget) {
+            yield return StartCoroutine(specialAction(selfCreature,target,specialSelectTarget));
+        }
+
+        public IEnumerator specialAction(CreatureCombatObject selfCreature, CreatureCombatObject target, SpecialSelectTarget specialSelectTarget) {
+            if (selfCreature != null && target != null) {
+                foreach (EnchantedEquipment enchantedEquipment in selfCreature.CreatureInCombat.EquipedCreeture.EnchantedEquipment) {
+                    if (enchantedEquipment == null || enchantedEquipment.Equipment == null) {
+                        continue;
+                    }
+                    EquipmentActionCollection equipmentActionCollection = ActionRegistry.getInstance().getAction<EquipmentActionCollection>(enchantedEquipment.getId());
+                    if (equipmentActionCollection == null) {
+                        continue;
+                    }
+                    ScriptedAction scriptedAction = SpecialSelectCommandUtils.getAction(equipmentActionCollection,specialSelectTarget);
+                    if (scriptedAction == null) {
+                        continue;
+                    }
+                    CommandExecutionState commandExecutionState = new CommandExecutionState(scriptedAction,selfCreature,this,false);
+                    yield return StartCoroutine(commandExecutionState.executeSection());
+                    while (!commandExecutionState.Complete) {
+                        CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
+                        commandExecutionState.CreatureSelector.Creatures.Add(target);
+                        yield return StartCoroutine(commandExecutionState.executeSection());
+                    }
+                    yield return null;
+                }
+            }
+            
+        }
+
+        public void handleNewCreatureTurn() {
+            if (humanPlayer.IsDead()) {
+                showGameOverScreen(playerLoseUIPrefab);
+                return;
+            }
+            if (aiPlayer.IsDead()) {
+                showGameOverScreen(playerWinUIPrefab);
+                return;
+            }
+            if (creatureTurns.Count < 0) {
+                Debug.LogWarning("Tried to display creature turn of empty turn schedule");
+                return;
+            }
+            creatureHighlightController.setSelector(null);
+            CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
+            Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
+            currentTurnPosition.z -= CURRENT_TURN_Z_CHANGE;
+            currentCreatureTurn.transform.position = currentTurnPosition;
+
+            creatureHighlightController.setCurrentCreatureTurn(currentCreatureTurn);
+            if (humanPlayer.Creatures.Contains(currentCreatureTurn.CreatureInCombat)) {
+                uiController.ActionUIController.displaySelect(creatureTurns[0],humanPlayer);
+                return;
+            }
+            if (aiPlayer.Creatures.Contains(currentCreatureTurn.CreatureInCombat)) {
+                StartCoroutine(moveAI());
+                return;
+            }
+            Debug.LogError($"{currentCreatureTurn.name} Doesn't belong to the player or ai");
+        }
+
+        
+
+        public IEnumerator nextCreatureTurn() {
+            CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
+            if (currentCreatureTurn != null) {
+                Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
+                currentTurnPosition.z += CURRENT_TURN_Z_CHANGE;
+                currentCreatureTurn.transform.position = currentTurnPosition;
+                yield return currentCreatureTurn.resetPosition();
+            }
+            creatureTurns.RemoveAt(0);
+            creatureTurns.Add(currentCreatureTurn.CreatureInCombat);
+            clearCreatureListOfDead(creatureTurns);
+            clearCreatureListOfDead(humanPlayer.Creatures);
+            clearCreatureListOfDead(aiPlayer.Creatures);
+            if (creatureTurns.Count == 0) {
+                showGameOverScreen(playerLoseUIPrefab);
+                Debug.Log("Tie");
+                yield return null;
+            }
+            handleNewCreatureTurn();
+        }
+
+        private void showGameOverScreen(GameOverController prefab) {
+            GameOverController instantiated = GameObject.Instantiate(prefab);
+            instantiated.transform.SetParent(uiController.transform,false);
+            ActionRegistry.getInstance().freeAll();
+        }
+
+
+        private void clearCreatureListOfDead(List<CreatureInCombat> creatures) {
+            for (int i = 0; i < creatures.Count; i++) {
+                if (creatures[i].IsDead) {
+                    creatures.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        public void Update() {
+            if (Input.GetMouseButtonDown(0)) {
+                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                raycastCreatureObjects(mousePosition);
+            }
+        }
+        private void raycastCreatureObjects(Vector2 mousePosition) {
+            RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Creature"));
+            if (hit.collider == null) {
+                return;
+            }
+            CreatureCombatObject creatureCombatObject = hit.collider.GetComponent<CreatureCombatObject>();
+            if (creatureCombatObject == null) {
+                return;
+            }
+            CreatureHighlightController.highlight(creatureCombatObject);
+        }
+
+        private IEnumerator moveAI() {
+            CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
+            CreatureActionCollection creatureActionCollection = ActionRegistry.getInstance().getAction<CreatureActionCollection>(currentCreatureTurn.CreatureInCombat.EquipedCreeture.creeture.Id);
+            List<ScriptedAction> actions = creatureActionCollection.actions;
+            if (actions.Count == 0) {
+                Debug.LogWarning($"{currentCreatureTurn.name} has no actions");
+                yield return null;;
+            }
+            int ran = Random.Range(0,actions.Count);
+            ScriptedAction chosenAction = actions[ran];
+            uiController.ActionUIController.displayEnemyTurn(creatureTurns[0],chosenAction);
+            CommandExecutionState commandExecutionState = new CommandExecutionState(chosenAction,currentCreatureTurn,this,true);
+            yield return StartCoroutine(commandExecutionState.executeSection());
+            CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
+            switch (creatureSelector.TargetType) {
+                case CreatureSelectionType.Ally:
+                    ran = Random.Range(0,aiPlayer.Creatures.Count);
+                    creatureSelector.Creatures.Add(aiPlayer.Creatures[ran].CreatureCombatObject);
+                    break;
+                case CreatureSelectionType.Enemy:
+                    ran = Random.Range(0,humanPlayer.Creatures.Count);
+                    creatureSelector.Creatures.Add(humanPlayer.Creatures[ran].CreatureCombatObject);
+                    break;
+            }
+            yield return StartCoroutine(commandExecutionState.executeSection());
+            yield return StartCoroutine(nextCreatureTurn());
+
+        }
+    }
+}
+

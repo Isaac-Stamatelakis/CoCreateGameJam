@@ -44,6 +44,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7b8be4f8fec714a4cb068f297abe3b1a, type: 2}
   - {fileID: 11400000, guid: 8ae22f2e273f0094f9025241d3dd34c1, type: 2}
   - {fileID: 11400000, guid: f57324faa84943d469595b600a09322d, type: 2}
+  - {fileID: 11400000, guid: 665481a8547ec434eb835f3ce7e79e89, type: 2}
+  - {fileID: 11400000, guid: 8800c103c2098a14c9945032e5cda718, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -85,6 +87,14 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - clockadoodle
+    - dragoon
+    - goof_ball
+    - soddle
+    - ambersand
+    - gun_crab
+    - mazda5
+    - absorber
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 59805baec6fa4b843a473bc7e503b17e, type: 2}

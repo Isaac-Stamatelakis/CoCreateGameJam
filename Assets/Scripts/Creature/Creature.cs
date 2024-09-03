@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using LootBoxes;
 using Items;
-using Creatures.Actions;
 using Actions.Script;
+using Trading;
 
 namespace Creatures {
-    [CreateAssetMenu(fileName = "New Creeture", menuName = "Creeture/Instance")]
+    [CreateAssetMenu(fileName = "New Creeture", menuName = "Creature")]
     [System.Serializable]
-    public class Creature : Lootable, IItem
+    public class Creature : Lootable
     {
         [SerializeField] private Sprite sprite;
-        [SerializeField] private string id;
         [SerializeField] private int speed;
         [SerializeField] private int strength;
         [SerializeField] private int health;
@@ -21,7 +20,8 @@ namespace Creatures {
         [SerializeField] private RuntimeAnimatorController controller;
         [SerializeField] private List<DamageType> strengths;
         [SerializeField] private List<DamageType> weaknesses;
-        [SerializeField] private List<ScriptedAction> actions;
+        [SerializeField] private Currency favouriteCurrency;
+        [SerializeField] private Currency hatedCurrency;
         #if UNITY_EDITOR
         public void setSprite(Sprite sprite) {
             this.sprite = sprite;
@@ -44,14 +44,17 @@ namespace Creatures {
         public int Speed {get => speed;}
         public int Strength {get => strength;}
         public int Health {get => health;}
+        public int MaxMana {get => mana;}
         public List<DamageType> Strengths { get => strengths; }
         public List<DamageType> Weaknesses { get => weaknesses; }
         public RuntimeAnimatorController AnimationController { get => controller; }
-        public List<ScriptedAction> Actions { get => actions;}
-
         public override Sprite getSprite()
         {
             return Sprite;
+        }
+        public override ItemSlotType getItemSlotType()
+        {
+            return ItemSlotType.Unique;
         }
     }
 }

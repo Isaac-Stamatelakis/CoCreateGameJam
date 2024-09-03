@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d91ab505b04e36c4c9c839e0312698e0, type: 3}
+  m_Name: TestRecipe
+  m_EditorClassIdentifier: 
+  inputs:
+  - lootable: {fileID: 11400000, guid: 7235df68661030845bd58044efa382dc, type: 2}
+    amount: 1
+  output:
+    lootable: {fileID: 11400000, guid: 619c1a7561664404d8b0b022c3ece1ae, type: 2}
+    amount: 1

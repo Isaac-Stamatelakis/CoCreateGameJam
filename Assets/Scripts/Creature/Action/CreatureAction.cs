@@ -4,31 +4,30 @@ using UnityEngine;
 using Levels.Combat;
 using Actions.Script;
 
-namespace Creatures.Actions {
-    public enum TargetType {
+namespace Actions {
+    public enum CreatureSelectionType {
         Ally,
         Enemy,
         Any,
-        Ally_Not_Self,
-        Any_Not_Self,
     }
     public static class TargetTypeExtension {
-        public static string formatSelection(this TargetType targetType) {
+        public static string formatSelection(this CreatureSelectionType targetType, bool allowSelf, bool single) {
             switch (targetType) {
-                case TargetType.Ally:
-                    return "Allies";
-                case TargetType.Enemy:
-                    return "Enemies";
-                case TargetType.Any:
-                    return "Creatures";
-                case TargetType.Any_Not_Self:
-                    return "Creatures except caster";
-                case TargetType.Ally_Not_Self:
-                    return "Allies except caster";
+                case CreatureSelectionType.Ally:
+                    return single 
+                        ? (allowSelf ? "Ally" : "Ally except caster") 
+                        : (allowSelf ? "Allies" : "Allies except caster");
+                case CreatureSelectionType.Enemy:
+                    return single ? "Enemy" : "Enemies";
+                case CreatureSelectionType.Any:
+                    return single 
+                        ? (allowSelf ? "Creature" : "Creature except caster") 
+                        : (allowSelf ? "Creatures" : "Creatures except caster");
                 default:
                     throw new System.Exception($"Target type {targetType} not covered");
             }
         }
+
     }
     public abstract class CreatureAction : ScriptedAction
     {

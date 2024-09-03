@@ -4,9 +4,10 @@ using UnityEngine;
 using LootBoxes;
 using UnityEngine.UI;
 using TMPro;
+using Items;
 
-namespace UI.Inventory {
-    public class DetailedLootboxDisplay : UIDisplayer<LootboxCount>, ILootBoxDisplayer
+namespace UI.Lists {
+    public class DetailedLootboxDisplay : UIInventoryDisplayer<StackableItemSlot>, ILootBoxDisplayer
     {
         [SerializeField] private TextMeshProUGUI title;
         [SerializeField] private TextMeshProUGUI description;
@@ -14,20 +15,16 @@ namespace UI.Inventory {
         [SerializeField] private Button openButton;
         [SerializeField] private Image image;
         [SerializeField] private LootBoxAnimationController animationControllerPrefab;
-        private InventoryUI<LootboxCount> inventory;
-        private int index;
-        private LootboxCount lootboxCount;
-        public override void display(LootboxCount element, InventoryUI<LootboxCount> inventory, int index)
+        private IntItemSlot itemSlot;
+        public override void display(StackableItemSlot element)
         {
-            this.inventory = inventory;
-            this.lootboxCount = element;
+            this.itemSlot = (IntItemSlot) element;
             openButton.onClick.AddListener(() => {
                 LootBoxAnimationController animationController = GameObject.Instantiate(animationControllerPrefab);
                 Canvas canvas = LootBoxAnimationUtils.findCanvas(transform);
                 animationController.transform.SetParent(canvas.transform,false);
-                StartCoroutine(animationController.open(lootboxCount,this));
+                StartCoroutine(animationController.open(itemSlot,this));
             });
-            this.index = index;
             rebuild();
         }
 
@@ -38,7 +35,7 @@ namespace UI.Inventory {
 
         public void rebuild()
         {
-            image.sprite = lootboxCount.getSprite();
+            image.sprite = itemSlot.getSprite();
             inventory.refresh();
         }
     }

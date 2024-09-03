@@ -5,21 +5,22 @@ using TMPro;
 using UnityEngine.UI;
 using Creatures;
 using Items;
+using Items.Equipment;
 
-namespace UI.Inventory {
-    public class CreatureDetailedDisplay : UIDisplayer<EquipedCreeture>
+namespace UI.Lists {
+    public class CreatureDetailedDisplay : UIInventoryDisplayer<EquipedCreature>
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private Image creatureImage;
         [SerializeField] private TMP_InputField nicknameField;
         [SerializeField] private TextMeshProUGUI levelText;
         [SerializeField] private Slider xpSlider;
-        [SerializeField] private ItemInventoryUI itemInventory;
+        [SerializeField] private StaticEquipmentInventoryUI itemInventory;
         [SerializeField] private Button recruitButton;
         [SerializeField] private Button equipButton;
         [SerializeField] private Button infoButton;
 
-        public override void display(EquipedCreeture element, InventoryUI<EquipedCreeture> inventory, int index)
+        public override void display(EquipedCreature element)
         {
             nameText.text = element.Creeture.name;
             creatureImage.sprite = element.Creeture.Sprite;
@@ -33,8 +34,8 @@ namespace UI.Inventory {
 
             int i = 0;
             List<Equipment> toDisplay = new List<Equipment>();
-            while (i < element.Equipment.Count && i < 3) {
-                toDisplay.Add(element.Equipment[i]);
+            while (i < element.EnchantedEquipment.Count && i < 3) {
+                toDisplay.Add(element.EnchantedEquipment[i].Equipment);
                 i++;
             }
             while (i < 3) {
