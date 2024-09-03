@@ -64,4 +64,13 @@ public static class GlobalUtils
     public static T[] getAllEnums<T>() where T : Enum {
         return Enum.GetValues(typeof(T)).Cast<T>().ToArray();
     }
+
+    public static int getFirstNullIndex<T>(List<T> elements) {
+        for (int i = 0; i < elements.Count; i++) {
+            if (elements[i] == null) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
