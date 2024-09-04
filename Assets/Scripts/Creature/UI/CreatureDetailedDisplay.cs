@@ -5,9 +5,10 @@ using TMPro;
 using UnityEngine.UI;
 using Creatures;
 using Items;
+using UI.Lists;
 using Items.Equipment;
 
-namespace UI.Lists {
+namespace Creatures.UI {
     public class CreatureDetailedDisplay : UIInventoryDisplayer<EquipedCreature>
     {
         [SerializeField] private TextMeshProUGUI nameText;
@@ -33,9 +34,9 @@ namespace UI.Lists {
             xpSlider.value = element.XP/experienceToLevel;
 
             int i = 0;
-            List<Equipment> toDisplay = new List<Equipment>();
+            List<EnchantedEquipment> toDisplay = new List<EnchantedEquipment>();
             while (i < element.EnchantedEquipment.Count && i < 3) {
-                toDisplay.Add(element.EnchantedEquipment[i].Equipment);
+                toDisplay.Add(element.EnchantedEquipment[i]);
                 i++;
             }
             while (i < 3) {

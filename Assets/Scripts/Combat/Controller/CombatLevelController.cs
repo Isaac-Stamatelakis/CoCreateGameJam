@@ -29,7 +29,7 @@ namespace Levels.Combat {
         public Transform CanvasTransform { get => uiController.transform; }
         public List<CreatureInCombat> CreatureTurns {get => creatureTurns;}
         public Transform SpawnedObjectContainer {get => spawnedObjectContainer;}
-        public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevel combatLevel) {
+        public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevelObject combatLevel) {
             this.humanPlayer = humanPlayer;
             humanPlayerCreatures.displayCreatures(humanPlayer.Creatures);
             this.aiPlayer = aiPlayer;

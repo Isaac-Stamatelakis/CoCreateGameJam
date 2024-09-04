@@ -7,7 +7,7 @@ using Levels;
 
 namespace Levels.Forge {
     [CreateAssetMenu(fileName = "New Forger", menuName = "Level/Forge")]
-    public class ForgeLevel : Level
+    public class ForgeLevel : LevelObject
     {
         [SerializeField] private List<Recipe> recipes;
         [SerializeField] private List<Recipe> blueprintRecipes;

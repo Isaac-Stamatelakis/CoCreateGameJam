@@ -34,18 +34,29 @@ namespace UI.Lists {
         protected void loadSlots() {
             RectTransform rectTransform = GetComponent<RectTransform>();
             GridLayoutGroup gridLayoutGroup = GetComponent<GridLayoutGroup>();
+            
+            
+            
+            //Debug.Log(width);
             /*
             Vector3[] corners = new Vector3[4];
             rectTransform.GetWorldCorners(corners);
-            float width = Mathf.Abs(corners[2].x - corners[0].x);
-            float height = Mathf.Abs(corners[2].y - corners[0].y);
-            int itemsPerRow = (int) (width/gridLayoutGroup.cellSize.x);
+            for (int i = 0; i < 4; i++) {
+                Debug.Log($"{i} : {corners[i]}");
+            }
             */
+            
+            //float width = Vector3.Distance(corners[0],corners[3]);
+            //int itemsPerRow = (int) (rectTransform.rect.width/gridLayoutGroup.cellSize.x);
+            //Debug.Log($"{name} {width} {itemsPerRow}");
+            //Vector2 size = RectTransformUtility.PixelAdjustRect(rectTransform,rectTransform.GetComponentInParent<Canvas>()).size;
+            //Debug.Log($"{size}");
             slots = new List<UIInventoryDisplayer<T>>();
             for (int i = 0; i < elements.Count; i++) {
                 slots.Add(null);
                 loadSlot(i);
             }
+            
         }
         protected void highlightSlot(int i) {
             if (i >= slots.Count) {

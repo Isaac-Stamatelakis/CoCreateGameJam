@@ -718,6 +718,7 @@ MonoBehaviour:
   slotPrefab: {fileID: 6310515468067946883, guid: d83d1fdf5c3fadb4f8ce32842c8357ac, type: 3}
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   creatureSelectUIPrefab: {fileID: 1583824888248312125, guid: 8f528b89be9de084e8caa3ebbe979024, type: 3}
+  creatureEquipUIPrefab: {fileID: 8216128371794471763, guid: 1e2197ba0a46c65488ecaed895712cfa, type: 3}
 --- !u!1 &7526185344291252114
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,6 +1488,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BackButton
       objectReference: {fileID: 0}
+    - target: {fileID: 8810138568433600502, guid: 8ab53ae6757b09e48b4cf888934a77ae, type: 3}
+      propertyPath: parentObject
+      value: 
+      objectReference: {fileID: 7526185344291252114}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ab53ae6757b09e48b4cf888934a77ae, type: 3}
 --- !u!224 &4650025888476669353 stripped

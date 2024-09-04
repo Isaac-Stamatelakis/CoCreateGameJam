@@ -7,10 +7,10 @@ using UnityEngine.EventSystems;
 using Items.Equipment;
 
 namespace UI.Lists {
-    public class EquipmentUIDisplay : UIInventoryDisplayer<Equipment>, IPointerClickHandler
+    public class EquipmentUIDisplay : UIInventoryDisplayer<EnchantedEquipment>, IPointerClickHandler
     {
         [SerializeField] private Image image;
-        public override void display(Equipment element)
+        public override void display(EnchantedEquipment element)
         {
             if (element == null) {
                 this.image.gameObject.SetActive(false);

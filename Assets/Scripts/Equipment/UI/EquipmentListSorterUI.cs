@@ -10,6 +10,7 @@ namespace Items.Equipment.UI {
     public class EquipmentListSorterUI : InventorySorter<EnchantedEquipment>
     {
         [SerializeField] private TMP_Dropdown rarityDropdown;
+        [SerializeField] private TMP_Dropdown enchantmentDropdown;
         [SerializeField] private Button enableAllStats;
         [SerializeField] private Button disableAllStats;
         [SerializeField] private ImageToggleButtonUI healthToggle;
@@ -21,15 +22,15 @@ namespace Items.Equipment.UI {
         [SerializeField] private ImageToggleButtonUI bonusManaToggle;
         private List<Rarity?> rarities;
         private int rarityIndex;
-        HashSet<string> viewedStats;
-        Dictionary<string,StatGetter> statGetterDict;
-        List<ImageToggleButtonUI> statToggleButtons;
+        HashSet<string> viewedStats = new HashSet<string>();
+        Dictionary<string,StatGetter> statGetterDict = new Dictionary<string, StatGetter>();
+        List<ImageToggleButtonUI> statToggleButtons = new List<ImageToggleButtonUI>();
         protected override void addSortingFeatures()
         {
             Rarity[] nonNullRarities = GlobalUtils.getAllEnums<Rarity>();
             rarities = new List<Rarity?>{null};
             rarityDropdown.options = new List<TMP_Dropdown.OptionData>{
-                new TMP_Dropdown.OptionData("All")
+                new TMP_Dropdown.OptionData("All Rarities")
             };
             foreach (Rarity rarity in nonNullRarities) {
                 rarityDropdown.options.Add(new TMP_Dropdown.OptionData(rarities.ToString()));
@@ -38,6 +39,11 @@ namespace Items.Equipment.UI {
             rarityDropdown.onValueChanged.AddListener((int index) => {
                 this.rarityIndex = index;
             });
+            enchantmentDropdown.options = new List<TMP_Dropdown.OptionData>{
+                new TMP_Dropdown.OptionData("All Enchantments")
+            };
+
+
 
             addToggleButton(healthToggle, "health", (EnchantedEquipment equipment) => equipment.getHealth());
             addToggleButton(strengthToggle, "strength", (EnchantedEquipment equipment) => equipment.getAttack());
@@ -47,7 +53,7 @@ namespace Items.Equipment.UI {
             addToggleButton(maxManaToggle, "maxMana", (EnchantedEquipment equipment) => equipment.getMaxMana());
             addToggleButton(bonusManaToggle, "bonusMana", (EnchantedEquipment equipment) => equipment.getBonusMana());
 
-            enableAllStats.onClick.AddListener(() => {
+            disableAllStats.onClick.AddListener(() => {
                 viewedStats = new HashSet<string>();
                 foreach (ImageToggleButtonUI toggleButtonUI in statToggleButtons) {
                     toggleButtonUI.setActiveNoCallBack(false);
@@ -71,7 +77,7 @@ namespace Items.Equipment.UI {
         protected override void applySorting()
         {
             List<EnchantedEquipment> displayed = InventorySortingUtils.sortEnum<EnchantedEquipment,Rarity>(elements,rarities[rarityIndex],rarityGetter);
-            displayStats();
+            //displayStats();
         }
 
         private void displayStats() {

@@ -33,6 +33,13 @@ namespace Items.Equipment {
             }
             return statSelector(equipment);
         }
+
+        public string getEnchantmentId() {
+            if (enchant == null) {
+                return null;
+            }
+            return enchant.Id;
+        }
         public int getAttack()
         {
             return getEquipmentStat(e => e.Attack);

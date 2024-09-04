@@ -9,10 +9,10 @@ using Actions;
 using System.Threading.Tasks;
 
 namespace Levels.Combat {
-    public class CombatLevelLoader : LevelLoader<CombatLevel>
+    public class CombatLevelLoader : LevelLoader<CombatLevelObject>
     {
         [SerializeField] private CombatLevelController combatLevelController;
-        protected override async void loadLevel(CombatLevel level)
+        protected override async void loadLevel(CombatLevelObject level)
         {
             PlayerIO playerIO = PlayerIO.Instance;
             List<EquipedCreature> creatures = playerIO.EquipedCreetures;

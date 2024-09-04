@@ -8,6 +8,9 @@ namespace UI.Lists {
     {
         public delegate E EnumGetter<in T, out E>(T element) where E : Enum;
         public static List<T> sortSearch<T>(string value, List<T> elements, List<T> displayed, int previousSearchLength) where T : IDisplayable{
+            if (value==null) {
+                return elements;
+            }
             // Only have to search displayed if searchValue is longer 
             List<T> elementsToSort = value.Length > previousSearchLength ? displayed : elements;
             List<T> newDisplayed = new List<T>();

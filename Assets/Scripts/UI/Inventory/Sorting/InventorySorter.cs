@@ -15,14 +15,15 @@ namespace UI.Lists {
         private int previousSearchLength;
         public void initalize(List<T> elements) {
             this.elements = elements;
+            addSortingFeatures();
             display();
             if (searchBar != null) {
                 searchBar.onValueChanged.AddListener((string value) => {
-                    this.searchValue = value;
+                    this.searchValue = value.ToLower();
                     display();
                 });
             }
-            addSortingFeatures();
+            
         }
 
         protected abstract void addSortingFeatures();

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Levels {
     [CreateAssetMenu(fileName = "New Level Area", menuName = "Level/Area")]
-    public class Area : Level
+    public class Area : LevelObject
     {
         public override string getSceneName()
         {

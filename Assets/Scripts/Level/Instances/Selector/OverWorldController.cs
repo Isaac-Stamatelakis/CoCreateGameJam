@@ -37,9 +37,9 @@ namespace Levels {
                 raycastMove(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             }
             if (Input.GetKeyDown(KeyCode.Space) && move.Count == 0) {
-                Level level = currentNode.level;
+                ILevel level = currentNode.getLevel();
                 if (level != null) {
-                    LevelManager.changeLevel(currentNode.level); 
+                    LevelManager.changeLevel(level); 
                 }
             }
         }
@@ -84,8 +84,7 @@ namespace Levels {
             while (queue.Count > 0)
             {
                 WorldNode currentTile = queue.Dequeue();
-
-                foreach (WorldNode nextTile in currentTile.AllConnections)
+                foreach (WorldNode nextTile in currentTile.Connections)
                 {
                     if (!cameFrom.ContainsKey(nextTile))
                     {
@@ -97,7 +96,7 @@ namespace Levels {
 
                         if (nextTile == endTile)
                         {
-                            return ReconstructPath(cameFrom, startTile, endTile);
+                            return reconstructPath(cameFrom, startTile, endTile);
                         }
                     }
                 }
@@ -105,7 +104,7 @@ namespace Levels {
             return new List<WorldNode>(); // No path found
         }
 
-        private List<WorldNode> ReconstructPath(Dictionary<WorldNode, WorldNode> cameFrom, WorldNode startTile, WorldNode endTile)
+        private List<WorldNode> reconstructPath(Dictionary<WorldNode, WorldNode> cameFrom, WorldNode startTile, WorldNode endTile)
         {
             List<WorldNode> path = new List<WorldNode>();
             WorldNode currentTile = endTile;
@@ -141,33 +140,19 @@ namespace Levels {
         }
         private void drawLines() {
             foreach (WorldNode node in nodes) {
-                foreach (WorldNode connection in node.connections) {
+                foreach (WorldNode connection in node.Connections) {
                     if (connection == null || node == null) {
                         continue;
                     }
                     if (!dev.discoverAll && (!playerIO.hasDiscoveredTile(node.name) || !playerIO.hasDiscoveredTile(connection.name))) {
                         continue;
                     }
-                    // Prevent duplicate lines
-                    if (connection.connections.Contains(node)) {
-                        //connection.connections.Remove(node);
-                    }
-                    LineFactory.create(node,connection,lineContainer);
-                
-                }
-            }
-            // Make graph doubly connected again
-            foreach (WorldNode node in nodes) {
-                foreach (WorldNode connection in node.connections) {
-                    if (connection == null) {
+                    if (connection.containsConnection(node)) {
                         continue;
                     }
-                    if (!connection.AllConnections.Contains(node)) {
-                        connection.AllConnections.Add(node);      
-                    }
-                    if (!node.AllConnections.Contains(connection)) {
-                        node.AllConnections.Add(connection);      
-                    }
+                    node.addLineConnection(connection);
+                    LineFactory.create(node,connection,lineContainer);
+                
                 }
             }
             Debug.Log(lineContainer.childCount + " Lines Drawn");

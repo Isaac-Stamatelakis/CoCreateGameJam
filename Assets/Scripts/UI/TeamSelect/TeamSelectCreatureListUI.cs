@@ -4,23 +4,26 @@ using UnityEngine;
 using UI.Lists;
 using Creatures;
 using Player;
+using UI.CreatureEquip;
 
 namespace UI.TeamSelect {
     public class TeamSelectCreatureListUI : InventoryUI<EquipedCreature>
     {
         [SerializeField] private CreatureSelectUI creatureSelectUIPrefab;
+        [SerializeField] private CreatureEquipUI creatureEquipUIPrefab;
         private int selectedIndex = -1;
         public override void leftClick(int index)
         {
             EquipedCreature equipedCreature = elements[index];
+            TeamSelectUI teamSelectUI = GlobalUtils.getComponentInHeirarchy<TeamSelectUI>(transform);
+                
             if (equipedCreature == null) {
                 selectedIndex = index;
-                CreatureSelectUI creatureSelectUI = GameObject.Instantiate(creatureSelectUIPrefab);
-                TeamSelectUI teamSelectUI = GlobalUtils.getComponentInHeirarchy<TeamSelectUI>(transform);
-                creatureSelectUI.transform.SetParent(teamSelectUI.transform,false);
+                CreatureSelectUI creatureSelectUI = UIUtils.instantiateUIPrefab<CreatureSelectUI>(creatureSelectUIPrefab,teamSelectUI.transform);
                 creatureSelectUI.display(PlayerIO.Instance.EquipedCreetures,nullSelectCallback);
             } else {
-
+                CreatureEquipUI creatureEquipUI = UIUtils.instantiateUIPrefab<CreatureEquipUI>(creatureEquipUIPrefab,teamSelectUI.transform);
+                creatureEquipUI.display(PlayerIO.Instance.getPlayerTeam()[index],true);
             }
         }
 

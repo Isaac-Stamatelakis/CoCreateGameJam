@@ -53,11 +53,8 @@ namespace UI.Lists {
                     titleText.text = "Creetures";
                     break;
                 case InventoryUIMode.Equipment:
-                    List<Equipment> tempEquipment = new List<Equipment>{
-                        LootableRegistry.getInstance().getLootable<Equipment>("mazda5")
-                    };
                     titleText.text = "Equipment";
-                    equipmentInventory.display(tempEquipment);
+                    equipmentInventory.display(PlayerIO.Instance.Equipment);
                     break;
                 case InventoryUIMode.Lootbox:
                     lootboxInventory.display(PlayerIO.Instance.LootBoxes.Cast<StackableItemSlot>().ToList());

@@ -4,17 +4,23 @@ using UnityEngine;
 using Creatures;
 using Player;
 using LootBoxes;
+using Items;
 
 namespace Levels.Combat {
     [CreateAssetMenu(fileName = "New Combat Level", menuName = "Level/CombatLevel")]
-    public class CombatLevel : Level
+    public class CombatLevelObject : LevelObject, ICombatLevel
     {
-        
-        private List<EquipedCreature> playerCreatures;
         [SerializeField] public List<EquipedCreature> enemyCreatures;
-        [SerializeField] public List<Lootable> lootables;
-        public void initalize(List<EquipedCreature> playerCreatures) {
-            this.playerCreatures = playerCreatures;
+        [SerializeField] public LootTableObject lootTable;
+
+        public List<EquipedCreature> getEnemyCreatures()
+        {
+            return enemyCreatures;
+        }
+
+        public ILootTable getLootTable()
+        {
+            return lootTable;
         }
 
         public override string getSceneName()

@@ -4,8 +4,17 @@ using UnityEngine;
 
 
 namespace Levels {
-    
-    public abstract class Level : ScriptableObject
+
+
+    public interface ILevel {
+        public string getSceneName();
+    }
+    public abstract class LevelObject : ScriptableObject, ILevel
+    {
+        public abstract string getSceneName();
+    }
+
+    public abstract class Level : ILevel
     {
         public abstract string getSceneName();
     }

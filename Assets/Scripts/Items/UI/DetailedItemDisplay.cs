@@ -6,13 +6,13 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace UI.Lists {
-    public class DetailedItemDisplay : UIInventoryDisplayer<Equipment>
+    public class DetailedItemDisplay : UIInventoryDisplayer<EnchantedEquipment>
     {
         [SerializeField] private Image image;
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI rarityText;
         [SerializeField] private TextMeshProUGUI statText;
-        public override void display(Equipment element)
+        public override void display(EnchantedEquipment element)
         {
             this.titleText.text = element.getName();
             this.image.sprite = element.getSprite();
