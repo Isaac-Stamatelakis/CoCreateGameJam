@@ -74,7 +74,7 @@ public class TieredItemGeneratorEditor : Editor
             Rarity rarity = tieredRarities[i];
             Equipment equipment = ScriptableObject.CreateInstance<Equipment>();
             equipment.name = $"{rarity} {tieredEquipmentLayout.stat}";
-            equipment.Id = equipment.name.ToLower().Replace(" ","_");
+            equipment.setId(equipment.name.ToLower().Replace(" ","_"));
             equipment.Sprite = sprite;
             setStat(equipment,tieredEquipmentLayout.stat,getValue(tieredEquipmentLayout,i+1));
             string assetPath = Path.Combine(itemPath,$"{equipment.name}.asset");

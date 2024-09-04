@@ -27,6 +27,10 @@ public abstract class Lootable : ScriptableObject, IDisplayable, ILootable {
         return id;
     }
 
+    public void setId(string id) {
+        this.id = id;
+    }
+
     public string getName()
     {
         return name;

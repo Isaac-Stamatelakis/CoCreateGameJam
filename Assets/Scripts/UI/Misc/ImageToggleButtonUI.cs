@@ -33,6 +33,10 @@ namespace UI {
             }
             setColor();
         }
+        public void setActiveNoCallBack(bool newState) {
+            this.active = newState;
+            setColor();
+        }
 
         private void setColor() {
             panel.color = active ? activeColor : inActiveColor;
