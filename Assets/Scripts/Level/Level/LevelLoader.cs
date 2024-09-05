@@ -24,7 +24,7 @@ namespace Levels {
             if (loaded) {
                 yield return null;
             }
-            Debug.Log("Loading Test Level");
+            Debug.Log($"Loading Test Level '{testLevel.name}'");
             load(testLevel);
         }
         public void load(ILevel level) {

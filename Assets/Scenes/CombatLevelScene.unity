@@ -1524,7 +1524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427f3e90b1dff4a4d97f1ce7816d57a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testLevel: {fileID: 11400000, guid: 736583232bc03ae4aaa44cb8be1bb797, type: 2}
+  testLevel: {fileID: 11400000, guid: 95a93f187e3e4e240a1966096cd4ad84, type: 2}
   combatLevelController: {fileID: 1144188295}
 --- !u!1 &786916912
 GameObject:

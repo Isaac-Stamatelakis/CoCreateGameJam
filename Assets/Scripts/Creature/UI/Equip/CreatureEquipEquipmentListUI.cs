@@ -17,7 +17,7 @@ namespace UI.CreatureEquip {
         }
         public override void leftClick(int index)
         {
-            
+            creatureEquipUI.equip(index);
         }
 
         public override void rightClick(int index)

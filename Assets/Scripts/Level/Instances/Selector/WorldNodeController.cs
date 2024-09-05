@@ -114,7 +114,8 @@ namespace Levels {
         }
 
         private void initPlayer() {
-            string tileName = "level0";
+            // Todo use serialization
+            string tileName = "Level0";
             if (tileName == null) {
                 tileName = Global.StartSquare;
             }

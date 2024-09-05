@@ -34,8 +34,34 @@ namespace UI.Lists {
             inventoryUI.display(displayed);
         }
 
+        public void refresh() {
+            displayed = elements;
+            display();
+        }
+
 
         protected abstract void applySorting();
+        public T getSelectedElement(int index) {
+            if (index < 0 || index >= displayed.Count) {
+                return default(T);
+            }
+            return displayed[index];
+        }
+
+        public void removeSelectedElement(int index) {
+            T element = getSelectedElement(index);
+            if (element == null) {
+                return;
+            }
+            int indexInOriginal = elements.IndexOf(element);
+            elements.RemoveAt(index);
+            refresh();
+        }
+
+        public void insert(T element) {
+            elements.Add(element);
+            refresh();
+        }
 
 
         

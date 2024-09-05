@@ -26,12 +26,12 @@ namespace Player {
             return playerTeam;  
         }
 
-        public static void clampPlayerTeam(List<EquipedCreature> playerTeam) {
-            while (playerTeam.Count > Global.PLAYER_TEAM_SIZE) {
-                playerTeam.RemoveAt(playerTeam.Count-1);
+        public static void clamp<T>(List<T> elements, int size) {
+            while (elements.Count > size) {
+                elements.RemoveAt(elements.Count-1);
             }
-            while (playerTeam.Count < Global.PLAYER_TEAM_SIZE) {
-                playerTeam.Add(null);
+            while (elements.Count < size) {
+                elements.Add(default(T));
             }
         }
     }

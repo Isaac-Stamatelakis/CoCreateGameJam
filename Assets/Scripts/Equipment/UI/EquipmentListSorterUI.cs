@@ -42,9 +42,6 @@ namespace Items.Equipment.UI {
             enchantmentDropdown.options = new List<TMP_Dropdown.OptionData>{
                 new TMP_Dropdown.OptionData("All Enchantments")
             };
-
-
-
             addToggleButton(healthToggle, "health", (EnchantedEquipment equipment) => equipment.getHealth());
             addToggleButton(strengthToggle, "strength", (EnchantedEquipment equipment) => equipment.getAttack());
             addToggleButton(armorToggle, "armor", (EnchantedEquipment equipment) => equipment.getDefense());

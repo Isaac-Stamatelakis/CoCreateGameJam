@@ -18,6 +18,7 @@ public static class Global {
     public static readonly int TRADE_UPDATE_FREQ = 25;
     public static int TRADE_UPDATES_PER_HOUR = 3600*25/TRADE_UPDATE_FREQ;
     public static readonly int PLAYER_TEAM_SIZE = 4;
+    public static readonly int MAX_CREATURE_EQUIPMENT = 3;
 }
 
 [System.Serializable]

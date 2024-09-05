@@ -21,14 +21,22 @@ namespace Creatures.UI {
         [SerializeField] private Button equipButton;
         [SerializeField] private Button infoButton;
 
+        private EquipedCreature equipedCreature;
+        public void Start() {
+            nicknameField.onValueChanged.AddListener((string value) => {
+                if (equipedCreature != null) {
+                    equipedCreature.Nickname = value;
+                }
+            });
+        }
+
         public override void display(EquipedCreature element)
         {
+            this.equipedCreature = element;
             nameText.text = element.Creeture.name;
             creatureImage.sprite = element.Creeture.Sprite;
             nicknameField.text = element.Nickname;
-            nicknameField.onValueChanged.AddListener((string value) => {
-                element.Nickname = value;
-            });
+            
             levelText.text = element.Level.ToString();
             float experienceToLevel = CreatureUtils.getExperienceToLevel(element.Level);
             xpSlider.value = element.XP/experienceToLevel;

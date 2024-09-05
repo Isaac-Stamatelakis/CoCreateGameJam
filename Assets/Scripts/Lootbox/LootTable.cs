@@ -69,6 +69,9 @@ public class LootFrequency {
 
 public static class LootTableUtils {
     public static List<IntItemSlot> openLootTable(ILootTable lootTable) {
+        if (lootTable == null) {
+            return new List<IntItemSlot>();
+        }
         int totalFrequency = 0;
         List<LootFrequency> loot = lootTable.getLootFrequencies();
         int rolls = lootTable.getRolls();
