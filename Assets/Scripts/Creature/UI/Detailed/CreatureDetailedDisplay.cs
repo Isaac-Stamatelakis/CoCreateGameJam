@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Creatures;
 using Items;
 using UI.Lists;
+using Player;
 using Items.Equipment;
 
 namespace Creatures.UI {
@@ -16,12 +17,15 @@ namespace Creatures.UI {
         [SerializeField] private TMP_InputField nicknameField;
         [SerializeField] private TextMeshProUGUI levelText;
         [SerializeField] private Slider xpSlider;
-        [SerializeField] private StaticEquipmentInventoryUI itemInventory;
+        [SerializeField] private DetailedCreatureEquipmentListUI itemInventory;
         [SerializeField] private Button recruitButton;
         [SerializeField] private Button equipButton;
         [SerializeField] private Button infoButton;
-
+        List<InventoryUI<EnchantedEquipment>> syncedEquipmentLists = new List<InventoryUI<EnchantedEquipment>>();
         private EquipedCreature equipedCreature;
+        public EquipedCreature EquipedCreature { get => equipedCreature;}
+        public List<InventoryUI<EnchantedEquipment>> SyncedEquipmentLists { get => syncedEquipmentLists; }
+
         public void Start() {
             nicknameField.onValueChanged.AddListener((string value) => {
                 if (equipedCreature != null) {
@@ -41,17 +45,12 @@ namespace Creatures.UI {
             float experienceToLevel = CreatureUtils.getExperienceToLevel(element.Level);
             xpSlider.value = element.XP/experienceToLevel;
 
-            int i = 0;
-            List<EnchantedEquipment> toDisplay = new List<EnchantedEquipment>();
-            while (i < element.EnchantedEquipment.Count && i < 3) {
-                toDisplay.Add(element.EnchantedEquipment[i]);
-                i++;
-            }
-            while (i < 3) {
-                toDisplay.Add(null);
-                i++;
-            }
-            itemInventory.display(toDisplay);
+            PlayerIOUtils.clamp<EnchantedEquipment>(element.EnchantedEquipment,Global.MAX_CREATURE_EQUIPMENT);
+            itemInventory.display(element.EnchantedEquipment);
+        }
+
+        public void addSyncedEquipmentList(InventoryUI<EnchantedEquipment> equipmentListUI) {
+            syncedEquipmentLists.Add(equipmentListUI);
         }
     }
 }

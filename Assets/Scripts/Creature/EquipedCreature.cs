@@ -4,6 +4,7 @@ using UnityEngine;
 using Items;
 using Newtonsoft.Json;
 using Items.Equipment;
+using Player;
 
 namespace Creatures {
     public interface IRarityItem {
@@ -19,6 +20,10 @@ namespace Creatures {
         private int xp;
         public Creature Creeture { get => creeture; }
         public List<EnchantedEquipment> EnchantedEquipment { get => equipment;}
+        public List<EnchantedEquipment> getEnchantedEquipment() {
+            PlayerIOUtils.clamp<EnchantedEquipment>(equipment,Global.MAX_CREATURE_EQUIPMENT);
+            return equipment;
+        }
         public Rarity rarity;
         public string Nickname { get => nickname; set => nickname = value;}
         public int Level { get => level; }

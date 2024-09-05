@@ -26,6 +26,10 @@ namespace UI.Lists {
             setTheme(colorTheme);
         }
 
+        public void rebuild() {
+            display(elements);
+        }
+
         public void setTheme(ColorTheme colorTheme) {
             foreach (UIInventoryDisplayer<T> slot in slots) {
                 slot.setTheme(colorTheme);

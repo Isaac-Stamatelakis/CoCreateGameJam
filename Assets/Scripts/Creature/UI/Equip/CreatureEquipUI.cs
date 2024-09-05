@@ -13,12 +13,13 @@ namespace UI.CreatureEquip {
     {
         [SerializeField] private EquipmentListSorterUI equipmentListSorter;
         [SerializeField] private CreatureDetailedDisplay creatureDetailedDisplay;
-
+        
         private EquipedCreature displayedCreature;
         public void display(EquipedCreature equipedCreature, bool onTeam) {
             equipmentListSorter.initalize(PlayerIO.Instance.Equipment);
             this.displayedCreature = equipedCreature;
             creatureDetailedDisplay.display(equipedCreature);
+            creatureDetailedDisplay.addSyncedEquipmentList(equipmentListSorter.InventoryUI);
         }
 
         public void equip(int index) {

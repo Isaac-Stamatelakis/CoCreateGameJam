@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 2524430340567799178}
   - component: {fileID: 2524430340567799179}
   - component: {fileID: 7770164797138762024}
-  - component: {fileID: 7294116219070947739}
+  - component: {fileID: 1513428426099856504}
   m_Layer: 5
   m_Name: Items
   m_TagString: Untagged
@@ -109,7 +109,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2524430340853385009}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Spacing: {x: 16, y: 16}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &7294116219070947739
+--- !u!114 &1513428426099856504
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -187,11 +187,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2524430340567799177}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45890815306a9b740988e0da7763d584, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f0826bfdcf296840bc9294f521a1777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 760522468164698552, guid: 9034ebd8bfd0622478036997e82d6cc6, type: 3}
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  popupPrefab: {fileID: 297810685694240498, guid: 8f51433090498d14e9312c3fa514118d, type: 3}
 --- !u!1 &2524430340682678882
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,8 +776,8 @@ RectTransform:
   - {fileID: 2524430340956901021}
   - {fileID: 2524430342089941338}
   - {fileID: 2524430341409215126}
-  - {fileID: 2524430340567799176}
   - {fileID: 2524430340896481641}
+  - {fileID: 2524430340567799176}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -840,7 +841,7 @@ MonoBehaviour:
   nicknameField: {fileID: 2524430342089941341}
   levelText: {fileID: 2524430340765983410}
   xpSlider: {fileID: 2524430341625261231}
-  itemInventory: {fileID: 7294116219070947739}
+  itemInventory: {fileID: 1513428426099856504}
   recruitButton: {fileID: 2524430341565852135}
   equipButton: {fileID: 2524430340686130619}
   infoButton: {fileID: 2524430341042629193}
@@ -879,7 +880,7 @@ RectTransform:
   - {fileID: 2524430340686130616}
   - {fileID: 2524430341042629190}
   m_Father: {fileID: 2524430340853385009}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

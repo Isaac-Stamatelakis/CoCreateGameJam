@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57ebf4d4bdea7e34ea1e0bfd62d50f70, type: 3}
+  m_Name: CardboardBoxLoot
+  m_EditorClassIdentifier: 
+  lootFrequencies:
+  - val: {fileID: 11400000, guid: 144f3d80dabf9a64a9ba86cc65396269, type: 2}
+    frequency: 1
+    amount: 1
+  - val: {fileID: 11400000, guid: 20bbaae9f0877f14bb319cdcd112dd5f, type: 2}
+    frequency: 1
+    amount: 1
+  - val: {fileID: 11400000, guid: e0612e60202bf2647aa51dc74373a01e, type: 2}
+    frequency: 1
+    amount: 1
+  - val: {fileID: 11400000, guid: 619c1a7561664404d8b0b022c3ece1ae, type: 2}
+    frequency: 1
+    amount: 5
+  - val: {fileID: 11400000, guid: cdb25ca96c985904b8564e47dc4dca62, type: 2}
+    frequency: 1
+    amount: 5
+  rolls: 5
+  repetitions: 1

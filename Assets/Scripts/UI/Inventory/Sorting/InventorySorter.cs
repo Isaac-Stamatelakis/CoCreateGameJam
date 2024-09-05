@@ -8,6 +8,7 @@ namespace UI.Lists {
     public abstract class InventorySorter<T> : MonoBehaviour where T : IDisplayable
     {
         [SerializeField] private InventoryUI<T> inventoryUI;
+        public InventoryUI<T> InventoryUI {get => inventoryUI;}
         [SerializeField] private TMP_InputField searchBar;
         private string searchValue;
         protected List<T> displayed;
