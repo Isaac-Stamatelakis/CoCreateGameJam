@@ -19,3 +19,9 @@ public static class Global {
     public static int TRADE_UPDATES_PER_HOUR = 3600*25/TRADE_UPDATE_FREQ;
     public static readonly int PLAYER_TEAM_SIZE = 4;
 }
+
+[System.Serializable]
+public class SerializableKVP<T,Y> {
+    public T key;
+    public Y value;
+}

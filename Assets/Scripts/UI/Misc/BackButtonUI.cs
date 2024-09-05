@@ -7,7 +7,7 @@ namespace UI {
     public class BackButtonUI : MonoBehaviour
     {
         [SerializeField] private bool destroyOnClick = true;
-        [SerializeField] private GameObject parentObject;
+        [SerializeField] public GameObject parentObject;
         public void Start() {
             Button button = GetComponent<Button>();
             button.onClick.AddListener(() => {

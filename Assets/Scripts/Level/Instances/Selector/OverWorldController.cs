@@ -6,25 +6,20 @@ using Player;
 using System.Linq;
 
 namespace Levels {
-    public class OverWorldController : MonoBehaviour
+    public class WorldNodeController : MonoBehaviour
     {
         protected List<WorldNode> nodes;
-        protected Transform playerTransform;
-        protected PlayerIO playerIO;
-        protected Transform lineContainer;
-        protected WorldNode currentNode;
-        protected List<WorldNode> move;
-        protected Dev dev;
-        protected Transform levelContainer;
+        [SerializeField] private Transform levelContainer;
+        [SerializeField] protected Transform lineContainer;
+        private WorldNode currentNode;
+        private List<WorldNode> moveList = new List<WorldNode>();
+        [SerializeField] private Dev dev;
+        [SerializeField] protected Transform playerTransform;
+        private HashSet<string> discoveredNodes;
         // Start is called before the first frame update
         void Start()
         {
-            move = new List<WorldNode>();
-            playerTransform = GameObject.Find("Player").transform;
-            playerIO = playerTransform.GetComponent<PlayerIO>();
-            lineContainer = transform.Find("Lines");
-            levelContainer = transform.Find("Levels");
-            dev = playerTransform.GetComponent<Dev>();
+            //discoveredTiles = PlayerIO.Instance.
             getLevelTiles();
             drawLines();
             initPlayer();
@@ -36,7 +31,7 @@ namespace Levels {
             if (Input.GetMouseButton(0)) {
                 raycastMove(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             }
-            if (Input.GetKeyDown(KeyCode.Space) && move.Count == 0) {
+            if (Input.GetKeyDown(KeyCode.Space) && moveList.Count == 0) {
                 ILevel level = currentNode.getLevel();
                 if (level != null) {
                     LevelManager.changeLevel(level); 
@@ -49,13 +44,13 @@ namespace Levels {
         }
 
         private void handleMove() {
-            if (move.Count == 0) {
+            if (moveList.Count == 0) {
                 return;
             }
-            WorldNode node = move[0];
+            WorldNode node = moveList[0];
             float dist = Vector2.Distance(node.transform.position,playerTransform.position);
             if (dist < 0.01f) {
-                move.RemoveAt(0);
+                moveList.RemoveAt(0);
                 currentNode = node;
                 return;
             }
@@ -66,7 +61,7 @@ namespace Levels {
             RaycastHit2D hit = Physics2D.Raycast(mousePosition,Vector2.zero,Mathf.Infinity,1 << LayerMask.NameToLayer("WorldNode"));
             if (hit.collider != null) {
                 WorldNode worldNode = hit.collider.gameObject.GetComponent<WorldNode>();
-                move = getPath(currentNode,worldNode);
+                moveList = getPath(currentNode,worldNode);
             }
         }
 
@@ -84,11 +79,11 @@ namespace Levels {
             while (queue.Count > 0)
             {
                 WorldNode currentTile = queue.Dequeue();
-                foreach (WorldNode nextTile in currentTile.Connections)
+                foreach (WorldNode nextTile in currentTile.LineConnections)
                 {
                     if (!cameFrom.ContainsKey(nextTile))
                     {
-                        if (!dev.discoverAll && !playerIO.hasDiscoveredTile(nextTile.name)) {
+                        if (!dev.discoverAll && !discoveredNodes.Contains(nextTile.name)) {
                             continue;
                         }
                         queue.Enqueue(nextTile);
@@ -119,8 +114,7 @@ namespace Levels {
         }
 
         private void initPlayer() {
-            
-            string tileName = playerIO.CurrentTile;
+            string tileName = "level0";
             if (tileName == null) {
                 tileName = Global.StartSquare;
             }
@@ -144,15 +138,15 @@ namespace Levels {
                     if (connection == null || node == null) {
                         continue;
                     }
-                    if (!dev.discoverAll && (!playerIO.hasDiscoveredTile(node.name) || !playerIO.hasDiscoveredTile(connection.name))) {
+                    if (!dev.discoverAll && (!discoveredNodes.Contains(node.name) || !discoveredNodes.Contains(connection.name))) {
                         continue;
                     }
                     if (connection.containsConnection(node)) {
                         continue;
                     }
                     node.addLineConnection(connection);
+                    connection.addLineConnection(node);
                     LineFactory.create(node,connection,lineContainer);
-                
                 }
             }
             Debug.Log(lineContainer.childCount + " Lines Drawn");
