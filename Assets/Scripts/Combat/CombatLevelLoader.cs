@@ -12,10 +12,13 @@ namespace Levels.Combat {
     public class CombatLevelLoader : LevelLoader<CombatLevelObject>
     {
         [SerializeField] private CombatLevelController combatLevelController;
+        [SerializeField] private bool useTestCreatures;
+        [SerializeField] private List<EquipedCreature> testTeam = new List<EquipedCreature>();
         protected override async void loadLevel(CombatLevelObject level)
         {
             PlayerIO playerIO = PlayerIO.Instance;
             List<EquipedCreature> creatures = playerIO.EquipedCreetures;
+            /*
             LootableRegistry registry = LootableRegistry.getInstance();
             EnchantedEquipment mazda5 = new EnchantedEquipment(LootableRegistry.getInstance().getLootable<Equipment>("mazda5"),null);
             List<EquipedCreature> testingCreatings = new List<EquipedCreature> {
@@ -24,7 +27,15 @@ namespace Levels.Combat {
                 new EquipedCreature(registry.getLootable<Creature>("dragoon"), new List<EnchantedEquipment>()),
                 new EquipedCreature(registry.getLootable<Creature>("gun_crab"), new List<EnchantedEquipment>{mazda5})
             };
-            CombatPlayer humanPlayer = new CombatPlayer(testingCreatings);
+            */
+            List<EquipedCreature> playerTeam = PlayerIO.Instance.getPlayerTeam();
+            int nonNullCount = GlobalUtils.getNoneNullCount<EquipedCreature>(playerTeam);
+            if (nonNullCount==0) {
+                nonNullCount = GlobalUtils.getNoneNullCount<EquipedCreature>(testTeam);
+                playerTeam = testTeam;
+            }
+            
+            CombatPlayer humanPlayer = new CombatPlayer(playerTeam);
             CombatPlayer aiPlayer = new CombatPlayer(level.enemyCreatures);
             await Task.WhenAll(
                 loadPlayerCreatureActions(humanPlayer),

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
+using Player;
 
 namespace Levels.Combat {
     public class CombatLevel : Level, ICombatLevel

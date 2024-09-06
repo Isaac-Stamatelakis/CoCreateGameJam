@@ -30,6 +30,10 @@ namespace Levels.Combat {
         public List<CreatureInCombat> CreatureTurns {get => creatureTurns;}
         public Transform SpawnedObjectContainer {get => spawnedObjectContainer;}
         public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevelObject combatLevel) {
+            if (humanPlayer.Creatures.Count == 0) {
+                // TODO CHANGE TO SPECIAL SCREEN TELLING PLAYER THEY HAVE NO CREATURES
+                showGameOverScreen(playerLoseUIPrefab);
+            }
             this.humanPlayer = humanPlayer;
             humanPlayerCreatures.displayCreatures(humanPlayer.Creatures);
             this.aiPlayer = aiPlayer;
@@ -127,6 +131,14 @@ namespace Levels.Combat {
         
 
         public IEnumerator nextCreatureTurn() {
+            clearCreatureListOfDead(creatureTurns);
+            clearCreatureListOfDead(humanPlayer.Creatures);
+            clearCreatureListOfDead(aiPlayer.Creatures);
+            if (creatureTurns.Count == 0) {
+                showGameOverScreen(playerLoseUIPrefab);
+                Debug.Log("Tie");
+                yield break;
+            }
             CreatureCombatObject currentCreatureTurn = getCurrentlyMovingCreature();
             if (currentCreatureTurn != null) {
                 Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
@@ -136,14 +148,7 @@ namespace Levels.Combat {
             }
             creatureTurns.RemoveAt(0);
             creatureTurns.Add(currentCreatureTurn.CreatureInCombat);
-            clearCreatureListOfDead(creatureTurns);
-            clearCreatureListOfDead(humanPlayer.Creatures);
-            clearCreatureListOfDead(aiPlayer.Creatures);
-            if (creatureTurns.Count == 0) {
-                showGameOverScreen(playerLoseUIPrefab);
-                Debug.Log("Tie");
-                yield return null;
-            }
+            
             handleNewCreatureTurn();
         }
 

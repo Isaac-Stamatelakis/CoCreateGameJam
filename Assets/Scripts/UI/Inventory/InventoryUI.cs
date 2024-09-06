@@ -4,9 +4,13 @@ using UnityEngine;
 using Player;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace UI.Lists {
-    public abstract class InventoryUI<T> : MonoBehaviour where T : IDisplayable
+    public interface IRefreshableUI {
+        public void refresh();
+    }
+    public abstract class InventoryUI<T> : MonoBehaviour, IRefreshableUI where T : IDisplayable
     {
         [SerializeField] protected UIInventoryDisplayer<T> slotPrefab;
         [SerializeField] protected Color highlightColor = Color.yellow;
@@ -24,10 +28,6 @@ namespace UI.Lists {
         public void display(List<T> elements, ColorTheme colorTheme) {
             display(elements);
             setTheme(colorTheme);
-        }
-
-        public void rebuild() {
-            display(elements);
         }
 
         public void setTheme(ColorTheme colorTheme) {
@@ -57,8 +57,7 @@ namespace UI.Lists {
             //Debug.Log($"{size}");
             slots = new List<UIInventoryDisplayer<T>>();
             for (int i = 0; i < elements.Count; i++) {
-                slots.Add(null);
-                loadSlot(i);
+                addSlot();
             }
             
         }
@@ -92,13 +91,14 @@ namespace UI.Lists {
             panel.color = slotPrefab.GetComponent<Image>().color;
         }
 
-        protected void loadSlot(int i) { 
-            if (i >= elements.Count) {
+        protected void addSlot() { 
+            int i = slots.Count;
+            if (slots.Count >= elements.Count) {
                 Debug.LogWarning($"Tried to display element at out of range index {i}");
                 return;
             }
             UIInventoryDisplayer<T> displayer = GameObject.Instantiate(slotPrefab);
-            slots[i] = displayer;
+            slots.Add(displayer);
             displayer.display(elements[i],i,this);
             displayer.transform.SetParent(transform,false);
             displayer.name = $"slot{i}";
@@ -108,14 +108,20 @@ namespace UI.Lists {
         public abstract void leftClick(int index);
 
         public void refresh() {
-            int i = 0;
-            while (i < slots.Count) {
-                slots[i].display(elements[i],i,this);
-                i++;
+            while (slots.Count > elements.Count) {
+                GameObject.Destroy(slots.Last());
+                slots.RemoveAt(slots.Count-1);
             }
-            while (i < elements.Count) {
-                loadSlot(i);
-                i++;
+            for (int i = 0; i < slots.Count; i++) {
+                slots[i].display(elements[i],i,this);
+            }
+            int safe = 0;
+            while (slots.Count < elements.Count) {
+                addSlot();
+                safe ++;
+                if (safe > 100) {
+                    throw new System.Exception("Passed while safe limit");
+                }
             }
         }
         public void reset() {

@@ -21,7 +21,7 @@ namespace Creatures.UI {
                 PlayerIO.Instance.Equipment.Add(enchantedEquipment);
                 equipedCreature.EnchantedEquipment[index] = null;
                 foreach (InventoryUI<EnchantedEquipment> equipmentList in equipmentLists) {
-                    equipmentList.rebuild();
+                    equipmentList.refresh();
                 }
                 GameObject.Destroy(gameObject);
             });

@@ -86,6 +86,9 @@ namespace Levels.Combat {
         public void move(Vector3 vector)
         {
             transform.position += vector;
+            if (CombatUI == null) {
+                return;
+            }
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(CombatUI.transform.position);
             worldPosition += vector;
             CombatUI.transform.position = RectTransformUtility.WorldToScreenPoint(Camera.main,worldPosition);

@@ -4,7 +4,7 @@ using UnityEngine;
 using UI.Lists;
 using Creatures;
 using Player;
-using UI.CreatureEquip;
+using Creatures.UI;
 
 namespace UI.TeamSelect {
     public class TeamSelectCreatureListUI : InventoryUI<EquipedCreature>
@@ -23,7 +23,7 @@ namespace UI.TeamSelect {
                 creatureSelectUI.display(PlayerIO.Instance.EquipedCreetures,nullSelectCallback);
             } else {
                 CreatureEquipUI creatureEquipUI = UIUtils.instantiateUIPrefab<CreatureEquipUI>(creatureEquipUIPrefab,teamSelectUI.transform);
-                creatureEquipUI.display(PlayerIO.Instance.getPlayerTeam()[index],true);
+                creatureEquipUI.display(PlayerIO.Instance.getPlayerTeam()[index],true,this);
             }
         }
 

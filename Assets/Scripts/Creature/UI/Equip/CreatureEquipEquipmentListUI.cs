@@ -5,7 +5,7 @@ using UI.Lists;
 using Creatures;
 using Items.Equipment;
 
-namespace UI.CreatureEquip {
+namespace Creatures.UI {
     public class CreatureEquipEquipmentListUI : InventoryUI<EnchantedEquipment>
     {
         private CreatureEquipUI creatureEquipUI;

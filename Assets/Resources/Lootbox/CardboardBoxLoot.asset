@@ -25,8 +25,11 @@ MonoBehaviour:
   - val: {fileID: 11400000, guid: 619c1a7561664404d8b0b022c3ece1ae, type: 2}
     frequency: 1
     amount: 5
-  - val: {fileID: 11400000, guid: cdb25ca96c985904b8564e47dc4dca62, type: 2}
+  - val: {fileID: 11400000, guid: f1c26d39de224fc48bc5e2a842e2cdec, type: 2}
     frequency: 1
-    amount: 5
+    amount: 1
+  - val: {fileID: 11400000, guid: 689936d28a8320e4e80be32b9ab7521d, type: 2}
+    frequency: 1
+    amount: 1
   rolls: 5
-  repetitions: 1
+  repetitions: 0
