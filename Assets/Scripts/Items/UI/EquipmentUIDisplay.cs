@@ -12,7 +12,7 @@ namespace UI.Lists {
         [SerializeField] private Image image;
         public override void display(EnchantedEquipment element)
         {
-            if (element == null) {
+            if (element == null || element.Equipment == null) {
                 this.image.gameObject.SetActive(false);
             } else {
                 this.image.gameObject.SetActive(true);

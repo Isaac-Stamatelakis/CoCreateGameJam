@@ -25,15 +25,6 @@ namespace Player {
             }
             return playerTeam;  
         }
-
-        public static void clamp<T>(List<T> elements, int size) {
-            while (elements.Count > size) {
-                elements.RemoveAt(elements.Count-1);
-            }
-            while (elements.Count < size) {
-                elements.Add(default(T));
-            }
-        }
     }
 }
 

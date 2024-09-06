@@ -51,7 +51,7 @@ namespace Player {
             if (playerData.playerTeam==null) {
                 playerData.playerTeam = PlayerIOUtils.initalizePlayerTeam();
             }
-            PlayerIOUtils.clamp<EquipedCreature>(playerData.playerTeam,Global.PLAYER_TEAM_SIZE);
+            GlobalUtils.clamp<EquipedCreature>(playerData.playerTeam,Global.PLAYER_TEAM_SIZE);
             return playerData.playerTeam;
         }
 

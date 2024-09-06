@@ -21,7 +21,7 @@ namespace Creatures {
         public Creature Creeture { get => creeture; }
         public List<EnchantedEquipment> EnchantedEquipment { get => equipment;}
         public List<EnchantedEquipment> getEnchantedEquipment() {
-            PlayerIOUtils.clamp<EnchantedEquipment>(equipment,Global.MAX_CREATURE_EQUIPMENT);
+            GlobalUtils.clamp<EnchantedEquipment>(equipment,Global.MAX_CREATURE_EQUIPMENT);
             return equipment;
         }
         public Rarity rarity;

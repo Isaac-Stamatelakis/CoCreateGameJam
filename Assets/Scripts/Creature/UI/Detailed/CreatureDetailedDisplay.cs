@@ -61,7 +61,7 @@ namespace Creatures.UI {
             displayRecruitButton();
             
 
-            PlayerIOUtils.clamp<EnchantedEquipment>(element.EnchantedEquipment,Global.MAX_CREATURE_EQUIPMENT);
+            GlobalUtils.clamp<EnchantedEquipment>(element.EnchantedEquipment,Global.MAX_CREATURE_EQUIPMENT);
             itemInventory.display(element.EnchantedEquipment);
         }
 

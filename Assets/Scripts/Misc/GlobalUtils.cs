@@ -32,6 +32,14 @@ public static class GlobalUtils
     public static int getNoneNullCount<T>(List<T> elements) {
         return elements.Count-getNullCount<T>(elements);
     }
+    public static void clamp<T>(List<T> elements, int size) {
+        while (elements.Count > size) {
+            elements.RemoveAt(elements.Count-1);
+        }
+        while (elements.Count < size) {
+            elements.Add(default(T));
+        }
+    }
 
     public static (Vector3,int) speedAndIterationsToMove(Vector3 a, Vector3 b,float velocity) {
         Vector2 direction = a - b;

@@ -37,7 +37,7 @@ namespace Creatures.UI {
 
 
         public void equip(int index) {
-            PlayerIOUtils.clamp<EnchantedEquipment>(displayedCreature.EnchantedEquipment,Global.MAX_CREATURE_EQUIPMENT);
+            GlobalUtils.clamp<EnchantedEquipment>(displayedCreature.EnchantedEquipment,Global.MAX_CREATURE_EQUIPMENT);
             int firstNullIndex = GlobalUtils.getFirstNullIndex<EnchantedEquipment>(displayedCreature.EnchantedEquipment);
             EnchantedEquipment enchantedEquipment = equipmentListSorter.getSelectedElement(index);
             equipmentListSorter.removeSelectedElement(index);
