@@ -12,16 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eab3ced77cff409419a421d5e894739b, type: 3}
   m_Name: Dragoon
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: db16b47b7255ba647b77ebede625c3ae, type: 3}
   id: dragoon
+  sprite: {fileID: 162513929, guid: fed0b56b40eea6c4781b5a58a8ce5854, type: 3}
   speed: 2
   strength: 5
-  health: 3
+  health: 5
   mana: 0
   description: 
   controller: {fileID: 9100000, guid: 9356422a02f3c384aa8c916414e582ee, type: 2}
   strengths: 
   weaknesses: 
-  actions:
-  - {fileID: 11400000, guid: 49dc34eb1c1b52e46873850ac05276bb, type: 2}
-  - {fileID: 11400000, guid: 109a6d3981698184bb628cc14b70d139, type: 2}
+  favouriteCurrency: {fileID: 0}
+  hatedCurrency: {fileID: 0}

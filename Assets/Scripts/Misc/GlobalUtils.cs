@@ -29,6 +29,15 @@ public static class GlobalUtils
         }
         return count;
     }
+    public static bool objectInHierarchy(GameObject gameObject, Transform transform) {
+        while (transform != null) {
+            if (transform.gameObject.Equals(gameObject)) {
+                return true;
+            }
+            transform = transform.parent;
+        }
+        return false;
+    }
     public static int getNoneNullCount<T>(List<T> elements) {
         return elements.Count-getNullCount<T>(elements);
     }

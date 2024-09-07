@@ -32,7 +32,6 @@ namespace Actions.Script {
                 string objIndicator = split[0];
                 string attributeIndicator = split[1];
                 CreatureCombatObject creatureCombatObject = commandExecutionState.getCreatureFromIndicator(scriptCommand,objIndicator);
-                //Debug.Log($"{creatureCombatObject.CreatureInCombat.EquipedCreeture.getName()} {creatureCombatObject.CreatureInCombat.}");
                 return ActionScriptParseUtils.parseCreatureAttribute(scriptCommand,attributeIndicator,creatureCombatObject.CreatureInCombat);
             } catch (IndexOutOfRangeException) {
                 ActionScriptInterpretorUtils.scriptError(scriptCommand,$"{val} must be of form obj.val");
