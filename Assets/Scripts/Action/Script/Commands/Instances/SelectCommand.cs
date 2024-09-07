@@ -29,7 +29,7 @@ namespace Actions.Script {
             if (random) {
                 for (int i = 0; i < targets; i++) {
                     commandExecutionState.CreatureSelector.Creatures.Add(
-                        commandExecutionState.CombatLevelController.getRandomCreature(targetSelf).CreatureCombatObject
+                        commandExecutionState.CombatLevelController.CreatureMoveOrder.getRandomCreature(targetSelf).CreatureCombatObject
                     );
                 }
             } else {

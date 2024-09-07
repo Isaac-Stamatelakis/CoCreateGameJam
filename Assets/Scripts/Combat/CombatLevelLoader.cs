@@ -48,9 +48,9 @@ namespace Levels.Combat {
         private async Task loadPlayerCreatureActions(CombatPlayer combatPlayer) {
             ActionRegistry actionRegistry = ActionRegistry.getInstance();
             var loadTasks = new List<Task>();
-            foreach (CreatureInCombat creatureInCombat in combatPlayer.Creatures) {
-                loadTasks.Add(actionRegistry.loadActions(creatureInCombat.EquipedCreeture.creeture.Id, ActionBundleType.Creature));
-                foreach (EnchantedEquipment enchantedEquipment in creatureInCombat.EquipedCreeture.EnchantedEquipment) {
+            foreach (EquipedCreature equipedCreature in combatPlayer.Creatures) {
+                loadTasks.Add(actionRegistry.loadActions(equipedCreature.creeture.Id, ActionBundleType.Creature));
+                foreach (EnchantedEquipment enchantedEquipment in equipedCreature.EnchantedEquipment) {
                     if (enchantedEquipment == null || enchantedEquipment.getId() == null) {
                         continue;
                     }

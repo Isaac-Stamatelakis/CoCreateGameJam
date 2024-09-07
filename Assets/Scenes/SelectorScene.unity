@@ -1744,7 +1744,7 @@ Transform:
   m_GameObject: {fileID: 798462005}
   m_LocalRotation: {x: 0, y: 0, z: 0.2588191, w: 0.9659258}
   m_LocalPosition: {x: 1.77, y: 4.92, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 240698671}
@@ -2710,6 +2710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelContainer: {fileID: 240698671}
   lineContainer: {fileID: 1403453488}
+  linePrefab: {fileID: 1173212227428986845, guid: 3e766d7157aecdf46bc6ea76519f90e8, type: 3}
   dev: {fileID: 1592442728}
   playerTransform: {fileID: 1592442725}
 --- !u!1 &1548574655
@@ -3593,7 +3594,7 @@ Transform:
   m_GameObject: {fileID: 1922682803}
   m_LocalRotation: {x: 0, y: 0, z: 0.5735764, w: 0.8191521}
   m_LocalPosition: {x: -2.25, y: 3.9, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 240698671}
@@ -4702,7 +4703,7 @@ Transform:
   m_GameObject: {fileID: 2065947685}
   m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: -1.22, y: 0.03, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 240698671}

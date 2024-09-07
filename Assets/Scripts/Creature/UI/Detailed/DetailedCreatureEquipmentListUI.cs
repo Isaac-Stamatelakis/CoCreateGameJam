@@ -18,7 +18,6 @@ namespace Creatures.UI {
             if (elements[index] == null) {
                 return;
             }
-    
             CreatureEquipmentUIPopup popup = GameObject.Instantiate(popupPrefab);
             List<InventoryUI<EnchantedEquipment>> listsToRefresh = new List<InventoryUI<EnchantedEquipment>>{
                 this

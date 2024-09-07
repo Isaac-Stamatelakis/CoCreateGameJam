@@ -19,10 +19,10 @@ namespace Creatures {
         public CreatureCombatObject CreatureCombatObject {get => creatureCombatObject;}
         public float Mana { get => mana; }
         public float ManaPercent {get => mana/equipedCreeture.getStat(CreatureStat.MaxMana);}
-
         public CreatureInCombat(EquipedCreature equipedCreeture) {
             this.equipedCreeture = equipedCreeture;
             this.health = equipedCreeture.getStat(CreatureStat.Health);
+            //this.health = Mathf.Min(equipedCreeture.Health,equipedCreeture.getStat(CreatureStat.Health));
         }
         public void hit(float damage, DamageType damageType) {
             if (equipedCreeture.Creeture.Weaknesses.Contains(damageType)) {
@@ -44,11 +44,21 @@ namespace Creatures {
             }
             creatureCombatObject.CombatUI.display();
         }
+
+        public float getStat(CreatureStat creatureStat) {
+            float value = equipedCreeture.getStat(creatureStat);
+            foreach (StatusEffect statusEffect in statusEffects) {
+                if (statusEffect is IStatChangeEffect statChangeEffect) {
+                    value = statChangeEffect.modifyStat(value, creatureStat);
+                }
+            }
+            return value;
+        }
         public void syncToObject(CreatureCombatObject creatureCombatObject) {
             this.creatureCombatObject = creatureCombatObject;
         }
         public void heal(float healAmount) {
-            health = Mathf.Min(equipedCreeture.getStat(CreatureStat.Health),health+healAmount);
+            health = Mathf.Min(getStat(CreatureStat.Health),health+healAmount);
         }
         public void addStatusEffect(StatusEffect statusEffect) {
             this.statusEffects.Add(statusEffect);

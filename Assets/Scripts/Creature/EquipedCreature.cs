@@ -18,6 +18,7 @@ namespace Creatures {
         private float mood;
         private int level;
         private int xp;
+        private float health;
         public Creature Creeture { get => creeture; }
         public List<EnchantedEquipment> EnchantedEquipment { get => equipment;}
         public List<EnchantedEquipment> getEnchantedEquipment() {
@@ -28,10 +29,17 @@ namespace Creatures {
         public string Nickname { get => nickname; set => nickname = value;}
         public int Level { get => level; }
         public int XP { get => xp; }
+        public float Health { get => health; }
+        public EquipedCreature(Creature creeture, List<EnchantedEquipment> equipment, float health) {
+            this.creeture = creeture;
+            this.equipment = equipment;
+            this.health = health;
+        }
 
         public EquipedCreature(Creature creeture, List<EnchantedEquipment> equipment) {
             this.creeture = creeture;
             this.equipment = equipment;
+            this.health = getStat(CreatureStat.Health);
         }
         public int getStat(CreatureStat stat) {
             int value = 0;
@@ -102,7 +110,7 @@ namespace Creatures {
                 return null;
             }
             List<EnchantedEquipment> equipment = new EquipmentFactory().deserializeList(sValue.equipmentData);
-            return new EquipedCreature(creeture,equipment);
+            return new EquipedCreature(creeture,equipment,sValue.health);
         }
         protected override SCreatureData formatValue(EquipedCreature value)
         {
@@ -113,7 +121,8 @@ namespace Creatures {
             string seralizedEquipment = value.EnchantedEquipment == null ? null : new EquipmentFactory().serialize(value.EnchantedEquipment);
             return new SCreatureData(
                 creatureId,
-                seralizedEquipment
+                seralizedEquipment,
+                value.Health
             );
         }
     }
@@ -121,9 +130,11 @@ namespace Creatures {
     public class SCreatureData {
             public string id;
             public string equipmentData;
-            public SCreatureData(string id, string equipmentData) {
+            public float health;
+            public SCreatureData(string id, string equipmentData, float health) {
                 this.id = id;
                 this.equipmentData = equipmentData;
+                this.health = health;
             }
         }
 

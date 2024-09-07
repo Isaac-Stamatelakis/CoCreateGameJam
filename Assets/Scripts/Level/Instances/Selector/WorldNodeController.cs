@@ -11,6 +11,7 @@ namespace Levels {
         protected List<WorldNode> nodes;
         [SerializeField] private Transform levelContainer;
         [SerializeField] protected Transform lineContainer;
+        [SerializeField] private GameObject linePrefab;
         private WorldNode currentNode;
         private List<WorldNode> moveList = new List<WorldNode>();
         [SerializeField] private Dev dev;
@@ -147,7 +148,7 @@ namespace Levels {
                     }
                     node.addLineConnection(connection);
                     connection.addLineConnection(node);
-                    LineFactory.create(node,connection,lineContainer);
+                    LineFactory.create(node,connection,lineContainer,linePrefab);
                 }
             }
             Debug.Log(lineContainer.childCount + " Lines Drawn");

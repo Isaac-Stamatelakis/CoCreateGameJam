@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Actions.Script.Execution;
 using UnityEngine;
 
 namespace Actions.Script {
-    public class HealCommand : InstantScriptCommand
+    public class HealCommand : InstantScriptCommand, ISimultableCommand
     {
         public HealCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
         {
@@ -47,6 +48,11 @@ namespace Actions.Script {
             }
             float heal = (float) orderedParameters[0];
             return (heal,range,self);
+        }
+
+        public void execute(SimulatedExecutionState state)
+        {
+            
         }
     }
 }

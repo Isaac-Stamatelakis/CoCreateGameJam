@@ -16,14 +16,6 @@ namespace Levels.Combat {
             "{name} Launches an Attack!",
             "Enemy {name} Strikes with Fury!"
         };
-        public static List<CreatureInCombat> generateTurns(List<CombatPlayer> players) {
-            List<CreatureInCombat> creatures = new List<CreatureInCombat>();
-            foreach (CombatPlayer player in players) {
-                creatures.AddRange(player.Creatures);
-            }
-            creatures = creatures.OrderByDescending(creature => creature.EquipedCreeture.getStat(CreatureStat.Speed)).ToList();
-            return creatures;
-        }
 
         public static string getEnemyTurnText(string creatureName, ScriptedAction scriptedAction) {
             return $"{creatureName} uses {scriptedAction.name}!";

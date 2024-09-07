@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Levels.Combat;
 using Items.Equipment;
+using Actions.Script.Execution;
 
 namespace Actions.Script {
-    public class AttackCommand : DelayScriptCommand
+    public class AttackCommand : DelayScriptCommand, ISimultableCommand
     {
         public AttackCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
         {
@@ -31,7 +32,6 @@ namespace Actions.Script {
             yield return new WaitForSeconds(0.1f);
         }
 
-        
 
         public static (float damage, float range, DamageType type, float falloff, float lifesteal, bool self) parse(FormattedScriptCommand scriptCommand) {
             List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
@@ -90,6 +90,11 @@ namespace Actions.Script {
                 self = (bool) parameters["self"];
             }
             return (damage,range,damageType,falloff,lifesteal,self);
+        }
+
+        public void execute(SimulatedExecutionState state)
+        {
+            
         }
     }
 }

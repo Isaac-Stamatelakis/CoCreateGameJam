@@ -5,9 +5,10 @@ using Creatures;
 using Levels.Combat;
 using System;
 using Actions.Script.Description;
+using Actions.Script.Execution;
 
 namespace Actions.Script {
-    public class IfCommand : InstantScriptCommand, IDescriptableCommand
+    public class IfCommand : InstantScriptCommand, IDescriptableCommand, ISimultableCommand
     {
         public IfCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
         {
@@ -171,6 +172,11 @@ namespace Actions.Script {
             }
             // Only gets here if commands are emptied ie no 'end if' statement was present in script
             ActionScriptInterpretorUtils.scriptError(ifCommand,"'if' was called with no 'end if'");
+        }
+
+        public void execute(SimulatedExecutionState state)
+        {
+            throw new NotImplementedException();
         }
     }
 

@@ -60,7 +60,6 @@ namespace Creatures.UI {
             xpSlider.value = element.XP/experienceToLevel;
             displayRecruitButton();
             
-
             GlobalUtils.clamp<EnchantedEquipment>(element.EnchantedEquipment,Global.MAX_CREATURE_EQUIPMENT);
             itemInventory.display(element.EnchantedEquipment);
         }

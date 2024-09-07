@@ -42,7 +42,7 @@ namespace Levels.Combat {
         public void display(ICombatAction combatAction, CombatLevelActionUIController combatLevelActionUIController) {
             combatLevelController = combatLevelActionUIController.CombatLevelUIController.CombatLevelController;
             if (combatAction is ScriptedAction scriptedAction) {
-                CreatureCombatObject currentlyMovingCreature = combatLevelController.getCurrentlyMovingCreature();
+                CreatureCombatObject currentlyMovingCreature = combatLevelController.CreatureMoveOrder.getCurrentCreatureObject();
                 // TODO remove singleton usage
                 commandExecutionState = new CommandExecutionState(scriptedAction,currentlyMovingCreature,CombatLevelController.Instance,true);
                 StartCoroutine(commandExecutionState.executeSection());

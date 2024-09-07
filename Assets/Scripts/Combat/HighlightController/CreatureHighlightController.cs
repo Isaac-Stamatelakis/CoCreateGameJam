@@ -46,7 +46,7 @@ namespace Levels.Combat {
             if (creatureCombatObject == null || creatureCombatObject.CreatureInCombat.IsDead) {
                 return;
             }
-            bool isAlly = humanPlayer.Creatures.Contains(creatureCombatObject.CreatureInCombat);
+            bool isAlly = humanPlayer.Creatures.Contains(creatureCombatObject.CreatureInCombat.EquipedCreeture);
             bool isSelf = creatureCombatObject.Equals(currentlyMovingCreature);
             bool validSelection = creatureSelector.isValidSelection(isAlly,isSelf);
             if (!validSelection) {
@@ -92,7 +92,7 @@ namespace Levels.Combat {
                 List<CreatureCombatObject> enemyCreatures = new List<CreatureCombatObject>();
                 List<CreatureCombatObject> allyCreatures = new List<CreatureCombatObject>();
                 foreach (CreatureCombatObject creatureCombatObject in creatureCombatObjects) {
-                    if (humanPlayer.Creatures.Contains(creatureCombatObject.CreatureInCombat)) {
+                    if (humanPlayer.Creatures.Contains(creatureCombatObject.CreatureInCombat.EquipedCreeture)) {
                         allyCreatures.Add(creatureCombatObject);
                     } else {
                         enemyCreatures.Add(creatureCombatObject);

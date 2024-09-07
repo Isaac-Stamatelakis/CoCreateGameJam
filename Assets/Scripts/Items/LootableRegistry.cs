@@ -12,7 +12,7 @@ public class LootableRegistry
         dict = new Dictionary<string, Lootable>();
         foreach (Lootable lootable in lootables) {
             if (dict.ContainsKey(lootable.getId())) {
-                Debug.LogError("Duplicate ID for " + lootable.name + " and " + dict[lootable.getId()].name);
+                Debug.LogWarning("Duplicate ID for " + lootable.name + " and " + dict[lootable.getId()].name);
                 continue;
             }
             dict[lootable.getId()] = lootable;

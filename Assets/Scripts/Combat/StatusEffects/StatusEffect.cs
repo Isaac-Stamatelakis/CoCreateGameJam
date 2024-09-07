@@ -7,5 +7,8 @@ namespace Levels.Combat {
     {
         public abstract string getName();
     }
+    public interface IStatChangeEffect {
+        public float modifyStat(float value, CreatureStat creatureStat);
+    }
 }
 

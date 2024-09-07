@@ -8,18 +8,24 @@ using Items.Consumables;
 namespace Levels.Combat {
     public class CombatPlayer
     {
-        private List<CreatureInCombat> creatures;
+        private List<EquipedCreature> creatures;
         private List<Consumable> consumables;
-        public List<CreatureInCombat> Creatures {get => creatures;}
+        public List<EquipedCreature> Creatures {get => creatures;}
         public List<Consumable> Consumables { get => consumables; }
 
         public CombatPlayer(List<EquipedCreature> equipedCreetures) {
-            creatures = new List<CreatureInCombat>();
-            foreach (EquipedCreature creeture in equipedCreetures) {
-                if (creeture == null) {
+            // Create deep copy
+            creatures = new List<EquipedCreature>();
+            foreach (EquipedCreature equipedCreature in equipedCreetures) {
+                if (equipedCreature == null) {
                     continue;
                 }
-                creatures.Add(new CreatureInCombat(creeture));
+                
+                creatures.Add(new EquipedCreature(
+                    equipedCreature.creeture,
+                    equipedCreature.EnchantedEquipment,
+                    equipedCreature.Health
+                ));
             }
         }
 
@@ -27,8 +33,11 @@ namespace Levels.Combat {
             return creatures.Count == 0;
         }
 
-        public bool HasCreature(CreatureInCombat creature) {
+        public bool HasCreature(EquipedCreature creature) {
             return creatures.Contains(creature);
+        }
+        public bool HasCreature(CreatureCombatObject creatureCombatObject) {
+            return creatures.Contains(creatureCombatObject.CreatureInCombat.EquipedCreeture);
         }
     }
 }

@@ -63,7 +63,7 @@ public class LootTable : ILootTable {
 [System.Serializable]
 public class LootFrequency {
     public Lootable val;
-    public int frequency;
+    public int frequency = 1;
     public int amount = 1;
 }
 

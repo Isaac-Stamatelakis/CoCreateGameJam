@@ -11,7 +11,6 @@ namespace Creatures.UI {
     {
         [SerializeField] private Button unequipButton;
         [SerializeField] private Button informationButton;
-
         private EquipedCreature equipedCreature;
         private List<InventoryUI<EnchantedEquipment>> equipmentLists;
         private int index;

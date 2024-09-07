@@ -59,7 +59,7 @@ namespace Actions {
             if (actions.ContainsKey(id)) {
                 return;
             }
-            if (!ActionHandleUtils.AddressableLabelExists(id)) {
+            if (!AddressableUtils.AddressableLabelExists(id)) {
                 return;
             }
             AsyncOperationHandle<IList<ScriptableObject>> handle = Addressables.LoadAssetsAsync<ScriptableObject>(id, null);
@@ -75,12 +75,7 @@ namespace Actions {
                 actions[id] = retrieveHandle;
             } else {
                 Debug.LogWarning($"Could not retrieve '{id}' due to {handle.OperationException}");
-            }
-            
-                
-            
-            
-            
+            } 
         }
     }
 
@@ -97,19 +92,7 @@ namespace Actions {
         }
     }
 
-    public static class ActionHandleUtils {
-        public static bool AddressableLabelExists(string label) {
-            foreach (var locator in Addressables.ResourceLocators)
-            {
-                IList<IResourceLocation> locations;
-                if (locator.Locate(label, typeof(object), out locations))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
+    
     public enum ActionBundleType {
         Creature,
         Equipment
@@ -140,3 +123,16 @@ namespace Actions {
     }
 }
 
+public static class AddressableUtils {
+    public static bool AddressableLabelExists(string label) {
+        foreach (var locator in Addressables.ResourceLocators)
+        {
+            IList<IResourceLocation> locations;
+            if (locator.Locate(label, typeof(object), out locations))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}

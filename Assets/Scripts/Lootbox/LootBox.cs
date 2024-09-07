@@ -4,6 +4,7 @@ using UnityEngine;
 using Creatures;
 using Trading;
 using Items;
+using System.Threading.Tasks;
 
 namespace LootBoxes {
     
@@ -11,16 +12,14 @@ namespace LootBoxes {
     {
         public Sprite sprite;
         public LootBoxType type;
-        [Header("Lootables that can be won\nChance is frequency/sum of all frequencies")]
-        public LootTableObject lootTable;
-        
+        public LootTableObject lootTableObject;
         public override Sprite getSprite()
         {
             return sprite;
         }
 
         public List<IntItemSlot> open() {
-            return LootTableUtils.openLootTable(lootTable);
+            return LootTableUtils.openLootTable(lootTableObject);
         }
 
         public override string ToString()
