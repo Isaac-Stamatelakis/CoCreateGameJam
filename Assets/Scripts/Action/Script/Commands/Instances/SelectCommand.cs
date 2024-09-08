@@ -23,10 +23,9 @@ namespace Actions.Script {
             
             if (random) {
                 List<CreatureCombatObject> randomCreatures = new List<CreatureCombatObject>();
-                CreatureMoveOrder creatureMoveOrder = CombatLevelController.Instance.CreatureMoveOrder;
+                GameState gameState = CombatLevelController.Instance.GameState;
                 for (int i = 0; i < targets; i++) {
-                    EquipedCreature randomCreature = creatureMoveOrder.getRandomCreature(targetType, targetSelf);
-                    CreatureInCombat randomCombatCreature = creatureMoveOrder.getCombatCreature(randomCreature);
+                    CreatureInCombat randomCombatCreature = gameState.getRandomCreature(targetType,targetSelf);
                     randomCreatures.Add(randomCombatCreature.CreatureCombatObject);
                 }
                 commandExecutionState.CreatureSelector = new DescriptableRandomSelector(randomCreatures,targetType,targetSelf,targets);

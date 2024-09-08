@@ -21,14 +21,12 @@ namespace Levels.Combat {
         [SerializeField] private PlayerWinUI playerWinUIPrefab;
         [SerializeField] private Transform spawnedObjectContainer;
         private readonly int CURRENT_TURN_Z_CHANGE = 1;
-        private CreatureMoveOrder creatureMoveOrder;
-        private CombatPlayer humanPlayer;
-        private CombatPlayer aiPlayer;
+        private GameState gameState;
         private CreatureHighlightController creatureHighlightController;
         public CreatureHighlightController CreatureHighlightController { get => creatureHighlightController; }
         public static CombatLevelController Instance { get => instance; }
         public Transform CanvasTransform { get => uiController.transform; }
-        public CreatureMoveOrder CreatureMoveOrder {get => creatureMoveOrder;}
+        public GameState GameState {get => gameState;}
         public Transform SpawnedObjectContainer {get => spawnedObjectContainer;}
         private MonteCarloTreeSearch monteCarloTreeSearch;
         public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevelObject combatLevel) {
@@ -36,9 +34,7 @@ namespace Levels.Combat {
                 // TODO CHANGE TO SPECIAL SCREEN TELLING PLAYER THEY HAVE NO CREATURES
                 showGameOverScreen(playerLoseUIPrefab);
             }
-            this.humanPlayer = humanPlayer;
-            this.aiPlayer = aiPlayer;
-            creatureMoveOrder = new CreatureMoveOrder(humanPlayer,aiPlayer);
+            gameState = new GameState(humanPlayer,aiPlayer);
 
             creatureHighlightController = new CreatureHighlightController(humanPlayer,uiController.DisplayedCreatureUI);
             initalizePlayerObjects(humanPlayer,humanPlayerCreatures);
@@ -48,8 +44,8 @@ namespace Levels.Combat {
         }
 
         private void initalizePlayerObjects(CombatPlayer combatPlayer, CombatCreatureContainer combatCreatureContainer) {
-            List<CreatureInCombat> combatCreatures = CreatureMoveOrder.getCombatCreatures(combatPlayer);
-            combatCreatureContainer.displayCreatures(CreatureMoveOrder.getCombatCreatures(combatPlayer));
+            List<CreatureInCombat> combatCreatures = combatPlayer.Creatures;
+            combatCreatureContainer.displayCreatures(combatCreatures);
             foreach (CreatureInCombat creatureInCombat in combatCreatures) {
                 uiController.CombatCreatureUIContainer.addCreature(creatureInCombat.CreatureCombatObject);
             }
@@ -86,23 +82,23 @@ namespace Levels.Combat {
         }
 
         public void handleNewCreatureTurn() {
-            if (humanPlayer.IsDead()) {
+            if (gameState.aiWin()) {
                 showGameOverScreen(playerLoseUIPrefab);
                 return;
             }
-            if (aiPlayer.IsDead()) {
+            if (gameState.humanWin()) {
                 showGameOverScreen(playerWinUIPrefab);
                 return;
             }
             creatureHighlightController.setSelector(null);
-            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCombatCreature().CreatureCombatObject;
+            CreatureCombatObject currentCreatureTurn = gameState.getCurrentCreature().CreatureCombatObject;
             Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
             currentTurnPosition.z -= CURRENT_TURN_Z_CHANGE;
             currentCreatureTurn.transform.position = currentTurnPosition;
 
             creatureHighlightController.setCurrentCreatureTurn(currentCreatureTurn);
-            if (humanPlayer.HasCreature(currentCreatureTurn)) {
-                uiController.ActionUIController.displaySelect(currentCreatureTurn,humanPlayer);
+            if (gameState.isHumanPlayerTurn()) {
+                uiController.ActionUIController.displaySelect(currentCreatureTurn,gameState.HumanPlayer);
                 return;
             } else {
                 StartCoroutine(moveAI());
@@ -110,21 +106,20 @@ namespace Levels.Combat {
         }
 
         public IEnumerator nextCreatureTurn() {
-            creatureMoveOrder.clearDeadCreatures();
-            if (creatureMoveOrder.IsEmpty) {
+            gameState.clearDeadCreatures();
+            if (gameState.tie()) {
                 showGameOverScreen(playerLoseUIPrefab);
                 Debug.Log("Tie");
                 yield break;
             }
-            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCombatCreature().CreatureCombatObject;
+            CreatureCombatObject currentCreatureTurn = gameState.getCurrentCreature().CreatureCombatObject;
             if (currentCreatureTurn != null) {
                 Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
                 currentTurnPosition.z += CURRENT_TURN_Z_CHANGE;
                 currentCreatureTurn.transform.position = currentTurnPosition;
                 yield return currentCreatureTurn.resetPosition();
             }
-            creatureMoveOrder.changeTurn();
-            Debug.Log(creatureMoveOrder.Creatures[0].getName());
+            gameState.changeTurn();
             handleNewCreatureTurn();
         }
 
@@ -153,7 +148,7 @@ namespace Levels.Combat {
         }
 
         private IEnumerator moveAI() {
-            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCombatCreature().CreatureCombatObject;
+            CreatureCombatObject currentCreatureTurn = gameState.getCurrentCreature().CreatureCombatObject;
             CreatureActionCollection creatureActionCollection = ActionRegistry.getInstance().getAction<CreatureActionCollection>(currentCreatureTurn.CreatureInCombat.EquipedCreeture.creeture.Id);
             List<ScriptedAction> actions = creatureActionCollection.actions;
             if (actions.Count == 0) {
@@ -182,8 +177,7 @@ namespace Levels.Combat {
             */
             
             MonteCarloTreeSearch monteCarloTreeSearch = new MonteCarloTreeSearch();
-            GameMove gameMove = monteCarloTreeSearch.getMove(new GameState(creatureMoveOrder),100);
-            
+            GameMove gameMove = monteCarloTreeSearch.getMove(gameState.deepCopy(),100);
             uiController.ActionUIController.displayEnemyTurn(currentCreatureTurn.CreatureInCombat,gameMove.ScriptedAction);
             LiveCommandExecutionState commandExecutionState = new LiveCommandExecutionState(gameMove.ScriptedAction,currentCreatureTurn,true);
             // Pre Selection

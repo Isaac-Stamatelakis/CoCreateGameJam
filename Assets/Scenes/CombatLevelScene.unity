@@ -490,7 +490,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2146616195}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99045503
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -799,7 +799,13 @@ MonoBehaviour:
   testLevel: {fileID: 11400000, guid: 95a93f187e3e4e240a1966096cd4ad84, type: 2}
   combatLevelController: {fileID: 1144188295}
   useTestCreatures: 0
-  testTeam: []
+  testTeam:
+  - creeture: {fileID: 11400000, guid: 06ce49e44feee9e4099fbcd7574de13a, type: 2}
+    equipment: []
+    rarity: 0
+  - creeture: {fileID: 11400000, guid: bd251078acac013418156393f22c8d07, type: 2}
+    equipment: []
+    rarity: 0
 --- !u!1 &786916912
 GameObject:
   m_ObjectHideFlags: 0
@@ -2429,7 +2435,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000054114786, y: 0}
+  m_AnchoredPosition: {x: -0.0000009536743, y: 0}
   m_SizeDelta: {x: -10.995818, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1825810320

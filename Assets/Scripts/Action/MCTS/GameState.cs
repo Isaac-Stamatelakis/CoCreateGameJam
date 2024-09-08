@@ -6,23 +6,185 @@ using Actions;
 using Levels.Combat;
 using Creatures;
 using Actions.Script.Execution;
+using System.Linq;
+using Actions.MCTS;
 
-namespace Actions.MCTS {
+namespace Levels.Combat {
     public class GameState
     {
-        private CreatureMoveOrder creatureMoveOrder;
         public int Moves;
         public GameMove LastMove {get; private set;} 
-        public GameState(CreatureMoveOrder creatureMoveOrder)
+        private List<CreatureInCombat> creatureTurns;
+        private CombatPlayer humanPlayer;
+        private CombatPlayer aiPlayer;
+        public bool IsEmpty {get => creatureTurns.Count==0;}
+        public int AliveCreatures {get => creatureTurns.Count;}
+        public CombatPlayer HumanPlayer { get => humanPlayer;}
+        public CombatPlayer AiPlayer { get => aiPlayer; }
+
+        public GameState(CombatPlayer humanPlayer, CombatPlayer aiPlayer)
         {
-            this.creatureMoveOrder = creatureMoveOrder;
+            creatureTurns = new List<CreatureInCombat>();
+            this.humanPlayer = humanPlayer;
+            this.aiPlayer = aiPlayer;
+            creatureTurns.AddRange(humanPlayer.Creatures);
+            creatureTurns.AddRange(aiPlayer.Creatures);
+            creatureTurns = creatureTurns.OrderByDescending(creature => creature.getStat(CreatureStat.Speed)).ToList();
+        }
+
+        public GameState(CombatPlayer humanPlayer, CombatPlayer aiPlayer, List<CreatureInCombat> turns) {
+            this.humanPlayer = humanPlayer;
+            this.aiPlayer = aiPlayer;
+            creatureTurns = turns;
+        }
+
+        public void clearDeadCreatures() {
+            clearDeadCreatureList(creatureTurns);
+            clearDeadCreatureList(humanPlayer.Creatures);
+            clearDeadCreatureList(aiPlayer.Creatures);
+        }
+
+        private void clearDeadCreatureList(List<CreatureInCombat> creatures) {
+            for (int i = 0; i < creatures.Count; i++) {
+                CreatureInCombat creatureInCombat = creatures[i];
+                if (creatureInCombat.IsDead) {
+                    creatures.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        public void changeTurn() {
+            CreatureInCombat currentTurn = creatureTurns[0];
+            creatureTurns.RemoveAt(0);
+            creatureTurns.Add(currentTurn);
         }
 
         public bool isGameOver() {
-            return creatureMoveOrder.isGameOver();
+            return humanPlayer.IsDead() || aiPlayer.IsDead();
         }
+        public bool humanWin() {
+            return aiPlayer.IsDead() && !humanPlayer.IsDead();
+        }
+        public bool aiWin() {
+            return !aiPlayer.IsDead() && humanPlayer.IsDead();
+        }
+        public bool tie() {
+            return aiPlayer.IsDead() && humanPlayer.IsDead();
+        }
+
+        public CreatureInCombat getCurrentCreature() {
+            if (creatureTurns.Count == 0) {
+                return null;
+            }
+            return creatureTurns[0];
+        }
+        public CreatureInCombat getRandomCreature(CreatureSelectionType targetType, bool includeCurrentlyMoving) {
+            if (includeCurrentlyMoving && creatureTurns.Count == 1) {
+                return null;
+            }
+            if (targetType == CreatureSelectionType.Any) {
+                int exclusion = includeCurrentlyMoving ? -1 : 0;
+                return sampleRandom(creatureTurns,exclusion);
+            }
+            bool humanTurn = isHumanPlayerTurn();
+            if (humanTurn) {
+                if (targetType == CreatureSelectionType.Ally) {
+                    int exclusion = includeCurrentlyMoving ? -1 : humanPlayer.Creatures.IndexOf(creatureTurns[0]);
+                    return sampleRandom(humanPlayer.Creatures,exclusion);
+                } else if (targetType == CreatureSelectionType.Enemy) {
+                    return sampleRandom(aiPlayer.Creatures,-1);
+                }
+            } else {
+                if (targetType == CreatureSelectionType.Ally) {
+                    int exclusion = includeCurrentlyMoving ? -1 : aiPlayer.Creatures.IndexOf(creatureTurns[0]);
+                    return sampleRandom(aiPlayer.Creatures,exclusion);
+                } else if (targetType == CreatureSelectionType.Enemy) {
+                    return sampleRandom(humanPlayer.Creatures,-1);
+                }
+            }
+            return null;
+        }
+
+        private CreatureInCombat sampleRandom(List<CreatureInCombat> creatures, int exclusion) {
+            int rand;
+            if (exclusion == 0) {
+                rand = Random.Range(1,creatures.Count);
+                return creatures[rand];
+            } 
+            do {
+                rand = Random.Range(0, creatures.Count);
+            } while (rand == exclusion);
+            return creatures[rand];
+        }
+
+        
+
+        public List<CreatureInCombat> getSelectableCreatures(CreatureSelectionType targetType, bool random, bool targetSelf) {
+            List<CreatureInCombat> creatureInCombats = new List<CreatureInCombat>();
+            bool addedSelf = false;
+            if (targetType == CreatureSelectionType.Ally || targetType == CreatureSelectionType.Any) {
+                addedSelf = true;
+                if (isHumanPlayerTurn()) {
+                    creatureInCombats.AddRange(humanPlayer.Creatures);
+                } else {
+                    creatureInCombats.AddRange(aiPlayer.Creatures);
+                }
+            }
+            if (targetType == CreatureSelectionType.Enemy || targetType == CreatureSelectionType.Any) {
+                if (isHumanPlayerTurn()) {
+                    creatureInCombats.AddRange(aiPlayer.Creatures);
+                } else {
+                    creatureInCombats.AddRange(humanPlayer.Creatures);
+                }
+            }
+            if (!targetSelf && addedSelf) {
+                CreatureInCombat selfCreature = getCurrentCreature();
+                creatureInCombats.Remove(selfCreature);
+                
+            }
+            return creatureInCombats;
+        }
+
+        public bool isHumanPlayerTurn() {
+            CreatureInCombat creature = getCurrentCreature();
+            if (humanPlayer.Creatures.Count <= aiPlayer.Creatures.Count) {
+                return humanPlayer.HasCreature(creature);
+            } else {
+                return !aiPlayer.HasCreature(creature);
+            }
+        }
+        public bool isSecondPlayersTurn() {
+            return !isHumanPlayerTurn();
+        }
+        public GameState deepCopy() {
+            List<CreatureInCombat> newTurns = new List<CreatureInCombat>(creatureTurns);
+            CombatPlayer humanCopy = new CombatPlayer(new List<CreatureInCombat>(humanPlayer.Creatures));
+            CombatPlayer aiCopy = new CombatPlayer(new List<CreatureInCombat>(aiPlayer.Creatures));
+            return new GameState(humanCopy,aiCopy,newTurns);
+        }
+        public bool isHumanWinning() {
+            if (humanPlayer.IsDead()) {
+                return false;
+            }
+            if (aiPlayer.IsDead()) {
+                return true;
+            }
+            float totalHumanHealth = getPlayerHealth(humanPlayer);
+            float totalAiHealth = getPlayerHealth(aiPlayer);
+            return totalHumanHealth > totalAiHealth;
+        }
+
+        private float getPlayerHealth(CombatPlayer combatPlayer) {
+            float health = 0;
+            foreach (CreatureInCombat creatureInCombat in combatPlayer.Creatures) {
+                health += creatureInCombat.getHealth();
+            }
+            return health;
+        }
+
         public List<GameMove> getPossibleMoves() {
-            string id = creatureMoveOrder.getCurrentCombatCreature().EquipedCreeture.Creeture.getId();
+            string id = getCurrentCreature().EquipedCreeture.Creeture.getId();
             CreatureActionCollection creatureActionCollection = ActionRegistry.getInstance().getAction<CreatureActionCollection>(id);
             List<GameMove> moves = new List<GameMove>();
             foreach (ScriptedAction scriptedAction in creatureActionCollection.actions) {
@@ -38,7 +200,7 @@ namespace Actions.MCTS {
                     continue;
                 }
                 (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) = SelectCommand.parse(selectCommand.getFormattedScriptCommand());
-                List<CreatureInCombat> selectableCreatures = creatureMoveOrder.getSelectableCreatures(targetType,random,targetSelf);
+                List<CreatureInCombat> selectableCreatures = getSelectableCreatures(targetType,random,targetSelf);
                 if (random) {
                     return new List<GameMove>{
                         new GameMove(
@@ -47,7 +209,6 @@ namespace Actions.MCTS {
                         )
                     };
                 }
-                //Debug.Log(selectableCreatures.Count);
                 // This assumes choosing max targets is always optimal (which is most likely is)
                 List<List<CreatureInCombat>> choicePermutations = GameStateUtils.GeneratePermutations<CreatureInCombat>(selectableCreatures,targets);
                 List<GameMove> moves = new List<GameMove>();
@@ -59,22 +220,23 @@ namespace Actions.MCTS {
             Debug.LogWarning($"{scriptedAction.name} did not have a select command");
             return new List<GameMove>();
         }
-        public GameState applyMove(GameMove gameMove) {
-            CreatureMoveOrder simulationMoveOrder = this.creatureMoveOrder.deepCopy();
+        public GameState simulateMove(GameMove gameMove) {
+            GameState simulatedState = deepCopy();
             SimulatedExecutionState simulatedExecutionState = new SimulatedExecutionState(
                 gameMove.ScriptedAction,
-                creatureMoveOrder.getCurrentCombatCreature(),
+                simulatedState.getCurrentCreature(),
                 true,
                 gameMove.Selector
             );
             LastMove = gameMove;
             Moves++;
             simulatedExecutionState.execute();
-            return new GameState(simulationMoveOrder);
+            simulatedState.clearDeadCreatures();
+            return simulatedState;
         }
         public int getWinner() {
             // Game State is always from AI Perspective
-            if (creatureMoveOrder.isHumanWinning()) {
+            if (isHumanWinning()) {
                 return 0; // HUMAN WINNING
             }
             return 1; // AI WINNING

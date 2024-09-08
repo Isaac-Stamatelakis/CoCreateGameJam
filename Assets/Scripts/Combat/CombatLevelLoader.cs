@@ -18,24 +18,14 @@ namespace Levels.Combat {
         {
             PlayerIO playerIO = PlayerIO.Instance;
             List<EquipedCreature> creatures = playerIO.EquipedCreetures;
-            /*
-            LootableRegistry registry = LootableRegistry.getInstance();
-            EnchantedEquipment mazda5 = new EnchantedEquipment(LootableRegistry.getInstance().getLootable<Equipment>("mazda5"),null);
-            List<EquipedCreature> testingCreatings = new List<EquipedCreature> {
-                new EquipedCreature(registry.getLootable<Creature>("ambersand"), new List<EnchantedEquipment>()),
-                new EquipedCreature(registry.getLootable<Creature>("soddle"), new List<EnchantedEquipment>()),
-                new EquipedCreature(registry.getLootable<Creature>("dragoon"), new List<EnchantedEquipment>()),
-                new EquipedCreature(registry.getLootable<Creature>("gun_crab"), new List<EnchantedEquipment>{mazda5})
-            };
-            */
-            List<EquipedCreature> playerTeam = PlayerIO.Instance.getPlayerTeam();
-            int nonNullCount = GlobalUtils.getNoneNullCount<EquipedCreature>(playerTeam);
-            if (nonNullCount==0) {
-                nonNullCount = GlobalUtils.getNoneNullCount<EquipedCreature>(testTeam);
-                playerTeam = testTeam;
+            CombatPlayer humanPlayer;
+            if (useTestCreatures) {
+                humanPlayer = new CombatPlayer(testTeam);
+            } else {
+                List<EquipedCreature> playerTeam = PlayerIO.Instance.getPlayerTeam();
+                humanPlayer = new CombatPlayer(playerTeam);
             }
             
-            CombatPlayer humanPlayer = new CombatPlayer(playerTeam);
             CombatPlayer aiPlayer = new CombatPlayer(level.enemyCreatures);
             await Task.WhenAll(
                 loadPlayerCreatureActions(humanPlayer),
@@ -48,7 +38,8 @@ namespace Levels.Combat {
         private async Task loadPlayerCreatureActions(CombatPlayer combatPlayer) {
             ActionRegistry actionRegistry = ActionRegistry.getInstance();
             var loadTasks = new List<Task>();
-            foreach (EquipedCreature equipedCreature in combatPlayer.Creatures) {
+            foreach (CreatureInCombat creatureInCombat in combatPlayer.Creatures) {
+                EquipedCreature equipedCreature = creatureInCombat.EquipedCreeture;
                 loadTasks.Add(actionRegistry.loadActions(equipedCreature.creeture.Id, ActionBundleType.Creature));
                 foreach (EnchantedEquipment enchantedEquipment in equipedCreature.EnchantedEquipment) {
                     if (enchantedEquipment == null || enchantedEquipment.getId() == null) {

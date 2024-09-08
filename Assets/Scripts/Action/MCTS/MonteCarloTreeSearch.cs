@@ -48,7 +48,7 @@ namespace Actions.MCTS {
             {
                 List<GameMove> possibleMoves = currentState.getPossibleMoves();
                 var randomMove = possibleMoves[random.Next(possibleMoves.Count)];
-                currentState = currentState.applyMove(randomMove);
+                currentState = currentState.simulateMove(randomMove);
                 i++;
             }
             return currentState.getWinner();
@@ -125,7 +125,7 @@ namespace Actions.MCTS {
             if (untriedMoves.Count > 0)
             {
                 var randomMove = untriedMoves[new System.Random().Next(untriedMoves.Count)];
-                var newState = state.applyMove(randomMove);
+                var newState = state.simulateMove(randomMove);
                 var newNode = new MCTSNode(this, newState);
                 children.Add(newNode);
                 return newNode;
