@@ -106,7 +106,6 @@ namespace Levels.Combat {
         }
 
         public IEnumerator nextCreatureTurn() {
-            gameState.clearDeadCreatures();
             if (gameState.tie()) {
                 showGameOverScreen(playerLoseUIPrefab);
                 Debug.Log("Tie");
@@ -155,42 +154,29 @@ namespace Levels.Combat {
                 Debug.LogWarning($"{currentCreatureTurn.name} has no actions");
                 yield break;
             }
-            /*
+            
             int ran = Random.Range(0,actions.Count);
             ScriptedAction chosenAction = actions[ran];
 
-            CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
-            switch (creatureSelector.TargetType) {
-                case CreatureSelectionType.Ally:
-                    ran = Random.Range(0,aiPlayer.Creatures.Count);
-                    EquipedCreature creature = humanPlayer.Creatures[ran];
-                    CreatureInCombat creatureInCombat = creatureMoveOrder.getCombatCreature(creature);
-                    creatureSelector.Creatures.Add(creatureInCombat.CreatureCombatObject);
-                    break;
-                case CreatureSelectionType.Enemy:
-                    ran = Random.Range(0,humanPlayer.Creatures.Count);
-                    EquipedCreature creature1 = humanPlayer.Creatures[ran];
-                    CreatureInCombat creatureInCombat1 = creatureMoveOrder.getCombatCreature(creature1);
-                    creatureSelector.Creatures.Add(creatureInCombat1.CreatureCombatObject);
-                    break;
-            }
-            */
-            
+            List<CreatureInCombat> selectables = gameState.getSelectableCreatures(CreatureSelectionType.Enemy,false);
+            List<CreatureInCombat> temp = new List<CreatureInCombat>{selectables[Random.Range(0,selectables.Count)]};
+            GameMove gameMove = new GameMove(chosenAction,new CreatureSelector<CreatureInCombat>(temp));
+            /*
             MonteCarloTreeSearch monteCarloTreeSearch = new MonteCarloTreeSearch();
-            GameMove gameMove = monteCarloTreeSearch.getMove(gameState.deepCopy(),100);
+            GameState cloneState = gameState.deepCopy();
+            GameMove gameMove = monteCarloTreeSearch.getMove(cloneState,100);
+            */
             uiController.ActionUIController.displayEnemyTurn(currentCreatureTurn.CreatureInCombat,gameMove.ScriptedAction);
             LiveCommandExecutionState commandExecutionState = new LiveCommandExecutionState(gameMove.ScriptedAction,currentCreatureTurn,true);
             // Pre Selection
             yield return StartCoroutine(commandExecutionState.executeSection());
             // Selection
-            ManualCreatureSelector creatureSelector = commandExecutionState.getManualCreatureSelector();
-            if (creatureSelector != null) {
-                List<CreatureCombatObject> combatObjects = new List<CreatureCombatObject>();
-                foreach (CreatureInCombat creatureInCombat in gameMove.Selector.getCreatures()) {
-                    combatObjects.Add(creatureInCombat.CreatureCombatObject);
-                }
-                creatureSelector.Creatures = combatObjects;
+            List<CreatureCombatObject> combatObjects = new List<CreatureCombatObject>();
+            foreach (CreatureInCombat creatureInCombat in gameMove.Selector.getCreatures()) {
+                combatObjects.Add(creatureInCombat.CreatureCombatObject);
             }
+            commandExecutionState.CreatureSelector = new CreatureSelector<CreatureCombatObject>(combatObjects);
+            
             yield return StartCoroutine(commandExecutionState.executeSection());
 
             // Post Selection

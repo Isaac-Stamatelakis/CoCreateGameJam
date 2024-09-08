@@ -28,47 +28,50 @@ namespace Actions.Script.Execution {
         }
         
         public void execute() {
-            /*
+            List<ScriptCommand> subStackCommands = null;
             while (CommandStack.Count > 0) {
                 ScriptCommand scriptCommand = CommandStack.Pop();
                 if (scriptCommand is SelectCommand selectCommand) {
-                    selectCommand.execute(this);
-                    break;
+                    subStackCommands = new List<ScriptCommand>();
+                    continue;
                 }
+                
+                if (scriptCommand is EndCommand endCommand && endCommand.endsStatement("select")) {
+
+                }
+                
                 if (scriptCommand is not ISimultableCommand simultableCommand) {
                     continue;
                 }
-                simultableCommand.execute(this);
+                if (subStackCommands != null) {
+                    subStackCommands.Add(scriptCommand);
+                } else {
+                    simultableCommand.execute(this);
+                }
             }
-            if (SubStack != null) {
-                SubStack.iterations = CreatureSelector.maxIterations();
-                List<ScriptCommand> cachedCommands = new List<ScriptCommand>();
+            SubStack = new SelectionCommandLoop(new Stack<ScriptCommand>());
+            SubStack.iterations = CreatureSelector.maxIterations();
+            while (SubStack.iterations > 0) {
+                for (int i = subStackCommands.Count-1; i > 0; i--) {
+                    SubStack.commands.Push(subStackCommands[i]);
+                }
                 while (SubStack.commands.Count > 0) {
-                    cachedCommands.Insert(0,SubStack.commands.Pop());
+                    ScriptCommand command = SubStack.commands.Pop();
+                    executeCommand(command);
                 }
-                while (SubStack.iterations > 0) {
-                    foreach (ScriptCommand scriptCommand in cachedCommands) {
-                        SubStack.commands.Push(scriptCommand);
-                    }
-                    while (SubStack.commands.Count > 0) {
-                        ScriptCommand command = SubStack.commands.Pop();
-                        executeCommand(command);
-                    }
-                    SubStack.iterations--;
-                    if (equipmentActionExecutor != null) {
-                        yield return equipmentActionExecutor.execute();
-                        equipmentActionExecutor = new EquipmentActionExecutor();
-                    }
+                SubStack.iterations--;
+                /*
+                if (equipmentActionExecutor != null) {
+                    yield return equipmentActionExecutor.execute();
+                    equipmentActionExecutor = new EquipmentActionExecutor();
                 }
+                */
             }
-            while (CommandStack.Count > 0 && !PausedForSelection) {
-                ScriptCommand command = CommandStack.Pop();
-                yield return ScriptCommandUtils.executeCommand(this, command);
-                if (!Run) {
-                    break;
-                }
+            
+            while (CommandStack.Count > 0) {
+                ScriptCommand scriptCommand = CommandStack.Pop();
+                executeCommand(scriptCommand);
             }
-            */
         }
         
 

@@ -21,9 +21,7 @@ namespace Levels.Combat {
             }
         }
         public CombatPlayer(List<CreatureInCombat> combatCreatures) {
-            foreach (CreatureInCombat creatureInCombat in combatCreatures) {
-                creatures.Add(creatureInCombat.deepCopy());
-            }
+            this.creatures = combatCreatures;
         }
 
         public bool IsDead() {

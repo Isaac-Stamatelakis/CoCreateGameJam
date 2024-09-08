@@ -38,7 +38,7 @@ namespace Levels.Combat {
             creatureTurns = turns;
         }
 
-        public void clearDeadCreatures() {
+        private void clearDeadCreatures() {
             clearDeadCreatureList(creatureTurns);
             clearDeadCreatureList(humanPlayer.Creatures);
             clearDeadCreatureList(aiPlayer.Creatures);
@@ -58,6 +58,7 @@ namespace Levels.Combat {
             CreatureInCombat currentTurn = creatureTurns[0];
             creatureTurns.RemoveAt(0);
             creatureTurns.Add(currentTurn);
+            clearDeadCreatures();
         }
 
         public bool isGameOver() {
@@ -117,10 +118,7 @@ namespace Levels.Combat {
             } while (rand == exclusion);
             return creatures[rand];
         }
-
-        
-
-        public List<CreatureInCombat> getSelectableCreatures(CreatureSelectionType targetType, bool random, bool targetSelf) {
+        public List<CreatureInCombat> getSelectableCreatures(CreatureSelectionType targetType, bool targetSelf) {
             List<CreatureInCombat> creatureInCombats = new List<CreatureInCombat>();
             bool addedSelf = false;
             if (targetType == CreatureSelectionType.Ally || targetType == CreatureSelectionType.Any) {
@@ -141,26 +139,39 @@ namespace Levels.Combat {
             if (!targetSelf && addedSelf) {
                 CreatureInCombat selfCreature = getCurrentCreature();
                 creatureInCombats.Remove(selfCreature);
-                
             }
             return creatureInCombats;
         }
 
         public bool isHumanPlayerTurn() {
             CreatureInCombat creature = getCurrentCreature();
+            return humanPlayer.HasCreature(creature);
+            /*
             if (humanPlayer.Creatures.Count <= aiPlayer.Creatures.Count) {
                 return humanPlayer.HasCreature(creature);
             } else {
                 return !aiPlayer.HasCreature(creature);
             }
+            */
         }
         public bool isSecondPlayersTurn() {
             return !isHumanPlayerTurn();
         }
         public GameState deepCopy() {
-            List<CreatureInCombat> newTurns = new List<CreatureInCombat>(creatureTurns);
-            CombatPlayer humanCopy = new CombatPlayer(new List<CreatureInCombat>(humanPlayer.Creatures));
-            CombatPlayer aiCopy = new CombatPlayer(new List<CreatureInCombat>(aiPlayer.Creatures));
+            List<CreatureInCombat> playerCreatureClone = new List<CreatureInCombat>();
+            List<CreatureInCombat> aiCreatureClone = new List<CreatureInCombat>();
+            List<CreatureInCombat> newTurns = new List<CreatureInCombat>();
+            foreach (CreatureInCombat creatureInCombat in creatureTurns) {
+                CreatureInCombat copy = creatureInCombat.deepCopy();
+                newTurns.Add(copy);
+                if (humanPlayer.HasCreature(creatureInCombat)) {
+                    playerCreatureClone.Add(copy);
+                } else {
+                    aiCreatureClone.Add(copy);
+                }
+            }
+            CombatPlayer humanCopy = new CombatPlayer(playerCreatureClone);
+            CombatPlayer aiCopy = new CombatPlayer(aiCreatureClone);
             return new GameState(humanCopy,aiCopy,newTurns);
         }
         public bool isHumanWinning() {
@@ -200,7 +211,7 @@ namespace Levels.Combat {
                     continue;
                 }
                 (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) = SelectCommand.parse(selectCommand.getFormattedScriptCommand());
-                List<CreatureInCombat> selectableCreatures = getSelectableCreatures(targetType,random,targetSelf);
+                List<CreatureInCombat> selectableCreatures = getSelectableCreatures(targetType,targetSelf);
                 if (random) {
                     return new List<GameMove>{
                         new GameMove(
@@ -231,7 +242,7 @@ namespace Levels.Combat {
             LastMove = gameMove;
             Moves++;
             simulatedExecutionState.execute();
-            simulatedState.clearDeadCreatures();
+            simulatedState.changeTurn();
             return simulatedState;
         }
         public int getWinner() {

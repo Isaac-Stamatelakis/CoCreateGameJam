@@ -112,7 +112,7 @@ namespace Actions.MCTS {
                 bool found = false;
                 foreach (var child in children)
                 {
-                    if (child.state.LastMove.Equals(move))
+                    if (move.Equals(child.state.LastMove))
                     {
                         found = true;
                         break;
