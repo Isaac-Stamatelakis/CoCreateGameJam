@@ -10,8 +10,9 @@ namespace Actions.MCTS {
     public class MonteCarloTreeSearch
     {
         private static System.Random random = new System.Random();
-        public int getMove(GameState initalState, int maxIterations) {
-            MCTSNode root = new MCTSNode(null,initalState);
+        private MCTSNode root;
+        public GameMove getMove(GameState initalState, int maxIterations) {
+            root = new MCTSNode(null,initalState);
             for (int i = 0; i < maxIterations; i++) {
                 MCTSNode node = selection(root);
                 if (!node.State.isGameOver()) {
@@ -41,11 +42,14 @@ namespace Actions.MCTS {
         }
         private int simulation(MCTSNode node) {
             GameState currentState = node.State;
-            while (!currentState.isGameOver())
+            int MAX_SEARCH = 10;
+            int i = 0;
+            while (!currentState.isGameOver() && i < MAX_SEARCH)
             {
                 List<GameMove> possibleMoves = currentState.getPossibleMoves();
                 var randomMove = possibleMoves[random.Next(possibleMoves.Count)];
                 currentState = currentState.applyMove(randomMove);
+                i++;
             }
             return currentState.getWinner();
         }

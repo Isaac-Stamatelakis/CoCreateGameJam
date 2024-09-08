@@ -11,11 +11,14 @@ namespace Levels.Combat {
             creatureObjects = GetComponentsInChildren<CreatureCombatObject>();
         }
 
-        public void displayCreatures(List<CreatureInCombat> creatures) {
+        public void displayCreatures(
+            List<CreatureInCombat> creatures
+        ) {
             int toShow =  Mathf.Min(creatures.Count,Global.MAX_COMBAT_CREATURES);
+            List<CreatureCombatObject> combatObjects = new List<CreatureCombatObject>();
             for (int i = 0; i < toShow; i++) {
                 creatureObjects[i].display(creatures[i]);
-                creatures[i].syncToObject(creatureObjects[i]);
+                creatures[i].setCombatObject(creatureObjects[i]);
             }
             // Hide inactive creatures
             for (int i = toShow; i < Global.MAX_COMBAT_CREATURES; i++) {

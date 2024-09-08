@@ -2,28 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
+using Levels.Combat;
+using Actions;
 
 namespace Actions.MCTS {
-    public interface ISimulatedSelector {
-        public CreatureInCombat getTarget(int iteration);
-        public int maxIterations();
-    }
-    public class SimulatedSelector : ISimulatedSelector
-    {
-        protected List<CreatureInCombat> creatures;
-        public CreatureInCombat getTarget(int iteration)
-        {
-            return creatures[iteration];
-        }
-
-        public int maxIterations()
-        {
-            return creatures.Count;
-        }
-    }
-
-    public class SimulatedRandomSelector : SimulatedSelector {
+    public class SimulatedRandomSelector<T> : CreatureSelector<T> where T : ICombatCreature{
         private int targets;
+
+        public SimulatedRandomSelector(List<T> creatures, int targets) : base(creatures)
+        {
+            this.targets = targets;
+        }
+
         public float getActionModification() {
             return (float) targets/creatures.Count;
         }

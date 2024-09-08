@@ -8,7 +8,7 @@ namespace Actions.Script {
         public AnimationCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
         {
         }
-        private RuntimeAnimatorController getAnimation(string animationName, CommandExecutionState commandExecutionState) {
+        private RuntimeAnimatorController getAnimation(string animationName, LiveCommandExecutionState commandExecutionState) {
             if (animationName.Equals("reset")) { // Special case to reset to idle
                 return commandExecutionState.DefaultAnimation;
             } else {
@@ -18,7 +18,7 @@ namespace Actions.Script {
                 return commandExecutionState.Animations[animationName];
             }
         }
-        public override IEnumerator execute(CommandExecutionState commandExecutionState)
+        public override IEnumerator execute(LiveCommandExecutionState commandExecutionState)
         {
             (string animationName, bool loop) = parse(formattedScriptCommand);
             RuntimeAnimatorController animatorController = getAnimation(animationName,commandExecutionState);

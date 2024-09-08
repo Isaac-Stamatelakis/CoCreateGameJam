@@ -26,15 +26,19 @@ namespace Actions.Script {
             );
             return ((string) parsedParameters[0],(string) parsedParameters[1],(string) parsedParameters[2]);
         }
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
+            executeState(commandExecutionState);
+        }
+
+        private void executeState(ICommandExecutionState commandExecutionState) {
             (string first, string booleanOperator, string second) = parse(formattedScriptCommand);
             bool statementPassed = false;
             if (booleanOperator.Equals("has")) {
                 string creatureIndicator = first;
                 string statusIndicator = second;
-                CreatureCombatObject creatureCombatObject = commandExecutionState.getCreatureFromIndicator(formattedScriptCommand,creatureIndicator);
-                statementPassed = creatureCombatObject.CreatureInCombat.hasStatusEffect(statusIndicator);
+                ICombatCreature creatureInCombat = commandExecutionState.getCreatureFromIndicator(formattedScriptCommand,creatureIndicator);
+                statementPassed = creatureInCombat.hasStatus(statusIndicator);
             } else if (
                 booleanOperator.Equals("<")  || 
                 booleanOperator.Equals(">")  || 
@@ -64,17 +68,17 @@ namespace Actions.Script {
             } else if (booleanOperator.Equals("is")) {
                 string creatureIndicator = first;
                 string statusIndicator = second;
-                CreatureCombatObject creatureCombatObject = commandExecutionState.getCreatureFromIndicator(formattedScriptCommand,creatureIndicator);
+                ICombatCreature creatureInCombat = commandExecutionState.getCreatureFromIndicator(formattedScriptCommand,creatureIndicator);
             } else {
                 ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,$"{booleanOperator} is not a valid boolean operator");
             }
             if (statementPassed) {
                 return;
             }
-            if (commandExecutionState.SubStack != null) {
-                skipIfStatement(formattedScriptCommand,commandExecutionState.SubStack.commands);
+            if (commandExecutionState.getSubStack() != null) {
+                skipIfStatement(formattedScriptCommand,commandExecutionState.getSubStack().commands);
             } else {
-                skipIfStatement(formattedScriptCommand,commandExecutionState.CommandStack);
+                skipIfStatement(formattedScriptCommand,commandExecutionState.getStack());
             }
         }
 
@@ -176,7 +180,7 @@ namespace Actions.Script {
 
         public void execute(SimulatedExecutionState state)
         {
-            throw new NotImplementedException();
+            executeState(state);
         }
     }
 

@@ -17,22 +17,25 @@ namespace Actions.Script {
         {
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
             (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) = parse(formattedScriptCommand);
-            commandExecutionState.CreatureSelector = new CreatureSelector(
-                targetType: targetType,
-                allowSelf: targetSelf,
-                maxTargets: targets,
-                random: random
-            );
+            
             if (random) {
+                List<CreatureCombatObject> randomCreatures = new List<CreatureCombatObject>();
+                CreatureMoveOrder creatureMoveOrder = CombatLevelController.Instance.CreatureMoveOrder;
                 for (int i = 0; i < targets; i++) {
-                    commandExecutionState.CreatureSelector.Creatures.Add(
-                        commandExecutionState.CombatLevelController.CreatureMoveOrder.getRandomCreature(targetSelf).CreatureCombatObject
-                    );
+                    EquipedCreature randomCreature = creatureMoveOrder.getRandomCreature(targetType, targetSelf);
+                    CreatureInCombat randomCombatCreature = creatureMoveOrder.getCombatCreature(randomCreature);
+                    randomCreatures.Add(randomCombatCreature.CreatureCombatObject);
                 }
+                commandExecutionState.CreatureSelector = new DescriptableRandomSelector(randomCreatures,targetType,targetSelf,targets);
             } else {
+                commandExecutionState.CreatureSelector = new ManualCreatureSelector(
+                    targetType: targetType,
+                    allowSelf: targetSelf,
+                    maxTargets: targets
+                );
                 commandExecutionState.PausedForSelection = true;
             }
             CommandExecutionStateUtils.generateSubStack(commandExecutionState);

@@ -8,7 +8,7 @@ namespace Actions.Script {
         public DelayScriptCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
         {
         }
-        public abstract IEnumerator execute(CommandExecutionState commandExecutionState);
+        public abstract IEnumerator execute(LiveCommandExecutionState commandExecutionState);
     }
 }
 

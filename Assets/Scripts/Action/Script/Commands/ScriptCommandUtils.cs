@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Actions.Script {
     public static class ScriptCommandUtils 
     {
-        public static IEnumerator executeCommand(CommandExecutionState state, ScriptCommand scriptCommand) {
+        public static IEnumerator executeCommand(LiveCommandExecutionState state, ScriptCommand scriptCommand) {
             if (scriptCommand is InstantScriptCommand instantScriptCommand) {
                 instantScriptCommand.execute(state);
             } else if (scriptCommand is DelayScriptCommand delayScriptCommand) {

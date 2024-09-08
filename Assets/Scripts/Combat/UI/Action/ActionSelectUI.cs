@@ -15,12 +15,14 @@ namespace Levels.Combat {
         [SerializeField] private InventoryUI<ICombatAction> dynamicActionDisplay;
         [SerializeField] private GridLayoutGroup otherActionDisplay;
         private ActionType? currentActionType = null;
-        private CreatureInCombat creatureInCombat;
+        private CreatureCombatObject creatureCombatObject;
         private List<Consumable> consumables;
-        public void display(CreatureInCombat creatureInCombat, List<Consumable> consumables) {
+        public CreatureCombatObject CreatureCombatObject { get => creatureCombatObject;}
+
+        public void display(CreatureCombatObject creatureCombatObject, List<Consumable> consumables) {
             gameObject.SetActive(true);
             this.currentActionType = null;
-            this.creatureInCombat = creatureInCombat;
+            this.creatureCombatObject = creatureCombatObject;
             this.consumables = consumables;
             displayActionType(ActionType.Creature);
         }
@@ -33,7 +35,7 @@ namespace Levels.Combat {
                 case ActionType.Creature:
                     dynamicActionDisplay.gameObject.SetActive(true);
                     otherActionDisplay.gameObject.SetActive(false);
-                    CreatureActionCollection creatureActionCollection = ActionRegistry.getInstance().getAction<CreatureActionCollection>(creatureInCombat.EquipedCreeture.creeture.Id);
+                    CreatureActionCollection creatureActionCollection = ActionRegistry.getInstance().getAction<CreatureActionCollection>(CreatureCombatObject.CreatureInCombat.EquipedCreeture.creeture.Id);
                     dynamicActionDisplay.display(creatureActionCollection.actions.Cast<ICombatAction>().ToList());
                     break;
                 case ActionType.Consumable:

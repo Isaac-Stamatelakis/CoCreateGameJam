@@ -10,7 +10,7 @@ namespace Actions.Script {
         {
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
             (float amount, float range, bool self) = parse(formattedScriptCommand);
             float healAmount = Random.Range(amount-range,amount+range);

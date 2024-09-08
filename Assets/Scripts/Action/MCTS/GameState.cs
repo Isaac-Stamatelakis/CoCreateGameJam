@@ -12,14 +12,14 @@ namespace Actions.MCTS {
     {
         private CreatureMoveOrder creatureMoveOrder;
         public int Moves;
-        public int LastMove;
+        public GameMove LastMove {get; private set;} 
         public GameState(CreatureMoveOrder creatureMoveOrder)
         {
             this.creatureMoveOrder = creatureMoveOrder;
         }
 
         public bool isGameOver() {
-            return false;
+            return creatureMoveOrder.isGameOver();
         }
         public List<GameMove> getPossibleMoves() {
             string id = creatureMoveOrder.getCurrentCombatCreature().EquipedCreeture.Creeture.getId();
@@ -39,47 +39,59 @@ namespace Actions.MCTS {
                 }
                 (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) = SelectCommand.parse(selectCommand.getFormattedScriptCommand());
                 List<CreatureInCombat> selectableCreatures = creatureMoveOrder.getSelectableCreatures(targetType,random,targetSelf);
+                if (random) {
+                    return new List<GameMove>{
+                        new GameMove(
+                            scriptedAction,
+                            new SimulatedRandomSelector<CreatureInCombat>(selectableCreatures,targets)
+                        )
+                    };
+                }
+                //Debug.Log(selectableCreatures.Count);
                 // This assumes choosing max targets is always optimal (which is most likely is)
                 List<List<CreatureInCombat>> choicePermutations = GameStateUtils.GeneratePermutations<CreatureInCombat>(selectableCreatures,targets);
-                
                 List<GameMove> moves = new List<GameMove>();
                 foreach (List<CreatureInCombat> permutation in choicePermutations) {
-                    //moves.Add(new GameMove());
-                } 
+                    moves.Add(new GameMove(scriptedAction,new CreatureSelector<CreatureInCombat>(permutation)));
+                }
                 return moves;
             }
             Debug.LogWarning($"{scriptedAction.name} did not have a select command");
             return new List<GameMove>();
         }
         public GameState applyMove(GameMove gameMove) {
-            /*
             CreatureMoveOrder simulationMoveOrder = this.creatureMoveOrder.deepCopy();
             SimulatedExecutionState simulatedExecutionState = new SimulatedExecutionState(
                 gameMove.ScriptedAction,
-                creatureMoveOrder,
+                creatureMoveOrder.getCurrentCombatCreature(),
                 true,
                 gameMove.Selector
             );
+            LastMove = gameMove;
+            Moves++;
+            simulatedExecutionState.execute();
             return new GameState(simulationMoveOrder);
-            */
-            return null;
         }
         public int getWinner() {
-            return 0;
+            // Game State is always from AI Perspective
+            if (creatureMoveOrder.isHumanWinning()) {
+                return 0; // HUMAN WINNING
+            }
+            return 1; // AI WINNING
         }
     }
 
     public class GameMove {
         private ScriptedAction scriptedAction;
-        private ISimulatedSelector selector;
-        public GameMove(ScriptedAction scriptedAction, ISimulatedSelector selector)
+        private CreatureSelector<CreatureInCombat> selector;
+        public GameMove(ScriptedAction scriptedAction,  CreatureSelector<CreatureInCombat> selector)
         {
             this.scriptedAction = scriptedAction;
             this.selector = selector;
         }
 
         public ScriptedAction ScriptedAction { get => scriptedAction; }
-        public ISimulatedSelector Selector { get => selector;}
+        public CreatureSelector<CreatureInCombat> Selector { get => selector;}
     }
 
     

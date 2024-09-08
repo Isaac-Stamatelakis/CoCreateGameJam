@@ -23,7 +23,7 @@ namespace Actions.Script {
             string actionName = (string) parsedParameters[1];
             return (objectName,actionName);
         }
-        public override IEnumerator execute(CommandExecutionState commandExecutionState)
+        public override IEnumerator execute(LiveCommandExecutionState commandExecutionState)
         {
             (string objectName, string actionName) = parse(formattedScriptCommand);
             if (!commandExecutionState.SpawnedObjects.ContainsKey(objectName)) {

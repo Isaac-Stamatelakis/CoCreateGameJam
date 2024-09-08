@@ -12,7 +12,7 @@ namespace Actions.Script {
 
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
             if (formattedScriptCommand.Parameters.Length == 0) {
                 ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,"'end' must be called with atleast one parameter");
@@ -46,7 +46,7 @@ namespace Actions.Script {
             }
             return formattedScriptCommand.Parameters[0].Equals(statement);
         }
-        private void endSpawn(CommandExecutionState commandExecutionState) {
+        private void endSpawn(LiveCommandExecutionState commandExecutionState) {
             if (formattedScriptCommand.Parameters.Length < 2) {
                 ActionScriptInterpretorUtils.scriptError(formattedScriptCommand,"Object name must be provided to 'end spawn object_name'");
             }

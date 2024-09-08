@@ -33,7 +33,7 @@ namespace Actions {
     {
         [SerializeField] private int manaCost;
         public int ManaCost {get => manaCost;}
-        public abstract void execute(CreatureSelector selector);
+        public abstract void execute(ManualCreatureSelector selector);
     }
 
 }

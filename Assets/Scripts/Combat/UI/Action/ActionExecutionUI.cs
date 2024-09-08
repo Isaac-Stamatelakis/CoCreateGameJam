@@ -17,13 +17,16 @@ namespace Levels.Combat {
         [SerializeField] private Button executionButton;
         private CombatLevelActionUIController combatLevelActionUIController;
         private CombatLevelController combatLevelController;
-        private CreatureSelector creatureSelector;
-        private CommandExecutionState commandExecutionState;
+        private IDescriptableSelector creatureSelector;
+        private LiveCommandExecutionState commandExecutionState;
         public void Start() {
             executionButton.onClick.AddListener(() => {
-                if (creatureSelector.isSatisfied()) {
-                    StartCoroutine(execute());
+                if (creatureSelector is IRequirementSelector requirementSelector) {
+                    if (!requirementSelector.isSatisfied()) {
+                        return;
+                    }
                 }
+                StartCoroutine(execute());
             });
         }
 
@@ -34,17 +37,18 @@ namespace Levels.Combat {
         }
 
         private void displaySelector() {
-            creatureSelector = commandExecutionState.getCurrentSelector();
-            creatureSelector.TextUI = selectionText;
+            creatureSelector = (IDescriptableSelector) commandExecutionState.CreatureSelector;
+            creatureSelector.setTextElement(selectionText);
             creatureSelector.updateDescription();
-            combatLevelController.CreatureHighlightController.setSelector(creatureSelector);
+            if (creatureSelector is ManualCreatureSelector manualCreatureSelector) {
+                combatLevelController.CreatureHighlightController.setSelector(manualCreatureSelector);
+            }
         }
-        public void display(ICombatAction combatAction, CombatLevelActionUIController combatLevelActionUIController) {
+
+        public void display(ICombatAction combatAction, CreatureCombatObject creatureCombatObject, CombatLevelActionUIController combatLevelActionUIController) {
             combatLevelController = combatLevelActionUIController.CombatLevelUIController.CombatLevelController;
             if (combatAction is ScriptedAction scriptedAction) {
-                CreatureCombatObject currentlyMovingCreature = combatLevelController.CreatureMoveOrder.getCurrentCreatureObject();
-                // TODO remove singleton usage
-                commandExecutionState = new CommandExecutionState(scriptedAction,currentlyMovingCreature,CombatLevelController.Instance,true);
+                commandExecutionState = new LiveCommandExecutionState(scriptedAction,creatureCombatObject,true);
                 StartCoroutine(commandExecutionState.executeSection());
                 displaySelector();
             }

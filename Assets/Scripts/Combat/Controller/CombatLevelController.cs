@@ -4,6 +4,7 @@ using UnityEngine;
 using Creatures;
 using Actions;
 using Actions.Script;
+using Actions.MCTS;
 using Items.Equipment;
 
 namespace Levels.Combat {
@@ -29,6 +30,7 @@ namespace Levels.Combat {
         public Transform CanvasTransform { get => uiController.transform; }
         public CreatureMoveOrder CreatureMoveOrder {get => creatureMoveOrder;}
         public Transform SpawnedObjectContainer {get => spawnedObjectContainer;}
+        private MonteCarloTreeSearch monteCarloTreeSearch;
         public void load(CombatPlayer humanPlayer, CombatPlayer aiPlayer, CombatLevelObject combatLevel) {
             if (humanPlayer.Creatures.Count == 0) {
                 // TODO CHANGE TO SPECIAL SCREEN TELLING PLAYER THEY HAVE NO CREATURES
@@ -37,10 +39,11 @@ namespace Levels.Combat {
             this.humanPlayer = humanPlayer;
             this.aiPlayer = aiPlayer;
             creatureMoveOrder = new CreatureMoveOrder(humanPlayer,aiPlayer);
-            
+
             creatureHighlightController = new CreatureHighlightController(humanPlayer,uiController.DisplayedCreatureUI);
             initalizePlayerObjects(humanPlayer,humanPlayerCreatures);
             initalizePlayerObjects(aiPlayer,aiPlayerCreatures);
+
             handleNewCreatureTurn();
         }
 
@@ -58,7 +61,7 @@ namespace Levels.Combat {
 
         public IEnumerator specialAction(CreatureCombatObject selfCreature, CreatureCombatObject target, SpecialSelectTarget specialSelectTarget) {
             if (selfCreature != null && target != null) {
-                foreach (EnchantedEquipment enchantedEquipment in selfCreature.CreatureInCombat.EquipedCreeture.EnchantedEquipment) {
+                foreach (EnchantedEquipment enchantedEquipment in selfCreature.getEquipment()) {
                     if (enchantedEquipment == null || enchantedEquipment.Equipment == null) {
                         continue;
                     }
@@ -70,11 +73,10 @@ namespace Levels.Combat {
                     if (scriptedAction == null) {
                         continue;
                     }
-                    CommandExecutionState commandExecutionState = new CommandExecutionState(scriptedAction,selfCreature,this,false);
+                    LiveCommandExecutionState commandExecutionState = new LiveCommandExecutionState(scriptedAction,selfCreature,false);
                     yield return StartCoroutine(commandExecutionState.executeSection());
                     while (!commandExecutionState.Complete) {
-                        CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
-                        commandExecutionState.CreatureSelector.Creatures.Add(target);
+                        commandExecutionState.CreatureSelector = new CreatureSelector<CreatureCombatObject>(new List<CreatureCombatObject>{target});
                         yield return StartCoroutine(commandExecutionState.executeSection());
                     }
                     yield return null;
@@ -93,21 +95,19 @@ namespace Levels.Combat {
                 return;
             }
             creatureHighlightController.setSelector(null);
-            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCreatureObject();
+            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCombatCreature().CreatureCombatObject;
             Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
             currentTurnPosition.z -= CURRENT_TURN_Z_CHANGE;
             currentCreatureTurn.transform.position = currentTurnPosition;
 
             creatureHighlightController.setCurrentCreatureTurn(currentCreatureTurn);
             if (humanPlayer.HasCreature(currentCreatureTurn)) {
-                uiController.ActionUIController.displaySelect(currentCreatureTurn.CreatureInCombat,humanPlayer);
+                uiController.ActionUIController.displaySelect(currentCreatureTurn,humanPlayer);
                 return;
             } else {
                 StartCoroutine(moveAI());
             }
         }
-
-        
 
         public IEnumerator nextCreatureTurn() {
             creatureMoveOrder.clearDeadCreatures();
@@ -116,7 +116,7 @@ namespace Levels.Combat {
                 Debug.Log("Tie");
                 yield break;
             }
-            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCreatureObject();
+            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCombatCreature().CreatureCombatObject;
             if (currentCreatureTurn != null) {
                 Vector3 currentTurnPosition = currentCreatureTurn.transform.position;
                 currentTurnPosition.z += CURRENT_TURN_Z_CHANGE;
@@ -124,6 +124,7 @@ namespace Levels.Combat {
                 yield return currentCreatureTurn.resetPosition();
             }
             creatureMoveOrder.changeTurn();
+            Debug.Log(creatureMoveOrder.Creatures[0].getName());
             handleNewCreatureTurn();
         }
 
@@ -152,18 +153,17 @@ namespace Levels.Combat {
         }
 
         private IEnumerator moveAI() {
-            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCreatureObject();
+            CreatureCombatObject currentCreatureTurn = creatureMoveOrder.getCurrentCombatCreature().CreatureCombatObject;
             CreatureActionCollection creatureActionCollection = ActionRegistry.getInstance().getAction<CreatureActionCollection>(currentCreatureTurn.CreatureInCombat.EquipedCreeture.creeture.Id);
             List<ScriptedAction> actions = creatureActionCollection.actions;
             if (actions.Count == 0) {
                 Debug.LogWarning($"{currentCreatureTurn.name} has no actions");
-                yield return null;;
+                yield break;
             }
+            /*
             int ran = Random.Range(0,actions.Count);
             ScriptedAction chosenAction = actions[ran];
-            uiController.ActionUIController.displayEnemyTurn(currentCreatureTurn.CreatureInCombat,chosenAction);
-            CommandExecutionState commandExecutionState = new CommandExecutionState(chosenAction,currentCreatureTurn,this,true);
-            yield return StartCoroutine(commandExecutionState.executeSection());
+
             CreatureSelector creatureSelector = commandExecutionState.getCurrentSelector();
             switch (creatureSelector.TargetType) {
                 case CreatureSelectionType.Ally:
@@ -179,9 +179,29 @@ namespace Levels.Combat {
                     creatureSelector.Creatures.Add(creatureInCombat1.CreatureCombatObject);
                     break;
             }
+            */
+            
+            MonteCarloTreeSearch monteCarloTreeSearch = new MonteCarloTreeSearch();
+            GameMove gameMove = monteCarloTreeSearch.getMove(new GameState(creatureMoveOrder),100);
+            
+            uiController.ActionUIController.displayEnemyTurn(currentCreatureTurn.CreatureInCombat,gameMove.ScriptedAction);
+            LiveCommandExecutionState commandExecutionState = new LiveCommandExecutionState(gameMove.ScriptedAction,currentCreatureTurn,true);
+            // Pre Selection
+            yield return StartCoroutine(commandExecutionState.executeSection());
+            // Selection
+            ManualCreatureSelector creatureSelector = commandExecutionState.getManualCreatureSelector();
+            if (creatureSelector != null) {
+                List<CreatureCombatObject> combatObjects = new List<CreatureCombatObject>();
+                foreach (CreatureInCombat creatureInCombat in gameMove.Selector.getCreatures()) {
+                    combatObjects.Add(creatureInCombat.CreatureCombatObject);
+                }
+                creatureSelector.Creatures = combatObjects;
+            }
+            yield return StartCoroutine(commandExecutionState.executeSection());
+
+            // Post Selection
             yield return StartCoroutine(commandExecutionState.executeSection());
             yield return StartCoroutine(nextCreatureTurn());
-
         }
     }
 }

@@ -7,73 +7,80 @@ using Levels.Combat;
 using Actions.Script;
 
 namespace Actions.Script.Execution {
-    public class SimulatedExecutionState : ICommandExecuteState
+    public class SimulatedExecutionState : CommandExecutionState<CreatureInCombat>
     {
-        private Stack<ScriptCommand> commandStack;
-        private Stack<ScriptCommand> loopMemory;
-        private CreatureMoveOrder creatureMoveOrder;
-        private SpecialActionExecutor specialActionExecutor;
-        private ISimulatedSelector simulatedSelector;
-        private int loopIterations;
-        private bool selectExecuted;
+        public float ChanceModifer;
         public SimulatedExecutionState(
             ScriptedAction scriptedAction, 
-            CreatureMoveOrder creatureMoveOrder,
-            bool executeSpecialActions, 
-            ISimulatedSelector simulatedSelector
-        ) {
-            this.commandStack = ScriptCommandFactory.parseCommands(scriptedAction.ActionScript);
-            this.creatureMoveOrder = creatureMoveOrder;
-            this.simulatedSelector = simulatedSelector;
-            if (executeSpecialActions) {
-                specialActionExecutor = new SpecialActionExecutor();
-            }
+            CreatureInCombat selfCreature, 
+            bool executeEquipmentActions, 
+            CreatureSelector<CreatureInCombat> selector) : base(scriptedAction, selfCreature, executeEquipmentActions)
+        {
+            CreatureSelector = selector;
         }
 
+        public float getActionEffectiveness() {
+            float val = ChanceModifer;
+            if (CreatureSelector is SimulatedRandomSelector<CreatureInCombat> randomSelector) {
+                val *= randomSelector.getActionModification();
+            }
+            return val;
+        }
+        
         public void execute() {
-            while (commandStack.Count > 0) {
-                ScriptCommand scriptCommand = commandStack.Pop();
-                bool inSelectionLoop = loopIterations >= 0 && loopIterations < simulatedSelector.maxIterations();
+            /*
+            while (CommandStack.Count > 0) {
+                ScriptCommand scriptCommand = CommandStack.Pop();
                 if (scriptCommand is SelectCommand selectCommand) {
-                    if (selectExecuted) {
-                        throw new System.Exception("Only one select statement per script is allowed");
-                    }
-                    selectExecuted = true;
-                    loopIterations = 0;
-                    continue;
-                }
-                if (inSelectionLoop) {
-                    loopMemory.Push(scriptCommand);
-                }
-                if (scriptCommand is EndCommand endCommand && endCommand.endsStatement("select")) {
-                    loopIterations ++;
-                    Stack<ScriptCommand> reversedMemory = new Stack<ScriptCommand>();
-                    while (loopMemory.Count > 0) {
-                        reversedMemory.Push(loopMemory.Pop());
-                    }
-                    while (reversedMemory.Count > 0) {
-                        commandStack.Push(reversedMemory.Pop());
-                    }
+                    selectCommand.execute(this);
+                    break;
                 }
                 if (scriptCommand is not ISimultableCommand simultableCommand) {
                     continue;
                 }
                 simultableCommand.execute(this);
             }
-        }
-
-        public CreatureInCombat getSelfCreature()
-        {
-            return creatureMoveOrder.getCurrentCombatCreature();
-        }
-
-        public CreatureInCombat getTargetCreature()
-        {
-            if (loopIterations < 0 || loopIterations > simulatedSelector.maxIterations()) {
-                return null;
+            if (SubStack != null) {
+                SubStack.iterations = CreatureSelector.maxIterations();
+                List<ScriptCommand> cachedCommands = new List<ScriptCommand>();
+                while (SubStack.commands.Count > 0) {
+                    cachedCommands.Insert(0,SubStack.commands.Pop());
+                }
+                while (SubStack.iterations > 0) {
+                    foreach (ScriptCommand scriptCommand in cachedCommands) {
+                        SubStack.commands.Push(scriptCommand);
+                    }
+                    while (SubStack.commands.Count > 0) {
+                        ScriptCommand command = SubStack.commands.Pop();
+                        executeCommand(command);
+                    }
+                    SubStack.iterations--;
+                    if (equipmentActionExecutor != null) {
+                        yield return equipmentActionExecutor.execute();
+                        equipmentActionExecutor = new EquipmentActionExecutor();
+                    }
+                }
             }
-            return simulatedSelector.getTarget(loopIterations);
+            while (CommandStack.Count > 0 && !PausedForSelection) {
+                ScriptCommand command = CommandStack.Pop();
+                yield return ScriptCommandUtils.executeCommand(this, command);
+                if (!Run) {
+                    break;
+                }
+            }
+            */
         }
+        
+
+        protected void executeCommand(ScriptCommand scriptCommand) {
+            if (scriptCommand is not ISimultableCommand simultableCommand) {
+                return;
+            }
+            simultableCommand.execute(this);
+        }
+
+
+        
     }
 }
 
