@@ -13,10 +13,13 @@ namespace UI.Lists {
     public abstract class InventoryUI<T> : MonoBehaviour, IRefreshableUI where T : IDisplayable
     {
         [SerializeField] protected UIInventoryDisplayer<T> slotPrefab;
+        [SerializeField] protected bool highlightLeftClick = false;
+        [SerializeField] protected bool highlightRightClick = false;
         [SerializeField] protected Color highlightColor = Color.yellow;
         protected List<T> elements;
         protected List<UIInventoryDisplayer<T>> slots;
         private int currentlyHighlightedSlot = -1;
+        private Color panelColor;
         public bool IsDisplaying {get => slots != null;}
         public void display(List<T> elements) {
             GlobalUtils.deleteChildren(transform);
@@ -27,6 +30,7 @@ namespace UI.Lists {
 
         public void display(List<T> elements, ColorTheme colorTheme) {
             display(elements);
+            panelColor = slotPrefab.GetComponent<Image>().color;
             setTheme(colorTheme);
         }
 
@@ -34,13 +38,11 @@ namespace UI.Lists {
             foreach (UIInventoryDisplayer<T> slot in slots) {
                 slot.setTheme(colorTheme);
             }
+            panelColor = colorTheme.Primary;
         }
         protected void loadSlots() {
             RectTransform rectTransform = GetComponent<RectTransform>();
             GridLayoutGroup gridLayoutGroup = GetComponent<GridLayoutGroup>();
-            
-            
-            
             //Debug.Log(width);
             /*
             Vector3[] corners = new Vector3[4];
@@ -66,19 +68,24 @@ namespace UI.Lists {
                 Debug.LogWarning($"Tried to highlight slot out of range {i}");
                 return;
             }
-            if (i == currentlyHighlightedSlot) {
+            bool clickedHighlightedSlot = i == currentlyHighlightedSlot;
+            if (clickedHighlightedSlot) {
                 return;
             }
-            Image panel = slotPrefab.GetComponent<Image>();
-            if (panel == null) {
-                return;
-            }
-            if (currentlyHighlightedSlot > 0) {
-                setSlotColor(slots[currentlyHighlightedSlot],panel.color); // Resets color of currently highlighted
-            }
+            resetHighlight();
             currentlyHighlightedSlot = i;
             setSlotColor(slots[currentlyHighlightedSlot],highlightColor);
         }
+
+        public void resetHighlight() {
+            bool slotHighlighted = currentlyHighlightedSlot != -1;
+            if (!slotHighlighted) {
+                return;
+            }
+            setSlotColor(slots[currentlyHighlightedSlot],panelColor);
+            currentlyHighlightedSlot = -1;
+        }
+
 
         protected void setSlotColor(UIInventoryDisplayer<T> slot, Color color) {
             if (slot == null) {
@@ -88,7 +95,10 @@ namespace UI.Lists {
             if (panel == null) {
                 return;
             }
-            panel.color = slotPrefab.GetComponent<Image>().color;
+            if (color.a==0) {
+                color.a=1;
+            }
+            panel.color = color;
         }
 
         protected void addSlot() { 
@@ -104,9 +114,20 @@ namespace UI.Lists {
             displayer.name = $"slot{i}";
         }
 
+        public void leftClickInventory(int index) {
+            if (highlightLeftClick) {
+                highlightSlot(index);
+            }
+            leftClick(index);
+        }
+        public void rightClickInventory(int index) {
+            if (highlightRightClick) {
+                highlightSlot(index);
+            }
+            rightClick(index);
+        }
         public abstract void rightClick(int index);
         public abstract void leftClick(int index);
-
         public void refresh() {
             while (slots.Count > elements.Count) {
                 GameObject.Destroy(slots.Last());

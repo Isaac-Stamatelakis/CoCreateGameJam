@@ -105,7 +105,6 @@ namespace Actions.MCTS {
         public MCTSNode expand() {
             List<GameMove> possibleMoves = state.getPossibleMoves();
             List<GameMove> untriedMoves = new List<GameMove>();
-
             // Find untried moves
             foreach (var move in possibleMoves)
             {

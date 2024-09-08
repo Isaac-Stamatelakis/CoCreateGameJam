@@ -21,6 +21,7 @@ namespace Trading.UI {
             homeButton.onClick.RemoveAllListeners();
             homeButton.onClick.AddListener(() => {
                 GlobalUtils.deleteChildren(detailedViewContainer);
+                tradingCreatureList.resetHighlight();
                 aggregateTradingCreatureDisplay.gameObject.SetActive(true);
             });
         }

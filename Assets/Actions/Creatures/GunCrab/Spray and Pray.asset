@@ -21,7 +21,7 @@ MonoBehaviour:
   preSelectDescription: 
   selectDescription: Gun Crab indiscriminately fires at
   postSelectDescription: 
-  actionScript: 'select 12 any random=true self=true;
+  actionScript: 'select 20 any random=true self=true;
 
     spawn bullet;
 

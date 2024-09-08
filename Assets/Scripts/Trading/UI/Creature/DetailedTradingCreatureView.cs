@@ -19,15 +19,17 @@ namespace Trading.UI {
         [SerializeField] private TextMeshProUGUI creatureDescription;
         [SerializeField] private Image moodImage;
         [SerializeField] private Button petButton;
-        [SerializeField] private TextMeshProUGUI moodText;
         [SerializeField] private Image currencyImage;
+        [SerializeField] private Button changeCreatureButton;
         [SerializeField] private TextMeshProUGUI currencyAcroynm;
         [SerializeField] private TextMeshProUGUI currencyName;
         [SerializeField] private TextMeshProUGUI currencyAmount;
+        [SerializeField] private TextMeshProUGUI changeArrow;
         [SerializeField] private TextMeshProUGUI hourChange;
         [SerializeField] private TextMeshProUGUI currencyNullText;
         [SerializeField] private Button investButton;
         [SerializeField] private Button withDrawButton;
+        [SerializeField] private Button changeCurrencyButton;
         [SerializeField] private Sprite nullSprite;
         [SerializeField] private ColorableDisplayableList displayableListPrefab;
         [SerializeField] private CurrencyCountPopUp currencyCountPopUpPrefab;
@@ -50,7 +52,6 @@ namespace Trading.UI {
         public void Awake() {
             invisibleWhenCreatureNull = new List<GameObject>{
                 moodImage.gameObject,
-                moodText.gameObject,
                 petButton.gameObject,
             };
             invisibleWhenCurrencyNull = new List<GameObject>{
@@ -145,40 +146,60 @@ namespace Trading.UI {
                 currencyName.text = tradingCreature.Currency.name;
                 currencyAcroynm.text = tradingCreature.Currency.Acroynm;
                 currencyAmount.text = LootableUtils.formatAmount(tradingCreature.Amount);
-                hourChange.text = $"";
+                double hourChangeAmount = tradingCreature.getHourChange();
+                hourChange.text = LootableUtils.formatAmount(hourChangeAmount);
+                if (hourChangeAmount > 0) {
+                    hourChange.color = Color.green;
+                    changeArrow.color = Color.green;
+                    changeArrow.text = "↑";
+                } else if (hourChangeAmount < 0) {
+                    hourChange.color = Color.red;
+                    changeArrow.color = Color.green;
+                    changeArrow.text = "↓";
+                } else {
+                    hourChange.color = Color.gray;
+                    changeArrow.color = Color.gray;
+                    changeArrow.text = "*";
+                }
+                
             }
+        }
+
+        private void creatureSectionClick() {
+            selectionButton<EquipedCreature>(
+                title: "Select a Creature",
+                elements: PlayerIO.Instance.EquipedCreetures,
+                selectCreature
+            );
+        }
+        private void currencySectionClick() {
+            selectionButton<DoubleItemSlot>(
+                title: "Select a Currency",
+                elements: PlayerIO.Instance.Currencies,
+                selectCurrency
+            );
         }
         public override void display(TradingCreature element)
         {
             creatureImage.GetComponent<Button>().onClick.RemoveAllListeners();
-            creatureImage.GetComponent<Button>().onClick.AddListener(() => {
-                selectionButton<EquipedCreature>(
-                    title: "Select a Creature",
-                    elements: PlayerIO.Instance.EquipedCreetures,
-                    selectCreature
-                );
-            });
+            creatureImage.GetComponent<Button>().onClick.AddListener(creatureSectionClick);
+            changeCreatureButton.onClick.RemoveAllListeners();
+            changeCreatureButton.onClick.AddListener(creatureSectionClick);
 
             currencyImage.transform.parent.GetComponent<Button>().onClick.RemoveAllListeners();
-            currencyImage.transform.parent.GetComponent<Button>().onClick.AddListener(() => {
-                selectionButton<DoubleItemSlot>(
-                    title: "Select a Currency",
-                    elements: PlayerIO.Instance.Currencies,
-                    selectCurrency
-                );
-            });
+            currencyImage.transform.parent.GetComponent<Button>().onClick.AddListener(currencySectionClick);
+            changeCurrencyButton.onClick.RemoveAllListeners();
+            changeCurrencyButton.onClick.AddListener(currencySectionClick);
+
             investButton.onClick.RemoveAllListeners();
             withDrawButton.onClick.RemoveAllListeners();
             investButton.onClick.AddListener(() => {
-                
                 displayCurrencyPopUp(CurrencyPopUpDisplayMode.Invest);
             });
 
             withDrawButton.onClick.AddListener(() => {
                 displayCurrencyPopUp(CurrencyPopUpDisplayMode.Withdraw);
             });
-
-
             refreshDisplay();
         }
 
