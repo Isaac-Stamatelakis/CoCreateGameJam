@@ -4,7 +4,7 @@ using UnityEngine;
 using Items.Equipment;
 
 namespace UI.Lists {
-    public class EquipmentMainInventoryUI : MainInventoryUI<Equipment>
+    public class EquipmentMainInventoryUI : MainInventoryUI<EnchantedEquipment>
     {
         
     }

@@ -42,9 +42,9 @@ namespace UI.Lists {
                 return;
             }
             if (eventData.button == PointerEventData.InputButton.Left) {
-                inventory.leftClick(index);
+                inventory.leftClickInventory(index);
             } else if (eventData.button == PointerEventData.InputButton.Right) {
-                inventory.rightClick(index);
+                inventory.rightClickInventory(index);
             }
         }
     }

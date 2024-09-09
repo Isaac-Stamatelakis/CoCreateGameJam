@@ -12,13 +12,12 @@ namespace Actions.Script {
         {
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
-            commandExecutionState.CreatureSelector = new CreatureSelector(
+            commandExecutionState.CreatureSelector = new ManualCreatureSelector(
                 targetType: CreatureSelectionType.Any,
                 allowSelf: false,
-                maxTargets: 1,
-                random: false
+                maxTargets: 1
             );
             //commandExecutionState.PausedForSelection=true;
             CommandExecutionStateUtils.generateSubStack(commandExecutionState);

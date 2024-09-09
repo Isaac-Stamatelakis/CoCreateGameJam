@@ -14,6 +14,9 @@ namespace Items.Equipment {
             if (instance == null) {
                 instance = new EnchantmentRegistry();
             }
+            if (id == null) {
+                return null;
+            }
             if (dict.ContainsKey(id)) {
                 return dict[id];
             }

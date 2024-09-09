@@ -31,6 +31,7 @@ namespace UI.TeamSelect {
             creatureName.text = element.getName();
             nickName.text = element.Nickname;
             rarity.text = element.rarity.ToString();
+            equipment.display(element.getEnchantedEquipment());
         }
     }
 }

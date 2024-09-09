@@ -26,17 +26,17 @@ namespace Levels.Combat {
             
         }
 
-        public void displaySelect(CreatureInCombat creatureInCombat, CombatPlayer combatPlayer) {
+        public void displaySelect(CreatureCombatObject creatureCombatObject, CombatPlayer combatPlayer) {
             toggleDisplay(actionSelectUI.gameObject);
-            ActionSelectUI.display(creatureInCombat,combatPlayer.Consumables);
+            ActionSelectUI.display(creatureCombatObject,combatPlayer.Consumables);
         }
 
-        public void displayExecutionUI(ActionExecutionUI actionExecutionUIPrefab, ICombatAction combatAction) {
+        public void displayExecutionUI(ActionExecutionUI actionExecutionUIPrefab, CreatureCombatObject creatureCombatObject, ICombatAction combatAction) {
             toggleDisplay(null);
             ActionExecutionUI actionExecutionUI = GameObject.Instantiate(actionExecutionUIPrefab);
             actionExecutionUI.gameObject.SetActive(true);
             actionExecutionUI.transform.SetParent(transform,false);
-            actionExecutionUI.display(combatAction,this);
+            actionExecutionUI.display(combatAction,creatureCombatObject,this);
         }
 
         public void displayEnemyTurn(CreatureInCombat creatureInCombat, ScriptedAction scriptedAction) {

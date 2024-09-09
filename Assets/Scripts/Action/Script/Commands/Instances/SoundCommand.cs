@@ -9,7 +9,7 @@ namespace Actions.Script {
         {
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
             string soundName = parse(formattedScriptCommand);
             if (!commandExecutionState.Sounds.ContainsKey(soundName)) {

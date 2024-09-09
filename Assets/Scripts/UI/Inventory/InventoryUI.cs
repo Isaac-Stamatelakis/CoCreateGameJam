@@ -4,15 +4,22 @@ using UnityEngine;
 using Player;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace UI.Lists {
-    public abstract class InventoryUI<T> : MonoBehaviour where T : IDisplayable
+    public interface IRefreshableUI {
+        public void refresh();
+    }
+    public abstract class InventoryUI<T> : MonoBehaviour, IRefreshableUI where T : IDisplayable
     {
         [SerializeField] protected UIInventoryDisplayer<T> slotPrefab;
+        [SerializeField] protected bool highlightLeftClick = false;
+        [SerializeField] protected bool highlightRightClick = false;
         [SerializeField] protected Color highlightColor = Color.yellow;
         protected List<T> elements;
         protected List<UIInventoryDisplayer<T>> slots;
         private int currentlyHighlightedSlot = -1;
+        private Color panelColor;
         public bool IsDisplaying {get => slots != null;}
         public void display(List<T> elements) {
             GlobalUtils.deleteChildren(transform);
@@ -23,6 +30,7 @@ namespace UI.Lists {
 
         public void display(List<T> elements, ColorTheme colorTheme) {
             display(elements);
+            panelColor = slotPrefab.GetComponent<Image>().color;
             setTheme(colorTheme);
         }
 
@@ -30,41 +38,54 @@ namespace UI.Lists {
             foreach (UIInventoryDisplayer<T> slot in slots) {
                 slot.setTheme(colorTheme);
             }
+            panelColor = colorTheme.Primary;
         }
         protected void loadSlots() {
             RectTransform rectTransform = GetComponent<RectTransform>();
             GridLayoutGroup gridLayoutGroup = GetComponent<GridLayoutGroup>();
+            //Debug.Log(width);
             /*
             Vector3[] corners = new Vector3[4];
             rectTransform.GetWorldCorners(corners);
-            float width = Mathf.Abs(corners[2].x - corners[0].x);
-            float height = Mathf.Abs(corners[2].y - corners[0].y);
-            int itemsPerRow = (int) (width/gridLayoutGroup.cellSize.x);
+            for (int i = 0; i < 4; i++) {
+                Debug.Log($"{i} : {corners[i]}");
+            }
             */
+            
+            //float width = Vector3.Distance(corners[0],corners[3]);
+            //int itemsPerRow = (int) (rectTransform.rect.width/gridLayoutGroup.cellSize.x);
+            //Debug.Log($"{name} {width} {itemsPerRow}");
+            //Vector2 size = RectTransformUtility.PixelAdjustRect(rectTransform,rectTransform.GetComponentInParent<Canvas>()).size;
+            //Debug.Log($"{size}");
             slots = new List<UIInventoryDisplayer<T>>();
             for (int i = 0; i < elements.Count; i++) {
-                slots.Add(null);
-                loadSlot(i);
+                addSlot();
             }
+            
         }
         protected void highlightSlot(int i) {
             if (i >= slots.Count) {
                 Debug.LogWarning($"Tried to highlight slot out of range {i}");
                 return;
             }
-            if (i == currentlyHighlightedSlot) {
+            bool clickedHighlightedSlot = i == currentlyHighlightedSlot;
+            if (clickedHighlightedSlot) {
                 return;
             }
-            Image panel = slotPrefab.GetComponent<Image>();
-            if (panel == null) {
-                return;
-            }
-            if (currentlyHighlightedSlot > 0) {
-                setSlotColor(slots[currentlyHighlightedSlot],panel.color); // Resets color of currently highlighted
-            }
+            resetHighlight();
             currentlyHighlightedSlot = i;
             setSlotColor(slots[currentlyHighlightedSlot],highlightColor);
         }
+
+        public void resetHighlight() {
+            bool slotHighlighted = currentlyHighlightedSlot != -1;
+            if (!slotHighlighted) {
+                return;
+            }
+            setSlotColor(slots[currentlyHighlightedSlot],panelColor);
+            currentlyHighlightedSlot = -1;
+        }
+
 
         protected void setSlotColor(UIInventoryDisplayer<T> slot, Color color) {
             if (slot == null) {
@@ -74,33 +95,54 @@ namespace UI.Lists {
             if (panel == null) {
                 return;
             }
-            panel.color = slotPrefab.GetComponent<Image>().color;
+            if (color.a==0) {
+                color.a=1;
+            }
+            panel.color = color;
         }
 
-        protected void loadSlot(int i) { 
-            if (i >= elements.Count) {
+        protected void addSlot() { 
+            int i = slots.Count;
+            if (slots.Count >= elements.Count) {
                 Debug.LogWarning($"Tried to display element at out of range index {i}");
                 return;
             }
             UIInventoryDisplayer<T> displayer = GameObject.Instantiate(slotPrefab);
-            slots[i] = displayer;
+            slots.Add(displayer);
             displayer.display(elements[i],i,this);
             displayer.transform.SetParent(transform,false);
             displayer.name = $"slot{i}";
         }
 
+        public void leftClickInventory(int index) {
+            if (highlightLeftClick) {
+                highlightSlot(index);
+            }
+            leftClick(index);
+        }
+        public void rightClickInventory(int index) {
+            if (highlightRightClick) {
+                highlightSlot(index);
+            }
+            rightClick(index);
+        }
         public abstract void rightClick(int index);
         public abstract void leftClick(int index);
-
         public void refresh() {
-            int i = 0;
-            while (i < slots.Count) {
-                slots[i].display(elements[i],i,this);
-                i++;
+            while (slots.Count > elements.Count) {
+                GameObject.Destroy(slots.Last());
+                slots.RemoveAt(slots.Count-1);
             }
-            while (i < elements.Count) {
-                loadSlot(i);
-                i++;
+            for (int i = 0; i < slots.Count; i++) {
+                slots[i].display(elements[i],i,this);
+            }
+            int safe = 0;
+            while (slots.Count < elements.Count) {
+                addSlot();
+                safe ++;
+                if (safe > 100) {
+                    throw new System.Exception("Passed while safe limit");
+                }
             }
         }
         public void reset() {

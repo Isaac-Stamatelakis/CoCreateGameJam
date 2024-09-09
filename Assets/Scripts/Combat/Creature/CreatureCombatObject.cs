@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Creatures;
+using Items.Equipment;
 
 namespace Levels.Combat {
     public enum HighlightType {
@@ -13,7 +14,7 @@ namespace Levels.Combat {
     public interface ISyncedMovementObject {
         public void move(Vector3 vector);
     }
-    public class CreatureCombatObject : MonoBehaviour, ISyncedMovementObject
+    public class CreatureCombatObject : MonoBehaviour, ISyncedMovementObject, ICombatCreature
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Animator animator;
@@ -27,6 +28,7 @@ namespace Levels.Combat {
         public AudioSource AudioSource { get => audioSource; }
         private Vector3 originPosition;
         private List<StatusEffect> statusEffects;
+        private bool dead;
 
         public void Start() {
             this.originPosition = transform.position;
@@ -86,6 +88,9 @@ namespace Levels.Combat {
         public void move(Vector3 vector)
         {
             transform.position += vector;
+            if (CombatUI == null) {
+                return;
+            }
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(CombatUI.transform.position);
             worldPosition += vector;
             CombatUI.transform.position = RectTransformUtility.WorldToScreenPoint(Camera.main,worldPosition);
@@ -109,6 +114,10 @@ namespace Levels.Combat {
         }
 
         public void kill() {
+            if (dead) {
+                return;
+            }
+            dead = true;
             GameObject.Destroy(highlightSprite.gameObject);
             GameObject.Destroy(combatUI.gameObject);
             StartCoroutine(killAnimation());
@@ -127,6 +136,69 @@ namespace Levels.Combat {
                 yield return new WaitForFixedUpdate();
             }
             GameObject.Destroy(gameObject);
+        }
+
+        public void hit(float damage, DamageType damageType)
+        {
+            if (dead) {
+                return;
+            }
+            DamageIndicatorUI damageIndicatorUI = CombatLevelPrefabContainer.Instance.getDamageIndicator();
+            Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(Camera.main,transform.position);
+            damageIndicatorUI.display(damage,damageType,screenPosition);
+            damageIndicatorUI.transform.SetParent(CombatLevelController.Instance.CanvasTransform);
+            creatureInCombat.hit(damage,damageType);
+            
+            if (creatureInCombat.Health <= 0) {
+                kill();
+            }
+            combatUI.display();
+        }
+
+        public void heal(float amount)
+        {
+            creatureInCombat.heal(amount);
+            combatUI.display();
+        }
+
+        public void addStatus(StatusEffect statusEffect)
+        {
+            creatureInCombat.addStatus(statusEffect);
+        }
+
+        public bool hasStatus(string statusName)
+        {
+            return creatureInCombat.hasStatus(statusName);
+        }
+
+        public List<EnchantedEquipment> getEquipment()
+        {
+            return creatureInCombat.getEquipment();
+        }
+
+        public float getHealth()
+        {
+            return creatureInCombat.getHealth();
+        }
+
+        public float getHealthPercent()
+        {
+            return creatureInCombat.getHealthPercent();
+        }
+
+        public float getMana()
+        {
+            return creatureInCombat.getMana();
+        }
+
+        public float getManaPercent()
+        {
+            return creatureInCombat.getManaPercent();
+        }
+
+        public float getStat(CreatureStat creatureStat)
+        {
+            return creatureInCombat.getStat(creatureStat);
         }
     }
 }

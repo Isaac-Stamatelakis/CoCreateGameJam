@@ -5,6 +5,7 @@ using System;
 using Creatures;
 using Items;
 using Levels.Combat;
+using Actions.Script.Execution;
 
 namespace Actions.Script {
     public static class ActionScriptParseUtils 
@@ -21,7 +22,7 @@ namespace Actions.Script {
             return array;
         }
 
-        public static double parseDoubleValue(string val, FormattedScriptCommand scriptCommand, CommandExecutionState commandExecutionState) {
+        public static double parseDoubleValue(string val, FormattedScriptCommand scriptCommand, ICommandExecutionState commandExecutionState) {
             try {
                 return Convert.ToDouble(val);
             } catch (FormatException) {
@@ -31,9 +32,8 @@ namespace Actions.Script {
                 string[] split = val.Split(".");
                 string objIndicator = split[0];
                 string attributeIndicator = split[1];
-                CreatureCombatObject creatureCombatObject = commandExecutionState.getCreatureFromIndicator(scriptCommand,objIndicator);
-                //Debug.Log($"{creatureCombatObject.CreatureInCombat.EquipedCreeture.getName()} {creatureCombatObject.CreatureInCombat.}");
-                return ActionScriptParseUtils.parseCreatureAttribute(scriptCommand,attributeIndicator,creatureCombatObject.CreatureInCombat);
+                ICombatCreature creatureInCombat = commandExecutionState.getCreatureFromIndicator(scriptCommand,objIndicator);
+                return ActionScriptParseUtils.parseCreatureAttribute(scriptCommand,attributeIndicator,creatureInCombat);
             } catch (IndexOutOfRangeException) {
                 ActionScriptInterpretorUtils.scriptError(scriptCommand,$"{val} must be of form obj.val");
             }
@@ -41,24 +41,24 @@ namespace Actions.Script {
         }
         
 
-        public static double parseCreatureAttribute(FormattedScriptCommand scriptCommand, string attribute, CreatureInCombat creatureInCombat) {
+        public static double parseCreatureAttribute(FormattedScriptCommand scriptCommand, string attribute, ICombatCreature creatureInCombat) {
             switch (attribute) {
                 case "health":
-                    return creatureInCombat.Health;
+                    return creatureInCombat.getHealth();
                 case "health_percent":
-                    return creatureInCombat.HealthPercent;
+                    return creatureInCombat.getHealthPercent();
                 case "mana":
-                    return creatureInCombat.Mana;
+                    return creatureInCombat.getMana();
                 case "mana_percent":
-                    return creatureInCombat.ManaPercent;
+                    return creatureInCombat.getManaPercent();
                 case "speed":
-                    return creatureInCombat.EquipedCreeture.getStat(CreatureStat.Speed);
+                    return creatureInCombat.getStat(CreatureStat.Speed);
                 case "attack":
-                    return creatureInCombat.EquipedCreeture.getStat(CreatureStat.Attack);
+                    return creatureInCombat.getStat(CreatureStat.Attack);
                 case "defense":
-                    return creatureInCombat.EquipedCreeture.getStat(CreatureStat.Armor);
+                    return creatureInCombat.getStat(CreatureStat.Armor);
                 case "ability_power":   
-                    return creatureInCombat.EquipedCreeture.getStat(CreatureStat.Ability);
+                    return creatureInCombat.getStat(CreatureStat.Ability);
                 default:
                     ActionScriptInterpretorUtils.scriptError(scriptCommand,$"{attribute} is not a valid attribute");
                     return default(double);

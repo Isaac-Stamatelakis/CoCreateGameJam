@@ -6,6 +6,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using Creatures;
 using Items.Equipment;
 using System.Threading.Tasks;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace Actions {
     public class ActionRegistry
@@ -13,6 +14,7 @@ namespace Actions {
         private static ActionRegistry instance;
         private Dictionary<string,IRetrivedHandle> actions;
         private ActionRegistry() {
+            Addressables.InitializeAsync();
             actions = new Dictionary<string, IRetrivedHandle>();
         }
         public static ActionRegistry getInstance() {
@@ -57,23 +59,23 @@ namespace Actions {
             if (actions.ContainsKey(id)) {
                 return;
             }
-
+            if (!AddressableUtils.AddressableLabelExists(id)) {
+                return;
+            }
             AsyncOperationHandle<IList<ScriptableObject>> handle = Addressables.LoadAssetsAsync<ScriptableObject>(id, null);
+        
             await handle.Task;
             if (handle.OperationException is InvalidKeyException e) {
-                Debug.LogWarning($"Action Registry could not load {actionBundleType} for id {id}\nError:{e}");
+                //Debug.LogWarning($"Action Registry could not load {actionBundleType} for id {id}\nError:{e}");
                 return;
             }
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 IRetrivedHandle retrieveHandle = ActionHandleFactory.formatHandle(handle,actionBundleType);
                 actions[id] = retrieveHandle;
-            }
-            
-                
-            
-            
-            
+            } else {
+                Debug.LogWarning($"Could not retrieve '{id}' due to {handle.OperationException}");
+            } 
         }
     }
 
@@ -89,6 +91,8 @@ namespace Actions {
             }
         }
     }
+
+    
     public enum ActionBundleType {
         Creature,
         Equipment
@@ -119,3 +123,16 @@ namespace Actions {
     }
 }
 
+public static class AddressableUtils {
+    public static bool AddressableLabelExists(string label) {
+        foreach (var locator in Addressables.ResourceLocators)
+        {
+            IList<IResourceLocation> locations;
+            if (locator.Locate(label, typeof(object), out locations))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}

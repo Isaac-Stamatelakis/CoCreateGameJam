@@ -446,7 +446,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 1074420987589094113, guid: 586d2999e944f594ba83182429f873e2, type: 3}
-  highlightColor: {r: 1, g: 0.70520693, b: 0, a: 0}
+  highlightLeftClick: 1
+  highlightRightClick: 0
+  highlightColor: {r: 0, g: 0.29482538, b: 0.4245283, a: 0}
   detailedDisplayPrefab: {fileID: 5770442839671086473, guid: 2572bd8f96b167141bda848a16edd6a6, type: 3}
 --- !u!1 &202904988
 GameObject:
@@ -2500,13 +2502,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 173596681}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 100
   m_Viewport: {fileID: 1879024928}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 534686571}

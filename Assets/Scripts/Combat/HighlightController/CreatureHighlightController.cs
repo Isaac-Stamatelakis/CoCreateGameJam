@@ -7,7 +7,7 @@ using Creatures;
 namespace Levels.Combat {
     public class CreatureHighlightController
     {
-        private CreatureSelector creatureSelector;
+        private ManualCreatureSelector creatureSelector;
         private CreatureCombatObject currentlyMovingCreature;
         private CreatureCombatObject viewHighlightedCreature;
         private CombatLevelDisplayedCreatureUI displayedCreatureUI;
@@ -86,7 +86,7 @@ namespace Levels.Combat {
             
         }
 
-        public void setSelector(CreatureSelector newSelector) {
+        public void setSelector(ManualCreatureSelector newSelector) {
             if (this.creatureSelector != null) {
                 List<CreatureCombatObject> creatureCombatObjects = this.creatureSelector.Creatures;
                 List<CreatureCombatObject> enemyCreatures = new List<CreatureCombatObject>();

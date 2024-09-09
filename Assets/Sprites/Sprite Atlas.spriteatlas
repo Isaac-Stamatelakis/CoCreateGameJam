@@ -40,6 +40,8 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 05dacdd01883e37409e60f2324278e68, type: 3}
+  - {fileID: 21300000, guid: a1b16a818bc06274ba296ac93b95ddda, type: 3}
+  - {fileID: 21300000, guid: 78c2bd7495fa9be48b77e8c2557ddd8b, type: 3}
   - {fileID: 1955398846, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
   - {fileID: 1857891848, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
   - {fileID: 1469639491, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
@@ -55,9 +57,14 @@ SpriteAtlas:
   - {fileID: -1057872545, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
   - {fileID: 172718117, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
   - {fileID: 687679904, guid: 1d17c1a626bc54e46b497e8a606282e3, type: 3}
+  - {fileID: 21300000, guid: 4c788ea61e955474ab8d5e7d19aad6b5, type: 3}
   - {fileID: 21300000, guid: 1732022c85c33104ca986e352ccd73b0, type: 3}
+  - {fileID: 21300000, guid: e1b1b24ccbd55764d9168fb5f4efccf5, type: 3}
+  - {fileID: 21300000, guid: a2a465dce98c3984885c1585f2bef5e5, type: 3}
   m_PackedSpriteNamesToIndex:
   - temp_tile
+  - iso_test_5
+  - test_iso_4
   - tiles_14
   - tiles_12
   - tiles_13
@@ -73,7 +80,10 @@ SpriteAtlas:
   - tiles_4
   - tiles_9
   - tiles_8
+  - test_iso_3
   - t_grass
+  - test_iso_tile
+  - iso_test_6
   m_RenderDataMap: {}
   m_Tag: Sprite Atlas
   m_IsVariant: 0

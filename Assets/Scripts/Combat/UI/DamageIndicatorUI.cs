@@ -17,7 +17,7 @@ namespace Levels.Combat {
         }
 
         private IEnumerator move() {
-            float speed = 0.25f;
+            float speed = 0.0f;
             int ITERATIONS = 50;
             for (int i = 0; i < ITERATIONS; i++) {
                 Vector3 position = transform.position;

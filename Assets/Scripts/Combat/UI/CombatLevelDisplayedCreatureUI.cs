@@ -21,7 +21,7 @@ namespace Levels.Combat {
         [SerializeField] private TextMeshProUGUI defense;
         [SerializeField] private SliderTextDisplayUI health;
         [SerializeField] private SliderTextDisplayUI mana;
-        [SerializeField] private InventoryUI<Equipment> equipmentInventory;
+        [SerializeField] private InventoryUI<EnchantedEquipment> equipmentInventory;
         [SerializeField] private Button databaseButton;
 
         public void display(CreatureInCombat creatureInCombat) {
@@ -33,6 +33,8 @@ namespace Levels.Combat {
             defense.text = creatureInCombat.EquipedCreeture.getStat(CreatureStat.Armor).ToString();
             health.display(creatureInCombat.Health,creatureInCombat.EquipedCreeture.getStat(CreatureStat.Health));
             mana.display(creatureInCombat.Mana,creatureInCombat.EquipedCreeture.getStat(CreatureStat.MaxMana));
+            GlobalUtils.clamp<EnchantedEquipment>(creatureInCombat.EquipedCreeture.EnchantedEquipment,Global.MAX_CREATURE_EQUIPMENT);
+            equipmentInventory.display(creatureInCombat.EquipedCreeture.EnchantedEquipment);
         }
     }
 }

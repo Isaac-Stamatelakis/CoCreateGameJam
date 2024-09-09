@@ -7,7 +7,7 @@ using Actions.Script.Execution;
 namespace Actions.Script {
     public static class CommandExecutionStateUtils
     {
-        public static void generateSubStack(CommandExecutionState commandExecutionState) {
+        public static void generateSubStack(LiveCommandExecutionState commandExecutionState) {
             Stack<ScriptCommand> reversedStack = new Stack<ScriptCommand>();
             while (commandExecutionState.CommandStack.Count > 0) {
                 ScriptCommand command = commandExecutionState.CommandStack.Pop();
@@ -25,7 +25,7 @@ namespace Actions.Script {
             while (reversedStack.Count > 0) {
                 subCommandStack.Push(reversedStack.Pop());
             }
-            commandExecutionState.SubStack = new SelectionCommandLoop(subCommandStack);
+            commandExecutionState.SubStack = new SelectionCommandLoop(subCommandStack,commandExecutionState.CreatureSelector.maxIterations());
         }
     }
 

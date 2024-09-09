@@ -9,7 +9,7 @@ namespace Actions.Script {
         {
         }
 
-        public abstract void execute(CommandExecutionState commandExecutionState);
+        public abstract void execute(LiveCommandExecutionState commandExecutionState);
     }
 }
 

@@ -5,7 +5,7 @@ using Creatures;
 using Levels.Combat;
 
 namespace Actions.Script {
-    public class SpecialActionExecutor
+    public class EquipmentActionExecutor
     {
         private CreatureCombatObject attacker;
         private CreatureCombatObject healer;

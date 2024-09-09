@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Levels.Combat;
 
 namespace Actions.Script {
     public class SpawnCommand : InstantScriptCommand
@@ -10,7 +11,7 @@ namespace Actions.Script {
             
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
             string spawnName = parse(formattedScriptCommand);
             if (!commandExecutionState.ObjectPrefabs.ContainsKey(spawnName)) {
@@ -25,7 +26,7 @@ namespace Actions.Script {
                 return;
             }
             GameObject instantiated = GameObject.Instantiate(commandExecutionState.ObjectPrefabs[spawnName]);
-            instantiated.transform.SetParent(commandExecutionState.CombatLevelController.SpawnedObjectContainer,false);
+            instantiated.transform.SetParent(CombatLevelController.Instance.SpawnedObjectContainer,false);
             instantiated.transform.position += commandExecutionState.SelfCreature.transform.position;
             commandExecutionState.SpawnedObjects[spawnName] = instantiated;
         }

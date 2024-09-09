@@ -49,7 +49,7 @@ namespace Actions.Script {
             }
             return (nameToMove,nameToGo,vel,offset);
         }
-        private Transform getMoveTransform(string nameToMove, CommandExecutionState commandExecutionState) {
+        private Transform getMoveTransform(string nameToMove, LiveCommandExecutionState commandExecutionState) {
             if (nameToMove.Equals("self")) {
                 return commandExecutionState.SelfCreature.transform;
             } else {
@@ -59,7 +59,7 @@ namespace Actions.Script {
                 return commandExecutionState.SpawnedObjects[nameToMove].transform;
             }
         }
-        private Vector3 getMovePosition(string nameToGo, CommandExecutionState commandExecutionState) {
+        private Vector3 getMovePosition(string nameToGo, LiveCommandExecutionState commandExecutionState) {
             if (nameToGo.Equals("self")) {
                 return commandExecutionState.SelfCreature.transform.position;
             } else if (nameToGo.Equals("target")) {
@@ -77,7 +77,7 @@ namespace Actions.Script {
             }
             return Vector3.zero;
         }
-        public override IEnumerator execute(CommandExecutionState commandExecutionState)
+        public override IEnumerator execute(LiveCommandExecutionState commandExecutionState)
         {
             
             (string nameToMove, string nameToGo, float velocity, Vector3 offset) = parse(formattedScriptCommand);

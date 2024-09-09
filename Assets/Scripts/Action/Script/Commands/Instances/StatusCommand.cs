@@ -9,7 +9,7 @@ namespace Actions.Script {
         {
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
             (StatusSubCommand subCommand, string[] subParameters) = parse(formattedScriptCommand);
             switch (subCommand) {
@@ -23,10 +23,10 @@ namespace Actions.Script {
                     throw new System.Exception($"{subCommand} was not covered by Status execution");
             }
         }
-        private void executeAdd(CommandExecutionState commandExecutionState, string[] subParameters) {
+        private void executeAdd(LiveCommandExecutionState commandExecutionState, string[] subParameters) {
             
         }
-        private void executeCleanse(CommandExecutionState commandExecutionState, string[] subParameters) {
+        private void executeCleanse(LiveCommandExecutionState commandExecutionState, string[] subParameters) {
 
         }
 

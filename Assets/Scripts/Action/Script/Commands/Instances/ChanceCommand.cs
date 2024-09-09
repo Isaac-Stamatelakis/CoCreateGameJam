@@ -10,7 +10,7 @@ namespace Actions.Script {
         {
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
             (int numerator, int denominator) = parse(formattedScriptCommand);
             if (denominator == 0) {
@@ -27,7 +27,7 @@ namespace Actions.Script {
             }
         }
 
-        private void endExecution(CommandExecutionState commandExecutionState) {
+        private void endExecution(LiveCommandExecutionState commandExecutionState) {
             if (commandExecutionState.SubStack == null) {
                 commandExecutionState.Run = false;
             } else {

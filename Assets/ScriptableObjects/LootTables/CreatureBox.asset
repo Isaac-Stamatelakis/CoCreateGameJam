@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57ebf4d4bdea7e34ea1e0bfd62d50f70, type: 3}
+  m_Name: CreatureBox
+  m_EditorClassIdentifier: 
+  lootFrequencies:
+  - val: {fileID: 11400000, guid: fa017282e748e3548b885059d3c3aefb, type: 2}
+    frequency: 1
+    amount: 1
+  - val: {fileID: 11400000, guid: 20bbaae9f0877f14bb319cdcd112dd5f, type: 2}
+    frequency: 1
+    amount: 1
+  - val: {fileID: 11400000, guid: 06ce49e44feee9e4099fbcd7574de13a, type: 2}
+    frequency: 1
+    amount: 1
+  - val: {fileID: 11400000, guid: e0612e60202bf2647aa51dc74373a01e, type: 2}
+    frequency: 1
+    amount: 1
+  rolls: 4
+  repetitions: 0

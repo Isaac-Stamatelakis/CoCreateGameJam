@@ -27,19 +27,16 @@ namespace Levels {
         }
 
 
-        public static GameObject create(WorldNode node, WorldNode connection, Transform lineContainer) {
-            GameObject line = new GameObject();
-
-            line.name = node.name + " To " + connection.name;
+        public static GameObject create(WorldNode node, WorldNode connection, Transform lineContainer, GameObject prefab) {
+            GameObject line = GameObject.Instantiate(prefab);
+            line.name = node.name + "-" + connection.name;
             line.transform.SetParent(lineContainer,false);
-            SpriteRenderer spriteRenderer = line.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/white_box");
             line.transform.position = (node.transform.position + connection.transform.position)/2;
             Vector2 dif = node.transform.position - connection.transform.position;
             float dist = Vector2.Distance(node.transform.position,connection.transform.position);
             float angle = Mathf.Atan2(dif.y,dif.x) * Mathf.Rad2Deg;
             line.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-            line.transform.localScale = new Vector3(dist/(spriteRenderer.bounds.size.x)*1.2f,0.5f);
+            line.transform.localScale = new Vector3(dist/(line.GetComponent<SpriteRenderer>().bounds.size.x)*1.2f,0.5f);
             return line;
         }
     }

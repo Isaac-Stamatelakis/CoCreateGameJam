@@ -4,12 +4,15 @@ using UnityEngine;
 
 namespace Actions.Script.Execution {
     public class SelectionCommandLoop {
-        public int iterations;
+        public int Iterations {get; set;}
         public Stack<ScriptCommand> commands;
-        public SelectionCommandLoop(Stack<ScriptCommand> commands)
+        public SelectionCommandLoop(Stack<ScriptCommand> commands, int iterations)
         {
-            iterations = -1;
             this.commands = commands;
+            this.Iterations = iterations;
+        }
+        public void deIterate() {
+            Iterations--;
         }
     }
 }

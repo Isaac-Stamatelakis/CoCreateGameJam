@@ -3,35 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using Levels.Combat;
 using Items.Equipment;
+using Actions.Script.Execution;
+using Creatures;
 
 namespace Actions.Script {
-    public class AttackCommand : DelayScriptCommand
+    public class AttackCommand : DelayScriptCommand, ISimultableCommand
     {
         public AttackCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
         {
         }
 
-        public override IEnumerator execute(CommandExecutionState commandExecutionState)
-        {
+        private void executeState(ICommandExecutionState commandExecutionState, float effectiveness = 1) {
             (float damage, float range, DamageType damageType, float falloff, float lifesteal, bool self) = parse(formattedScriptCommand);
-            CreatureCombatObject target = commandExecutionState.getActionTarget(self);
+            ICombatCreature target = commandExecutionState.getActionTarget(self);
             if (target==null) {
-                yield break;
+                return;
             }
             float realDamage = UnityEngine.Random.Range(damage-range,damage+range);
-            realDamage += falloff * commandExecutionState.SubStack.iterations;
-            target.CreatureInCombat.hit(realDamage,damageType);
-            if (commandExecutionState.SpecialActionExecutor != null) {
-                commandExecutionState.SpecialActionExecutor.setAttack(commandExecutionState.SelfCreature,target);
+            realDamage += falloff * commandExecutionState.getSubStack().Iterations;
+            target.hit(realDamage,damageType);
+            EquipmentActionExecutor equipmentActionExecutor = commandExecutionState.getEquipmentActionExecutor();
+            /*
+            if (equipmentActionExecutor != null) {
+                equipmentActionExecutor.setAttack(commandExecutionState.getSelfCreature(),target);
                 if (realDamage*lifesteal > 0) {
-                    commandExecutionState.SpecialActionExecutor.setHeal(commandExecutionState.SelfCreature,commandExecutionState.SelfCreature);
+                    equipmentActionExecutor.setHeal(commandExecutionState.getSelfCreature(),commandExecutionState.getSelfCreature());
                 }
             }
-            commandExecutionState.SelfCreature.CreatureInCombat.heal(realDamage*lifesteal);
+            */
+            commandExecutionState.getSelfCreature().heal(realDamage*lifesteal);
+        }
+        public override IEnumerator execute(LiveCommandExecutionState commandExecutionState)
+        {
+            executeState((ICommandExecutionState)commandExecutionState);
             yield return new WaitForSeconds(0.1f);
         }
 
-        
 
         public static (float damage, float range, DamageType type, float falloff, float lifesteal, bool self) parse(FormattedScriptCommand scriptCommand) {
             List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
@@ -90,6 +97,11 @@ namespace Actions.Script {
                 self = (bool) parameters["self"];
             }
             return (damage,range,damageType,falloff,lifesteal,self);
+        }
+
+        public void execute(SimulatedExecutionState state)
+        {
+            executeState(state,state.getActionEffectiveness());
         }
     }
 }

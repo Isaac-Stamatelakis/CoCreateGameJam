@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Levels {
     public interface ILevelLoader {
-        public void load(Level level);
+        public void load(ILevel level);
     }
-    public abstract class LevelLoader<T> : MonoBehaviour, ILevelLoader where T : Level
+    public abstract class LevelLoader<T> : MonoBehaviour, ILevelLoader where T : LevelObject
     {
         [SerializeField] private T testLevel;
         private bool loaded = false;
@@ -24,13 +24,13 @@ namespace Levels {
             if (loaded) {
                 yield return null;
             }
-            Debug.Log("Loading Test Level");
+            Debug.Log($"Loading Test Level '{testLevel.name}'");
             load(testLevel);
         }
-        public void load(Level level) {
+        public void load(ILevel level) {
             string levelType = level.GetType().ToString().Split(".").Last();
             string sceneName = SceneManager.GetActiveScene().name;
-            Debug.Log($"{levelType} '{level.name}' Loaded In Scene '{sceneName}'");
+            Debug.Log($"{levelType} Loaded In Scene '{sceneName}'");
             PrepareToLoad();
             loadLevel((T)level);
             loaded = true;
@@ -46,8 +46,8 @@ namespace Levels {
     }
     
     public class LevelManager {
-        public static Level currentLevel;
-        public static void changeLevel(Level level) {
+        public static ILevel currentLevel;
+        public static void changeLevel(ILevel level) {
             SceneManager.LoadScene(level.getSceneName());
             currentLevel = level;
             SceneManager.sceneLoaded += OnSceneLoaded;

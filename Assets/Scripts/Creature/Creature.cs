@@ -26,9 +26,6 @@ namespace Creatures {
         public void setSprite(Sprite sprite) {
             this.sprite = sprite;
         }
-        public void setId(string id) {
-            this.id = id;
-        }
         public void setSpeed(int speed) {
             this.speed = speed;
         }

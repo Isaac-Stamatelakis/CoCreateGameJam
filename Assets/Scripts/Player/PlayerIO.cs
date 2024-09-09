@@ -51,8 +51,25 @@ namespace Player {
             if (playerData.playerTeam==null) {
                 playerData.playerTeam = PlayerIOUtils.initalizePlayerTeam();
             }
-            PlayerIOUtils.clampPlayerTeam(playerData.playerTeam);
+            GlobalUtils.clamp<EquipedCreature>(playerData.playerTeam,Global.PLAYER_TEAM_SIZE);
             return playerData.playerTeam;
+        }
+
+        public void removeCreatureFromTeam(EquipedCreature equipedCreature) {
+            List<EquipedCreature> playerTeam = getPlayerTeam();
+            int index = playerTeam.IndexOf(equipedCreature);
+            removeCreatureFromTeam(index);
+            
+        }
+        public void removeCreatureFromTeam(int index) {
+            List<EquipedCreature> playerTeam = getPlayerTeam();
+            if (index < 0 || index >= playerTeam.Count) {
+                Debug.LogWarning($"Cannot remove index '{index}' from player team as out of range");
+                return;
+            }
+            EquipedCreature equipedCreature = playerTeam[index];
+            playerData.creetures.Add(equipedCreature);
+            playerTeam[index] = null;
         }
 
         public bool hasItems(List<IntItemSlot> itemSlots) {

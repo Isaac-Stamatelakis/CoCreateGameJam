@@ -17,7 +17,7 @@ namespace Items.Equipment {
         {
             return new SerializedEquipment(
                 value.getId(),
-                value.enchant.Id
+                value.getEnchantmentId()
             );
         }
     }

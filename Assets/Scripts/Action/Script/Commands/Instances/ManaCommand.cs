@@ -10,7 +10,7 @@ namespace Actions.Script {
             
         }
 
-        public override void execute(CommandExecutionState commandExecutionState)
+        public override void execute(LiveCommandExecutionState commandExecutionState)
         {
             
         }

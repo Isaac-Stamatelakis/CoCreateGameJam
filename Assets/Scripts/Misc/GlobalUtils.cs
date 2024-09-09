@@ -20,6 +20,35 @@ public static class GlobalUtils
         }
         return default(T);
     }
+    public static int getNullCount<T>(List<T> elements) {
+        int count = 0;
+        foreach (T element in elements) {
+            if (element == null) {
+                count++;
+            }
+        }
+        return count;
+    }
+    public static bool objectInHierarchy(GameObject gameObject, Transform transform) {
+        while (transform != null) {
+            if (transform.gameObject.Equals(gameObject)) {
+                return true;
+            }
+            transform = transform.parent;
+        }
+        return false;
+    }
+    public static int getNoneNullCount<T>(List<T> elements) {
+        return elements.Count-getNullCount<T>(elements);
+    }
+    public static void clamp<T>(List<T> elements, int size) {
+        while (elements.Count > size) {
+            elements.RemoveAt(elements.Count-1);
+        }
+        while (elements.Count < size) {
+            elements.Add(default(T));
+        }
+    }
 
     public static (Vector3,int) speedAndIterationsToMove(Vector3 a, Vector3 b,float velocity) {
         Vector2 direction = a - b;

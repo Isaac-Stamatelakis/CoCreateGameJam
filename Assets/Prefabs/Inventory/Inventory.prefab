@@ -1565,7 +1565,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 8589481002411955856, guid: c0a323a62c5e015469d2986d02ca4e7d, type: 3}
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  detailedDisplayPrefab: {fileID: -5925611393838887840, guid: 814a85f66b60a43488ffb4dfed55ce04, type: 3}
+  detailedDisplayPrefab: {fileID: 1333195550673991702, guid: 88318a6f65354504992900a0d504c245, type: 3}
 --- !u!114 &3645441144488088439
 MonoBehaviour:
   m_ObjectHideFlags: 0

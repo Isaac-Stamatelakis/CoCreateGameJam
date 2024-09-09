@@ -23,13 +23,14 @@ MonoBehaviour:
 
     move self target;
 
-    attack 6 range=1 type=physical;
+    if self.health < target.health;
 
-    if
-    self.health < target.health;
-
-    attack 6 range=1 type=physical;
+    attack
+    1.5 range=0.5 type=physical;
 
     end if;
+
+    attack 3.5 range=0.5 type=physical;
+
 
 '
