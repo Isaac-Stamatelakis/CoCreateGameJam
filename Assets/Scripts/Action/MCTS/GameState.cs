@@ -9,6 +9,7 @@ using Actions.Script.Execution;
 using System.Linq;
 using Actions.MCTS;
 
+
 namespace Levels.Combat {
     public class GameState
     {
@@ -38,7 +39,7 @@ namespace Levels.Combat {
             creatureTurns = turns;
         }
 
-        private void clearDeadCreatures() {
+        public void clearDeadCreatures() {
             clearDeadCreatureList(creatureTurns);
             clearDeadCreatureList(humanPlayer.Creatures);
             clearDeadCreatureList(aiPlayer.Creatures);
@@ -210,7 +211,7 @@ namespace Levels.Combat {
                 if (scriptCommand is not SelectCommand selectCommand) {
                     continue;
                 }
-                (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) = SelectCommand.parse(selectCommand.getFormattedScriptCommand());
+                (int targets, CreatureSelectionType targetType, bool random, bool targetSelf, float? period) = SelectCommand.parse(selectCommand.getFormattedScriptCommand());
                 List<CreatureInCombat> selectableCreatures = getSelectableCreatures(targetType,targetSelf);
                 if (random) {
                     return new List<GameMove>{
@@ -234,7 +235,7 @@ namespace Levels.Combat {
         public GameState simulateMove(GameMove gameMove) {
             GameState simulatedState = deepCopy();
             SimulatedExecutionState simulatedExecutionState = new SimulatedExecutionState(
-                gameMove.ScriptedAction,
+                ScriptCommandFactory.parseCommands(gameMove.ScriptedAction.ActionScript),
                 simulatedState.getCurrentCreature(),
                 true,
                 gameMove.Selector

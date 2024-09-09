@@ -20,7 +20,7 @@ namespace Actions.Script {
                 return;
             }
             float realDamage = UnityEngine.Random.Range(damage-range,damage+range);
-            realDamage += falloff * commandExecutionState.getSubStack().iterations;
+            realDamage += falloff * commandExecutionState.getSubStack().Iterations;
             target.hit(realDamage,damageType);
             EquipmentActionExecutor equipmentActionExecutor = commandExecutionState.getEquipmentActionExecutor();
             /*

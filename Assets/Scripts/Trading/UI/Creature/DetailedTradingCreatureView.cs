@@ -154,16 +154,17 @@ namespace Trading.UI {
                     changeArrow.text = "↑";
                 } else if (hourChangeAmount < 0) {
                     hourChange.color = Color.red;
-                    changeArrow.color = Color.green;
+                    changeArrow.color = Color.red;
                     changeArrow.text = "↓";
                 } else {
                     hourChange.color = Color.gray;
                     changeArrow.color = Color.gray;
                     changeArrow.text = "*";
                 }
-                
             }
         }
+
+        
 
         private void creatureSectionClick() {
             selectionButton<EquipedCreature>(

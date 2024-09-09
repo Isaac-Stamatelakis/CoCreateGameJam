@@ -25,7 +25,7 @@ namespace Actions.Script {
             while (reversedStack.Count > 0) {
                 subCommandStack.Push(reversedStack.Pop());
             }
-            commandExecutionState.SubStack = new SelectionCommandLoop(subCommandStack);
+            commandExecutionState.SubStack = new SelectionCommandLoop(subCommandStack,commandExecutionState.CreatureSelector.maxIterations());
         }
     }
 

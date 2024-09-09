@@ -55,6 +55,11 @@ namespace Levels.Combat {
             yield return StartCoroutine(specialAction(selfCreature,target,specialSelectTarget));
         }
 
+        public void executeSubStackCommands(LiveCommandExecutionState liveCommandExecutionState) {
+            StartCoroutine(liveCommandExecutionState.executeSection());
+            //yield return
+        }
+
         public IEnumerator specialAction(CreatureCombatObject selfCreature, CreatureCombatObject target, SpecialSelectTarget specialSelectTarget) {
             if (selfCreature != null && target != null) {
                 foreach (EnchantedEquipment enchantedEquipment in selfCreature.getEquipment()) {
@@ -82,6 +87,12 @@ namespace Levels.Combat {
         }
 
         public void handleNewCreatureTurn() {
+            gameState.clearDeadCreatures();
+            if (gameState.tie()) {
+                showGameOverScreen(playerLoseUIPrefab);
+                Debug.Log("Tie");
+                return;
+            }
             if (gameState.aiWin()) {
                 showGameOverScreen(playerLoseUIPrefab);
                 return;

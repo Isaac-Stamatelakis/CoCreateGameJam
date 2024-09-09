@@ -11,10 +11,10 @@ namespace Actions.Script.Execution {
     {
         public float ChanceModifer;
         public SimulatedExecutionState(
-            ScriptedAction scriptedAction, 
+            Stack<ScriptCommand> commandStack, 
             CreatureInCombat selfCreature, 
             bool executeEquipmentActions, 
-            CreatureSelector<CreatureInCombat> selector) : base(scriptedAction, selfCreature, executeEquipmentActions)
+            CreatureSelector<CreatureInCombat> selector) : base(commandStack, selfCreature, executeEquipmentActions)
         {
             CreatureSelector = selector;
         }
@@ -49,9 +49,8 @@ namespace Actions.Script.Execution {
                     simultableCommand.execute(this);
                 }
             }
-            SubStack = new SelectionCommandLoop(new Stack<ScriptCommand>());
-            SubStack.iterations = CreatureSelector.maxIterations();
-            while (SubStack.iterations > 0) {
+            SubStack = new SelectionCommandLoop(new Stack<ScriptCommand>(),CreatureSelector.maxIterations());
+            while (SubStack.Iterations > 0) {
                 for (int i = subStackCommands.Count-1; i > 0; i--) {
                     SubStack.commands.Push(subStackCommands[i]);
                 }
@@ -59,7 +58,7 @@ namespace Actions.Script.Execution {
                     ScriptCommand command = SubStack.commands.Pop();
                     executeCommand(command);
                 }
-                SubStack.iterations--;
+                SubStack.deIterate();
                 /*
                 if (equipmentActionExecutor != null) {
                     yield return equipmentActionExecutor.execute();

@@ -15,12 +15,13 @@ namespace Actions.Script {
     {
         public SelectCommand(FormattedScriptCommand formattedScriptCommand) : base(formattedScriptCommand)
         {
+
         }
 
         public override void execute(LiveCommandExecutionState commandExecutionState)
         {
-            (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) = parse(formattedScriptCommand);
-            
+            (int targets, CreatureSelectionType targetType, bool random, bool targetSelf, float? period) = parse(formattedScriptCommand);
+            commandExecutionState.SelectionPeriod = period;
             if (random) {
                 List<CreatureCombatObject> randomCreatures = new List<CreatureCombatObject>();
                 GameState gameState = CombatLevelController.Instance.GameState;
@@ -40,7 +41,7 @@ namespace Actions.Script {
             CommandExecutionStateUtils.generateSubStack(commandExecutionState);
             
         }
-        public static (int targets, CreatureSelectionType targetType, bool random, bool targetSelf) parse(FormattedScriptCommand scriptCommand) {
+        public static (int targets, CreatureSelectionType targetType, bool random, bool targetSelf, float? period) parse(FormattedScriptCommand scriptCommand) {
             List<object> orderedParameters = ActionScriptParseUtils.parseOrdered(
             parseInstructions: new List<ParseInstruction>{
                     new ParseInstruction(ParseType.Integer,"targets",true),
@@ -55,20 +56,25 @@ namespace Actions.Script {
             Dictionary<string,object> dictParameters = ActionScriptParseUtils.parseDict(
                 new List<ParseInstruction>{
                     new ParseInstruction(ParseType.Boolean,"random",false),
-                    new ParseInstruction(ParseType.Boolean,"self",false)
+                    new ParseInstruction(ParseType.Boolean,"self",false),
+                    new ParseInstruction(ParseType.Float,"period",false)
                 },
                 parameters: scriptCommand.Parameters,
                 scriptCommand: scriptCommand
             );
             bool random = false;
             bool targetSelf = true;
+            float? period = null;
             if (dictParameters.ContainsKey("random")) {
                 random = (bool) dictParameters["random"];
             }
             if (dictParameters.ContainsKey("self")) {
                 targetSelf = (bool) dictParameters["self"];
             }
-            return (targets,targetType,random,targetSelf);
+            if (dictParameters.ContainsKey("period")) {
+                period = (float) dictParameters["period"];
+            }
+            return (targets,targetType,random,targetSelf,period);
         }
 
         public void execute(ActionScriptDescriptionParser actionScriptDescriptionParser)
@@ -87,7 +93,7 @@ namespace Actions.Script {
         }
 
         private string getDescription() {
-            (int targets, CreatureSelectionType type, bool random, bool targetSelf) = SelectCommand.parse(formattedScriptCommand);
+            (int targets, CreatureSelectionType type, bool random, bool targetSelf, float? period) = SelectCommand.parse(formattedScriptCommand);
             string targetString = ScriptDescriptionCollectionUtils.integerToText(targets);
             string selectString = targetString;
             if (random) {
